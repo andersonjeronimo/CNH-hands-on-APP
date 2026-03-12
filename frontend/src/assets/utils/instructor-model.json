@@ -1,0 +1,20 @@
+{
+    "firstname": "",
+    "lastname": "",
+    "email": "",
+    "ddd": "",
+    "phone": "",
+    "cpf": "",
+    "cnpj": "",
+    "status": "Ativo",
+    "category": "A",
+    "vehicle": "Proprio",
+    "description": "",
+    "state": "",
+    "stateId": 0,
+    "city": "",
+    "cityId": 0,
+    "microregionId": 0,
+    "callByMicroregion":false,
+    "agree": false
+}

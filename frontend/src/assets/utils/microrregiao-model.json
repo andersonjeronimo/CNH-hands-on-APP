@@ -1,0 +1,12 @@
+{
+    "id": 0,
+    "nome": "",
+    "microrregiao": {
+        "id": 0,
+        "nome": "",
+        "mesorregiao": {
+            "id": 0,
+            "nome": ""
+        }
+    }
+}
