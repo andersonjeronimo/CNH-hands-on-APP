@@ -1,7 +1,3 @@
-//import { MongoClient/* , ServerApiVersion */ } from "mongodb";
-
-//import { ObjectId } from 'mongodb';
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -13,47 +9,6 @@ import cityModel from '../assets/utils/cidade-model.json';
 import searchFormModel from '../assets/utils/search-form-model.json';
 import paginationModel from '../assets/utils/pagination.json';
 
-
-/*DATABASE*/
-
-//const uri = import.meta.env.VITE_URI;
-//const dbName = import.meta.env.VITE_DATABASE_NAME;
-//const collectionName = import.meta.env.VITE_COLLECTION_NAME;
-
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-
-//async function findInstructors(category: string, vehicle: string, stateId: number, cityId: number, microregionId: number,
-//    callByMicroregion: boolean, skip: number, limit: number) {
-//    let documents;
-//    let query;
-//    if (callByMicroregion) {
-//        query = {
-//            category, vehicle, stateId, microregionId,
-//            $or: [{ callByMicroregion: { $eq: true } }, { cityId: { $eq: cityId } }]
-//        };
-//    } else {
-//        query = { category, vehicle, stateId, cityId };
-//    }
-//
-//    const client = new MongoClient(uri/* , {
-//        serverApi: {
-//            version: ServerApiVersion.v1,
-//            strict: true,
-//            deprecationErrors: true,
-//        }
-//    } */);
-//    try {
-//        const database = client.db(dbName);
-//        const collection = database.collection(collectionName);
-//        documents = await collection.find(query)
-//            .skip(skip)
-//            .limit(limit)
-//            .toArray();
-//    } finally {
-//        await client.close();
-//    }
-//    return documents;
-//}
 
 function SearchForm() {
 
@@ -178,60 +133,34 @@ function SearchForm() {
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
-
         paginationModel.pageNumber = 1;
         paginationModel.pageSize = Number(import.meta.env.VITE_PAGE_SIZE);
-        //const skip = ((paginationModel.pageNumber - 1) * paginationModel.pageSize);
 
-        //await findInstructors(
-        //    formData.category,
-        //    formData.vehicle,
-        //    formData.stateId,
-        //    formData.cityId,
-        //    formData.microregionId,
-        //    formData.callByMicroregion,
-        //    skip,
-        //    paginationModel.pageSize).then(
-        //        (instructors) => {
-        //            if (typeof instructors === 'object' && Object.keys(instructors).length > 0) {
-        //                navigate('/search-result', { state: { data: instructors, query: formData } });
-        //            } else if (Array.isArray(instructors) && instructors.length > 0) {
-        //                navigate('/search-result', { state: { data: instructors, query: formData } });
-        //            }
-        //            else {
-        //                setAlertClass(messageClass.warning);
-        //                setMessage(`Não localizamos nenhum instrutor com os critérios selecionados.`);
-        //            }
-        //        }
-        //    ).catch((error) => console.log(error));
+        const payload = {
+            pagination: paginationModel,
+            query: formData
+        }
 
-
-
-        //axios
-        //    .post(import.meta.env.VITE_INSTRUCTOR_SEARCH_API_URL, payload)
-        //    .then((response) => {
-        //        if (response.data) {
-        //            if (typeof response.data === 'object' && Object.keys(response.data).length > 0) {
-        //                navigate('/search-result', { state: { data: response.data, query: formData } });
-        //            } else if (Array.isArray(response.data) && response.data.length > 0) {
-        //                navigate('/search-result', { state: { data: response.data, query: formData } });
-        //            }
-        //            else {
-        //                setAlertClass(messageClass.warning);
-        //                setMessage(`Não localizamos nenhum instrutor com os critérios selecionados.`);
-        //            }
-        //        }
-        //        else {
-        //            setAlertClass(messageClass.warning);
-        //            setMessage(`Não localizamos nenhum instrutor com os critérios selecionados.`);
-        //        }
-        //    })
-        //    .catch((error) => console.log(error));
-
-
-
-
-
+        axios
+            .post(import.meta.env.VITE_INSTRUCTOR_SEARCH_API_URL, payload)
+            .then((response) => {
+                if (response.data) {
+                    if (typeof response.data === 'object' && Object.keys(response.data).length > 0) {
+                        navigate('/search-result', { state: { data: response.data, query: formData } });
+                    } else if (Array.isArray(response.data) && response.data.length > 0) {
+                        navigate('/search-result', { state: { data: response.data, query: formData } });
+                    }
+                    else {
+                        setAlertClass(messageClass.warning);
+                        setMessage(`Não localizamos nenhum instrutor com os critérios selecionados.`);
+                    }
+                }
+                else {
+                    setAlertClass(messageClass.warning);
+                    setMessage(`Não localizamos nenhum instrutor com os critérios selecionados.`);
+                }
+            })
+            .catch((error) => console.log(error));
 
     };
 
