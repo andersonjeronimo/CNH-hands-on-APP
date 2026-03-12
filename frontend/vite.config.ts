@@ -8,6 +8,7 @@ export default defineConfig({
     port: 5173
   },
   preview: {
-    port: 3000
+    port: 3000,
+    allowedHosts:['cnhnamao2026.com.br']
   }
 })
