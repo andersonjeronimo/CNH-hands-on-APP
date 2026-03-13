@@ -7,6 +7,7 @@ import RegisterForm from './pages/RegisterForm';
 import RegisterResult from './pages/RegisterResult';
 import SearchForm from './pages/SearchForm';
 import SearchResult from './pages/SearchResult';
+import SerchResultFail from './pages/SearchResultFail';
 import Customers from './pages/Instructors';
 import CustomerDetails from './pages/InstructorDetails';
 import Details from './pages/Details';
@@ -43,6 +44,7 @@ function Router() {
                 <Route path='/register-result' element={<RegisterResult />} />
                 <Route path='/search' element={<SearchForm />} />
                 <Route path='/search-result' element={<SearchResult />} />
+                <Route path='/search-result-fail' element={<SerchResultFail />} />
                 
                 {/* rota de listagem de instrutores deve ser privada */}
                 <Route path='/customers' element={

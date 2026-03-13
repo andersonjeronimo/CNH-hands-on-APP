@@ -151,13 +151,11 @@ function SearchForm() {
                         navigate('/search-result', { state: { data: response.data, query: formData } });
                     }
                     else {
-                        setAlertClass(messageClass.warning);
-                        setMessage(`Não localizamos nenhum instrutor com os critérios selecionados.`);
+                        navigate('/search-result-fail');
                     }
                 }
                 else {
-                    setAlertClass(messageClass.warning);
-                    setMessage(`Não localizamos nenhum instrutor com os critérios selecionados.`);
+                    navigate('/search-result-fail');
                 }
             })
             .catch((error) => console.log(error));
