@@ -2,6 +2,7 @@
     "firstname": "",
     "lastname": "",
     "email": "",
+    "password":"",    
     "ddd": "",
     "phone": "",
     "cpf": "",
