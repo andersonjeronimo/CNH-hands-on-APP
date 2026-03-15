@@ -20,7 +20,7 @@ function RegisterResult() {
                     setModelData(response.data);
                 }
             })
-            .catch((error) => console.log(error));
+            .catch((error) => console.log(error.message));
     }, []);
 
     return (

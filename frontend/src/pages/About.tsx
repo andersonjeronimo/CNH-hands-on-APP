@@ -7,6 +7,7 @@ function About() {
             <p className="text-center"><h3><i>Fazendo match entre alunos e instrutores de todo o Brasil</i></h3></p>
             <hr /> */}
             <Logo></Logo>
+            <hr />
             <p>
                 <strong>O CNH na Mão</strong> é uma plataforma criada para aproximar alunos que querem aprender a dirigir de instrutores de trânsito credenciados.
                 Nosso objetivo é tornar mais fácil encontrar aulas de direção, permitindo que alunos encontrem instrutores próximos e entrem em contato diretamente para combinar suas aulas.

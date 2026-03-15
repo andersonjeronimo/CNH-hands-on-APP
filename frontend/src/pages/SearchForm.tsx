@@ -1,19 +1,21 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import TermsCustomer from './TermsCustomer';
 
+import axios from 'axios';
+
+import TermsCustomer from './TermsCustomer';
 import Estados from '../assets/utils/estados.json';
 import provinceModel from '../assets/utils/estado-model.json';
 import cityModel from '../assets/utils/cidade-model.json';
 import searchFormModel from '../assets/utils/search-form-model.json';
 import paginationModel from '../assets/utils/pagination.json';
+import utils from '../assets/utils/utils.json';
 
 
 function SearchForm() {
 
     const navigate = useNavigate();
-
+    
     const messageClass = {
         primary: 'alert alert-primary',
         success: 'alert alert-success',
@@ -28,13 +30,13 @@ function SearchForm() {
     const [citiesData, setCitiesData] = useState([cityModel]);//cidades por UF
     const [selectedCity, setSelectedCity] = useState(cityModel);
     const [microregionData, setMicroregionData] = useState([cityModel]);
+    const [formData, setFormData] = useState(searchFormModel);
     //const [submitBtnDisabled, setSubmitBtnDisabled] = useState(true);//cidades por microrregião
 
-    useEffect(() => {
-        setProvinceData(Estados);
-    }, []);
 
-    const [formData, setFormData] = useState(searchFormModel);
+    useEffect(() => {
+        setProvinceData(Estados);        
+    }, []);    
 
     const handleInputChange = async (e: any) => {
         const { name, value, type, checked } = e.target;
@@ -64,7 +66,7 @@ function SearchForm() {
                     } else {
                         setCitiesData([cityModel]);
                     }
-                }).catch((error) => console.log(error));
+                }).catch((error) => console.log(error.message));
         }
         //Cidade===============================================
         else if (name === 'city') {
@@ -102,7 +104,7 @@ function SearchForm() {
                         setMicroregionData([cityModel]);
                     }
                 })
-                .catch((error) => console.log(error));
+                .catch((error) => console.log(error.message));
 
         }
         //Termos e condições===================================
@@ -158,7 +160,7 @@ function SearchForm() {
                     navigate('/search-result-fail');
                 }
             })
-            .catch((error) => console.log(error));
+            .catch((error) => console.log(error.message));
 
     };
 
@@ -232,8 +234,8 @@ function SearchForm() {
                             <input className='form-check-input'
                                 type='radio'
                                 name='category'
-                                value='A'
-                                checked={formData.category === 'A'}
+                                value={utils.category.A}
+                                checked={formData.category === utils.category.A}
                                 onChange={handleInputChange}
                                 id='category' />
                             <label className='form-check-label'>
@@ -244,8 +246,8 @@ function SearchForm() {
                             <input className='form-check-input'
                                 type='radio'
                                 name='category'
-                                value='B'
-                                checked={formData.category === 'B'}
+                                value={utils.category.B}
+                                checked={formData.category === utils.category.B}
                                 onChange={handleInputChange}
                                 id='category' />
                             <label className='form-check-label'>
@@ -256,8 +258,8 @@ function SearchForm() {
                             <input className='form-check-input'
                                 type='radio'
                                 name='category'
-                                value='AB'
-                                checked={formData.category === 'AB'}
+                                value={utils.category.AB}
+                                checked={formData.category === utils.category.AB}
                                 onChange={handleInputChange}
                                 id='category' />
                             <label className='form-check-label'>
@@ -272,8 +274,8 @@ function SearchForm() {
                             <input className='form-check-input'
                                 type='radio'
                                 name='vehicle'
-                                value='Proprio'
-                                checked={formData.vehicle === 'Proprio'}
+                                value={utils.vehicle.instrutor}
+                                checked={formData.vehicle === utils.vehicle.instrutor}
                                 onChange={handleInputChange}
                                 id='vehicle' />
                             <label className='form-check-label'>
@@ -284,8 +286,8 @@ function SearchForm() {
                             <input className='form-check-input'
                                 type='radio'
                                 name='vehicle'
-                                value='Aluno'
-                                checked={formData.vehicle === 'Aluno'}
+                                value={utils.vehicle.aluno}
+                                checked={formData.vehicle === utils.vehicle.aluno}
                                 onChange={handleInputChange}
                                 id='vehicle' />
                             <label className='form-check-label'>
@@ -296,8 +298,8 @@ function SearchForm() {
                             <input className='form-check-input'
                                 type='radio'
                                 name='vehicle'
-                                value='Combinar'
-                                checked={formData.vehicle === 'Combinar'}
+                                value={utils.vehicle.ambos}
+                                checked={formData.vehicle === utils.vehicle.ambos}
                                 onChange={handleInputChange}
                                 id='vehicle' />
                             <label className='form-check-label'>

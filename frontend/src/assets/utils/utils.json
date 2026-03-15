@@ -1,0 +1,21 @@
+{
+    "status": {
+        "ativo": "Ativo",
+        "inativo": "Inativo",
+        "pausado": "Pausado"
+    },
+    "category": {
+        "A": "A",
+        "B": "B",
+        "AB": "A e B"
+    },
+    "vehicle": {        
+        "aluno": "Aluno",
+        "instrutor": "Instrutor",
+        "ambos": "Combinar"
+    },
+    "role": {
+        "aluno": "Aluno",
+        "instrutor": "Instrutor"
+    }
+}

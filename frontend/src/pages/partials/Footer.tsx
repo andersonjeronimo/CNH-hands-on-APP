@@ -17,10 +17,10 @@ function Footer() {
                             </h5>
                             <ul className="nav flex-column">
                                 <li className="nav-item mb-2">
-                                    <a href="#" className="nav-link p-0 text-body-secondary">Início</a>
+                                    <a href="/signup" className="nav-link p-0 text-body-secondary">Cadastro</a>
                                 </li>
                                 <li className="nav-item mb-2">
-                                    <a href="/register" className="nav-link p-0 text-body-secondary">Cadastro</a>
+                                    <a href="/details" className="nav-link p-0 text-body-secondary">Perfil do Instrutor</a>
                                 </li>
                                 <li className="nav-item mb-2">
                                     <a href="/search" className="nav-link p-0 text-body-secondary">Busca</a>

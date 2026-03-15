@@ -2,7 +2,8 @@ import { Route, BrowserRouter, Routes, Navigate } from 'react-router-dom';
 import JSX from 'react';
 
 import App from './App';
-import LoginPage from './pages/Login';
+import SignInPage from './pages/SignIn';
+import SignUpPage from './pages/SignUp';
 import RegisterForm from './pages/RegisterForm';
 import RegisterResult from './pages/RegisterResult';
 import SearchForm from './pages/SearchForm';
@@ -28,8 +29,8 @@ function Router() {
 
     //implementar login
     function PrivateRoute({ children }: Props) {
-        const isAuth = false;
-        return isAuth ? children : <Navigate to="/" />
+        const isAuth = true;
+        return isAuth ? children : <Navigate to="/signin" />
 
     }
 
@@ -38,29 +39,71 @@ function Router() {
             <Routes>
                 <Route path='/' element={<App />} />
                 <Route path='/home' element={<App />} />
-                <Route path='/login' element={<LoginPage />} />
+                <Route path='/signin' element={<SignInPage />} />
+                <Route path='/signup' element={<SignUpPage />} />
                 <Route path='/construction' element={<Construction />} />
-                <Route path='/register' element={<RegisterForm />} />
-                <Route path='/register-result' element={<RegisterResult />} />
-                <Route path='/search' element={<SearchForm />} />
-                <Route path='/search-result' element={<SearchResult />} />
-                <Route path='/search-result-fail' element={<SerchResultFail />} />
-                
-                {/* rota de listagem de instrutores deve ser privada */}
+
+                <Route path='/register' element={
+                    <PrivateRoute>
+                        <RegisterForm />
+                    </PrivateRoute>
+                }>
+                </Route>
+
+                <Route path='/register-result' element={
+                    <PrivateRoute>
+                        <RegisterResult />
+                    </PrivateRoute>
+                }>
+                </Route>
+
+                <Route path='/search' element={
+                    <PrivateRoute>
+                        <SearchForm />
+                    </PrivateRoute>
+                }>
+                </Route>
+
+                <Route path='/search-result' element={
+                    <PrivateRoute>
+                        <SearchResult />
+                    </PrivateRoute>
+                }>
+                </Route>
+
+                <Route path='/search-result-fail' element={
+                    <PrivateRoute>
+                        <SerchResultFail />
+                    </PrivateRoute>
+                }>
+                </Route>
+
+                <Route path='/customersfilter' element={
+                    <PrivateRoute>
+                        <CustomerDetails />
+                    </PrivateRoute>
+                }></Route>
+
+                <Route path='/details' element={
+                    <PrivateRoute>
+                        <Details />
+                    </PrivateRoute>
+                }>
+                </Route>
+
                 <Route path='/customers' element={
                     <PrivateRoute>
                         <Customers />
                     </PrivateRoute>
-                } />
-                
-                <Route path='/customersfilter' element={<CustomerDetails />}></Route>
-                <Route path='/details' element={<Details />}></Route>
+                }>
+                </Route>
+
                 <Route path='/about' element={<About />}></Route>
                 <Route path='/privacy' element={<Privacy />}></Route>
                 <Route path='/terms' element={<Terms />}></Route>
                 <Route path='/faq-customers' element={<FaqCustomers />}></Route>
                 <Route path='/faq-instructors' element={<FaqInstructors />}></Route>
-                
+
             </Routes>
         </BrowserRouter>
     )

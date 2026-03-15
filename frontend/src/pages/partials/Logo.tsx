@@ -1,11 +1,11 @@
 import LogoImg from "../../assets/images/logo.png";
 function Logo() {
     return (
-        <div className="container mt-lg-5 mb-lg-5">
+        <div className="container mt-lg-5">
             <div className='row'>
                 <div className='col-md-12'>
                     <div className="text-center">
-                        <img src={LogoImg} className="img-fluid w-50" alt="..." />                        
+                        <img src={LogoImg} width={400} className="img-fluid" alt="..." />                        
                     </div>
                 </div>
                 <div className='col-md-12'>
