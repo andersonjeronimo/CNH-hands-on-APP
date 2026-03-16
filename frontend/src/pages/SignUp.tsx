@@ -59,7 +59,7 @@ function SignInPage() {
             setPasswordTest('');
 
         } else {
-            axios.post(`${import.meta.env.VITE_INSTRUCTOR_API_USER_URL}`, formData)
+            axios.post(`${import.meta.env.VITE_USER_API_URL}`, formData)
                 .then((response) => {
                     if (response.data) {
                         //if (response.status === 201) {                            
@@ -70,7 +70,7 @@ function SignInPage() {
                         //ATENÇÃO!! Enviar para tela de cadastro realizado com sucesso e efetuar login
                         //https://www.youtube.com/watch?v=r4gjCn2r-iw
 
-                        navigate('/register', { state: userId });
+                        navigate('/signup-result', { state: userId });
                         //axios.get(`${import.meta.env.VITE_INSTRUCTOR_API_USER_ID_URL}/${userId}`)
                         //    .then((response) => {
                         //        if (response.data) {
@@ -93,6 +93,7 @@ function SignInPage() {
                 })
                 .catch((error) => {
                     setMessage(`${error.message}, (Já existe um usuário cadastrado com este e-mail.)`);
+                    alert(`${error.message}, (Já existe um usuário cadastrado com este e-mail.)`);
                     setFormData(prevState => ({
                         ...prevState,
                         ['password']: '',

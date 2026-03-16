@@ -4,6 +4,7 @@ import JSX from 'react';
 import App from './App';
 import SignInPage from './pages/SignIn';
 import SignUpPage from './pages/SignUp';
+import SignUpResult from './pages/SignUpResult';
 import RegisterForm from './pages/RegisterForm';
 import RegisterResult from './pages/RegisterResult';
 import SearchForm from './pages/SearchForm';
@@ -46,6 +47,13 @@ function Router() {
                 <Route path='/register' element={
                     <PrivateRoute>
                         <RegisterForm />
+                    </PrivateRoute>
+                }>
+                </Route>
+
+                <Route path='/signup-result' element={
+                    <PrivateRoute>
+                        <SignUpResult />
                     </PrivateRoute>
                 }>
                 </Route>

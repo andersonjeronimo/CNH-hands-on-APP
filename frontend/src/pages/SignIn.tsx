@@ -1,19 +1,38 @@
+//import { useEffect } from 'react';
+//import { useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import axios from 'axios';
 
 import userModel from '../assets/utils/user-model.json';
+import utils from '../assets/utils/utils.json';
 import PinImg from '../assets/images/cnh-pin.svg';
 
 function SignInPage() {
 
     const navigate = useNavigate();
+    //const location = useLocation();
 
-    const [formData, setFormData] = useState(userModel);
+    const [modelData, setModelData] = useState(userModel);
     //const [userData, setUserData] = useState(userModel);
     const [showPassword, setShowPassword] = useState(false);
     const [passwordFieldMessage, setPasswordFieldMessage] = useState("");
     const [message, setMessage] = useState("");
+
+    /* useEffect(() => {
+        if (location.state) {
+            setModelData(location.state);
+        }
+        axios
+            .get(`${import.meta.env.VITE_INSTRUCTOR_API_USER_URL}/${_id}`)
+            .then((response) => {
+                if (typeof response.data === 'object' && Object.keys(response.data).length > 0) {
+                    setModelData(response.data);
+                }
+            })
+            .catch((error) => console.log(error.message));
+    }, []); */
 
     const handleShowPassword = async (e: any) => {
         e.preventDefault();
@@ -25,7 +44,7 @@ function SignInPage() {
 
     const handleInputChange = async (e: any) => {
         const { name, value, type, checked } = e.target;
-        setFormData(prevState => ({
+        setModelData(prevState => ({
             ...prevState,
             [name]: type === 'checkbox' ? checked : value
         }));
@@ -34,35 +53,55 @@ function SignInPage() {
     const handleSubmit = async (e: any) => {
         e.preventDefault();
 
-        axios.post(`${import.meta.env.VITE_INSTRUCTOR_API_AUTH_URL}`, formData)
+        axios.post(`${import.meta.env.VITE_AUTH_API_URL}`, modelData)
             .then((response) => {
                 if (response.data) {
-                    /* if (Array.isArray(response.data) && response.data.length > 0) {
-                        setMessage('Data is a non-empty array.');
-                    } else */
-                    if (typeof response.data === 'object' && Object.keys(response.data).length > 0) {
-                        //setMessage('Data is a non-empty object.');
+                    if (response.status === 400) {
+                        setMessage(typeof response.data);
+                    }                    
 
-                        //1-COMPARAR SENHAS
+                    if (response.data.user.role === utils.role.aluno) {
+                        navigate('/search', { state: response.data });
 
-                        //2-OK? libear acesso (variável isAuth = TRUE)
+                    } else if (response.data.user.role === utils.role.instrutor) {
 
-                        //3-Erro? Informar o motivo
+                        //guardar o response
+                        const userData = response.data;
 
-                        alert(message);
-                        setPasswordFieldMessage(message);
+                        axios.get(`${import.meta.env.VITE_INSTRUCTOR_API_USER_ID_URL}/${userData.user._id}`)
+                            .then((response) => {
+                                if (response.data) {
 
+                                    //verificar se já existe
+                                    navigate('/details', { state: response.data });
 
+                                    //if (typeof response.data === 'object' && Object.keys(response.data).length > 0) {
+                                    //    //setMessage(typeof response.data);
+                                    //}
+
+                                } else {
+                                    //não? tela de registro
+                                    navigate('/register', { state: userData });
+                                }
+                            })
+                            .catch((error) => {
+                                setMessage(`${error.message}, (E-mail ou senha inválidos.)`);
+                                setPasswordFieldMessage(`${error.message}, (E-mail ou senha inválidos.)`);
+                                alert(`${error.message}, (E-mail ou senha inválidos.)`);
+                            });
                     }
 
-                    navigate('/register-result', { state: response.data });
                 } else {
-
-                    //4-Erro? Não existe email cadastrado
-
+                    //
+                    setMessage(typeof response.data);
                 }
+
             })
-            .catch((error) => setMessage(error.message));
+            .catch((error) => {
+                setMessage(`${error.message}, (E-mail ou senha inválidos.)`);
+                setPasswordFieldMessage(`${error.message}, (E-mail ou senha inválidos.)`);
+                alert(`${error.message}, (E-mail ou senha inválidos.)`);
+            });
 
     };
 
@@ -81,6 +120,7 @@ function SignInPage() {
             </div>
             <p className="text-center"><h1>Login</h1></p>
             <p className="text-center"><h3>Insira as credenciais</h3></p>
+            {message}
             <hr />
             <main className="form-signin">
                 <form className='row g-3 needs-validation justify-content-md-center' onSubmit={handleSubmit}>
@@ -97,7 +137,7 @@ function SignInPage() {
 
                                 </span>
                                 <input type='email' className='form-control form-control-lg' name='email' id='email'
-                                    value={formData.email} onChange={handleInputChange}
+                                    value={modelData.email} onChange={handleInputChange}
                                     aria-describedby='email' required />
                             </div>
                         </div>
@@ -121,7 +161,7 @@ function SignInPage() {
                                     }
                                 </span>
                                 <input type={showPassword ? 'text' : 'password'} className='form-control form-control-lg' name='password' id='password'
-                                    value={formData.password} onChange={handleInputChange}
+                                    value={modelData.password} onChange={handleInputChange}
                                     aria-describedby='passwordHelpBlock' required />
                             </div>
                             <div id="passwordHelpBlock" className="form-text">

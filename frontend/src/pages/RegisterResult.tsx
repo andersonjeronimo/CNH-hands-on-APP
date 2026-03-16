@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 
-import successImg from '../assets/images/success.png';
+import verifiedImg from '../assets/images/verified-account.png';
 
 import model from '../assets/utils/instructor-model.json';
 
@@ -30,7 +30,7 @@ function RegisterResult() {
             <hr />
             <div className='row text-center'>
                 <div className='col-md-12'>
-                    <img src={successImg} className="img-fluid w-50" alt="icone representando sucesso"></img>
+                    <img src={verifiedImg} className="img-fluid w-50" alt="icone representando sucesso"></img>
                 </div>
             </div>
         </div>

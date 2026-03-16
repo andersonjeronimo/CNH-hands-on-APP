@@ -45,12 +45,16 @@ function RegisterForm() {
     useEffect(() => {
         setProvinceData(Estados);
         setFormData(instructorModel);
-        //CARREGAR O USER
-        const _userId = location.state;
-        setFormData(prevState => ({
-            ...prevState,
-            ['userId']: _userId
-        }));
+        if (location.state.user) {
+            const user = location.state.user;
+            const token = location.state.token;
+            setFormData(prevState => ({
+                ...prevState,
+                ['userId']: user._id
+            }));
+            console.log(token);
+            setMessage(`${user.email}, ${user.role}, ${user._id}`);
+        }
     }, []);
 
 
@@ -187,8 +191,7 @@ function RegisterForm() {
                 ...prevState,
                 ['cpf']: ''
             }));
-        }
-        else if (isCnpj && !cnpj.isValid(_cnpj)) {
+        } else if (isCnpj && !cnpj.isValid(_cnpj)) {
             setInputClass(inputFocusClass.danger);
             setAlertClass(messageClass.danger);
             setMessage(`Atenção: O CNPJ informado, ${formData.cnpj}, é inválido`);
@@ -196,6 +199,10 @@ function RegisterForm() {
                 ...prevState,
                 ['cnpj']: ''
             }));
+
+
+        } else if (formData.userId === "") {
+            setMessage(`Acesso indevido: sem autenticação. Acessar tela de login`);
         } else {
             //Prosseguir Cadastro de instrutores. Preencha os campos obrigatórios
             setInputClass(inputFocusClass.default);
@@ -222,7 +229,7 @@ function RegisterForm() {
                             //setMessage('Response data is empty or null.');                            
                             axios.post(import.meta.env.VITE_INSTRUCTOR_API_URL, formData)
                                 .then((response) => {
-                                    navigate('/register-result', { state: response.data });
+                                    navigate('/details', { state: response.data });
                                     /* if (response.data) {
                                         if (Array.isArray(response.data) && response.data.length > 0) {
                                             //response.data -> ID
@@ -257,7 +264,7 @@ function RegisterForm() {
                             //setMessage('Response data is empty or null.');
                             axios.post(import.meta.env.VITE_INSTRUCTOR_API_URL, formData)
                                 .then((response) => {
-                                    navigate('/register-result', { state: response.data });
+                                    navigate('/details', { state: response.data });
                                     /* if (response.data) {
                                         if (Array.isArray(response.data) && response.data.length > 0) {
                                             //response.data -> ID
