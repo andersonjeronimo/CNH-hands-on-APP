@@ -45,14 +45,14 @@ function RegisterForm() {
     useEffect(() => {
         setProvinceData(Estados);
         setFormData(instructorModel);
-        if (location.state.user) {
+        if (location.state) {
             const user = location.state.user;
             const token = location.state.token;
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             setFormData(prevState => ({
                 ...prevState,
                 ['userId']: user._id
-            }));
-            console.log(token);
+            }));            
             setMessage(`${user.email}, ${user.role}, ${user._id}`);
         }
     }, []);
@@ -523,7 +523,7 @@ function RegisterForm() {
                                 onChange={handleInputChange}
                                 id='vehicle' />
                             <label className='form-check-label'>
-                                Veículo PRÓPRIO
+                                Veículo do INSTRUTOR
                             </label>
                         </div>
                         <div className='form-check'>
@@ -547,7 +547,7 @@ function RegisterForm() {
                                 onChange={handleInputChange}
                                 id='vehicle' />
                             <label className='form-check-label'>
-                                Veículo PRÓPRIO ou do ALUNO (a combinar)
+                                Veículo do INSTRUTOR / do ALUNO (a combinar)
                             </label>
                         </div>
                     </div>

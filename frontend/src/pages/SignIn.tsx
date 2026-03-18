@@ -58,7 +58,11 @@ function SignInPage() {
                 if (response.data) {
                     if (response.status === 400) {
                         setMessage(typeof response.data);
-                    }                    
+                    }
+
+                    //!!SETAR O TOKEN PARA PRÓXIMAS REQUISIÇÕES!!
+                    localStorage.setItem(`${import.meta.env.VITE_LOCAL_STORAGE_VAR}`, response.data.token);
+                    axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
 
                     if (response.data.user.role === utils.role.aluno) {
                         navigate('/search', { state: response.data });

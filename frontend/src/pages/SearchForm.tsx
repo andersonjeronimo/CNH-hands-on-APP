@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 import axios from 'axios';
 
@@ -15,7 +16,8 @@ import utils from '../assets/utils/utils.json';
 function SearchForm() {
 
     const navigate = useNavigate();
-    
+    const location = useLocation();
+
     const messageClass = {
         primary: 'alert alert-primary',
         success: 'alert alert-success',
@@ -31,12 +33,21 @@ function SearchForm() {
     const [selectedCity, setSelectedCity] = useState(cityModel);
     const [microregionData, setMicroregionData] = useState([cityModel]);
     const [formData, setFormData] = useState(searchFormModel);
-    //const [submitBtnDisabled, setSubmitBtnDisabled] = useState(true);//cidades por microrregião
 
 
     useEffect(() => {
         setProvinceData(Estados);        
-    }, []);    
+        if (location.state) {
+            const user = location.state.user;
+            const token = location.state.token;
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            setFormData(prevState => ({
+                ...prevState,
+                ['userId']: user._id
+            }));
+            setMessage(`${user.email}, ${user.role}, ${user._id}`);
+        }        
+    }, []);
 
     const handleInputChange = async (e: any) => {
         const { name, value, type, checked } = e.target;
