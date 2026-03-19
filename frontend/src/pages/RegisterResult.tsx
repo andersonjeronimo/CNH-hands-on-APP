@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 
-//import verifiedImg from '../assets/images/verified-account.png';
 import successImg from '../assets/images/support.png';
 
 import model from '../assets/utils/instructor-model.json';
@@ -28,8 +27,7 @@ function RegisterResult() {
     }, []);
 
     return (
-        <div className="container mt-lg-5 mb-lg-5">
-            {/* <p className="text-center"><h1>{modelData.email}</h1></p> */}
+        <div className="container mt-lg-5 mb-lg-5">            
             <p className="text-center"><h1>Cadastro concluído.</h1></p>
             <p className="text-center"><h3>Instrutor {modelData.firstname}, os alunos já podem te encontrar!</h3></p>
             <p className='text-center fs-4'>

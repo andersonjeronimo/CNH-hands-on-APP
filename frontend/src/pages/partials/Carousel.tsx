@@ -13,14 +13,7 @@ function Carousel() {
                     <div className="carousel-item active">
                         <img src={Logo} className="w-50 " alt="Logotipo do CNH Na Mão" />
                         <div className="container">
-                            <div className="carousel-caption text-start">
-                                {/* <h1>Cadastre-se</h1> */}
-                                {/* <p className="opacity-75">
-                                    Some representative placeholder content for the first slide of the carousel.
-                                </p> */}
-                                {/* <p>
-                                    <a className="btn btn-lg btn-primary" href="#">Cadastro de Instrutor</a>
-                                </p> */}
+                            <div className="carousel-caption text-start">                                
                                 <div className="col-md-12">                                    
                                     <a className="btn btn-primary form-control btn-lg shadow-lg" href="/register" role="button">                                        
                                         Cadastre-se como instrutor!
@@ -33,13 +26,6 @@ function Carousel() {
                         <img src={Logo} className="w-50" alt="Logotipo do CNH Na Mão" />
                         <div className="container">
                             <div className="carousel-caption text-start">
-                                {/* <h1>Cadastre-se</h1> */}
-                                {/* <p className="opacity-75">
-                                    Some representative placeholder content for the first slide of the carousel.
-                                </p> */}
-                                {/* <p>
-                                    <a className="btn btn-lg btn-primary" href="#">Cadastro de Instrutor</a>
-                                </p> */}
                                 <div className="col-md-12">                                    
                                     <a className="btn btn-primary form-control btn-lg shadow-lg" href="/register" role="button">                                        
                                         Cadastre-se como instrutor!
@@ -51,14 +37,7 @@ function Carousel() {
                     <div className="carousel-item active">
                         <img src={Logo} className="w-50" alt="Logotipo do CNH Na Mão" />
                         <div className="container">
-                            <div className="carousel-caption text-start">
-                                {/* <h1>Cadastre-se</h1> */}
-                                {/* <p className="opacity-75">
-                                    Some representative placeholder content for the first slide of the carousel.
-                                </p> */}
-                                {/* <p>
-                                    <a className="btn btn-lg btn-primary" href="#">Cadastro de Instrutor</a>
-                                </p> */}
+                            <div className="carousel-caption text-start">                                
                                 <div className="col-md-12">                                    
                                     <a className="btn btn-primary form-control btn-lg shadow-lg" href="/register" role="button">                                        
                                         Cadastre-se como instrutor!

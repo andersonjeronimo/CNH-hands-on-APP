@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-//import { useLocation } from 'react-router-dom';
 import { cpf, cnpj } from 'cpf-cnpj-validator';
 import axios from 'axios';
 
@@ -15,8 +14,6 @@ import utils from '../assets/utils/utils.json';
 function Details() {
 
     const navigate = useNavigate();
-    //const location = useLocation();
-
     const messageClass = {
         primary: 'alert alert-primary',
         success: 'alert alert-success',
@@ -37,8 +34,7 @@ function Details() {
     const [selectedProvince, setSelectedProvince] = useState(provinceModel);
     const [citiesData, setCitiesData] = useState([cityModel]);//cidades por UF
     const [selectedCity, setSelectedCity] = useState(cityModel);
-    const [microregionData, setMicroregionData] = useState([cityModel]);
-    //const [submitBtnDisabled, setSubmitBtnDisabled] = useState(true);//cidades por microrregião
+    const [microregionData, setMicroregionData] = useState([cityModel]);    
     const [formData, setFormData] = useState(instructorModel);
     const [isCpf, setIsCpf] = useState(true);
     const [isCnpj, setIsCnpj] = useState(false);

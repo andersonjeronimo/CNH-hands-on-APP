@@ -2,8 +2,6 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import driver from '../../assets/images/driver.png';
 import student from '../../assets/images/student.png';
-//import driver from '../../assets/images/instrutor.svg';
-//import student from '../../assets/images/alunos.svg';
 import utils from '../../assets/utils/utils.json';
 
 function Cards() {

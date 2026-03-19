@@ -2,8 +2,6 @@ import Check from "../../assets/images/check.svg";
 import Chat from "../../assets/images/chat.svg";
 import Car from "../../assets/images/car.svg";
 import Logo from "../../assets/images/logo.png";
-import Instrutores from "../../assets/images/cadastro_instrutor.png";
-
 
 function Feature() {
 
@@ -65,8 +63,7 @@ function Feature() {
                 <div className="row featurette">
                     <div className="col-md-7 order-md-2">
                         <h2 className="featurette-heading fw-normal lh-1">
-                            Receba solicitações de alunos:
-                            {/* <span className="text-body-secondary"> Direto pelo Whatsapp.</span> */}
+                            Receba solicitações de alunos:                            
                         </h2>
                         <p className="lead">
                             Com base nessas informações, o aluno filtra o profissional de acordo com a necessidade e realiza contato com aquele que escolher.

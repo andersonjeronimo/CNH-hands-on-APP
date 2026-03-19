@@ -2,11 +2,8 @@ import Pin from "../../assets/images/cnh-pin.svg"
 
 function Header() {
 
-    const handleSubmit = (/* e: any */) => {
-        localStorage.clear();
-        //const { name } = e.target;
-        //if (name === 'logout') {
-        //}
+    const handleSubmit = () => {
+        localStorage.clear();        
     }
 
     return (

@@ -2,10 +2,7 @@ import Logo from "./partials/Logo";
 
 function About() {
     return (
-        <div className="container mt-lg-5 mb-lg-5">
-            {/* <p className="text-center"><h1>Sobre o CNH na Mão</h1></p>            
-            <p className="text-center"><h3><i>Fazendo match entre alunos e instrutores de todo o Brasil</i></h3></p>
-            <hr /> */}
+        <div className="container mt-lg-5 mb-lg-5">           
             <Logo></Logo>
             <hr />
             <p>
