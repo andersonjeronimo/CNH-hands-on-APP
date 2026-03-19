@@ -1,5 +1,4 @@
-//import { useEffect } from 'react';
-//import { useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,28 +10,27 @@ import PinImg from '../assets/images/cnh-pin.svg';
 
 function SignInPage() {
 
-    const navigate = useNavigate();
-    //const location = useLocation();
+    const navigate = useNavigate();    
 
-    const [modelData, setModelData] = useState(userModel);
-    //const [userData, setUserData] = useState(userModel);
+    const [modelData, setModelData] = useState(userModel);    
     const [showPassword, setShowPassword] = useState(false);
     const [passwordFieldMessage, setPasswordFieldMessage] = useState("");
     const [message, setMessage] = useState("");
 
-    /* useEffect(() => {
-        if (location.state) {
-            setModelData(location.state);
-        }
-        axios
-            .get(`${import.meta.env.VITE_INSTRUCTOR_API_USER_URL}/${_id}`)
-            .then((response) => {
-                if (typeof response.data === 'object' && Object.keys(response.data).length > 0) {
-                    setModelData(response.data);
+    useEffect(() => {
+        const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
+        const role = localStorage.getItem(`${import.meta.env.VITE_ROLE_VAR}`);
+        if (token) {
+            if (role) {
+                if (role === utils.role.aluno) {
+                    navigate('/search');
                 }
-            })
-            .catch((error) => console.log(error.message));
-    }, []); */
+                if (role === utils.role.instrutor) {
+                    navigate('/details');
+                }
+            }
+        }
+    }, []);
 
     const handleShowPassword = async (e: any) => {
         e.preventDefault();
@@ -61,42 +59,21 @@ function SignInPage() {
                     }
 
                     //!!SETAR O TOKEN PARA PRÓXIMAS REQUISIÇÕES!!
-                    localStorage.setItem(`${import.meta.env.VITE_LOCAL_STORAGE_VAR}`, response.data.token);
+                    localStorage.setItem(`${import.meta.env.VITE_TOKEN_VAR}`, response.data.token);
+                    localStorage.setItem(`${import.meta.env.VITE_ID_VAR}`, response.data.user._id);
+                    localStorage.setItem(`${import.meta.env.VITE_EMAIL_VAR}`, response.data.user.email);
+                    localStorage.setItem(`${import.meta.env.VITE_ROLE_VAR}`, response.data.user.role);
+
                     axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
 
                     if (response.data.user.role === utils.role.aluno) {
-                        navigate('/search', { state: response.data });
+                        navigate('/search');
 
                     } else if (response.data.user.role === utils.role.instrutor) {
-
-                        //guardar o response
-                        const userData = response.data;
-
-                        axios.get(`${import.meta.env.VITE_INSTRUCTOR_API_USER_ID_URL}/${userData.user._id}`)
-                            .then((response) => {
-                                if (response.data) {
-
-                                    //verificar se já existe
-                                    navigate('/details', { state: response.data });
-
-                                    //if (typeof response.data === 'object' && Object.keys(response.data).length > 0) {
-                                    //    //setMessage(typeof response.data);
-                                    //}
-
-                                } else {
-                                    //não? tela de registro
-                                    navigate('/register', { state: userData });
-                                }
-                            })
-                            .catch((error) => {
-                                setMessage(`${error.message}, (E-mail ou senha inválidos.)`);
-                                setPasswordFieldMessage(`${error.message}, (E-mail ou senha inválidos.)`);
-                                alert(`${error.message}, (E-mail ou senha inválidos.)`);
-                            });
+                        navigate('/details');
                     }
 
-                } else {
-                    //
+                } else {                    
                     setMessage(typeof response.data);
                 }
 
@@ -108,8 +85,6 @@ function SignInPage() {
             });
 
     };
-
-
 
     return (
         <div className="container mt-lg-5 mb-lg-5">

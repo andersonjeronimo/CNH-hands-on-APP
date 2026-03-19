@@ -45,16 +45,22 @@ function RegisterForm() {
     useEffect(() => {
         setProvinceData(Estados);
         setFormData(instructorModel);
-        if (location.state) {
-            const user = location.state.user;
-            const token = location.state.token;
-            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-            setFormData(prevState => ({
-                ...prevState,
-                ['userId']: user._id
-            }));            
-            setMessage(`${user.email}, ${user.role}, ${user._id}`);
+        alert("CONTINUAR NO REGISTER FORM - USE-EFFECT");
+
+        const role = localStorage.getItem(`${import.meta.env.VITE_ROLE_VAR}`);
+        if (role === utils.role.aluno) {
+            navigate('/search');
         }
+
+        const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
+        axios.defaults.headers.common['authorization'] = `Bearer ${token}`;
+
+        const user_id = localStorage.getItem(`${import.meta.env.VITE_ID_VAR}`);
+        setFormData(prevState => ({
+            ...prevState,
+            ['userId']: user_id ?? ''
+        }));
+                
     }, []);
 
 

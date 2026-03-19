@@ -30,9 +30,8 @@ function Router() {
 
     //implementar login
     function PrivateRoute({ children }: Props) {
-        const isAuth = true;
+        const isAuth = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);        
         return isAuth ? children : <Navigate to="/signin" />
-
     }
 
     return (

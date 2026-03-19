@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+//import { useLocation } from 'react-router-dom';
 import { cpf, cnpj } from 'cpf-cnpj-validator';
 import axios from 'axios';
 
@@ -14,7 +14,7 @@ import utils from '../assets/utils/utils.json';
 function Details() {
 
     const navigate = useNavigate();
-    const location = useLocation();
+    //const location = useLocation();
 
     const messageClass = {
         primary: 'alert alert-primary',
@@ -40,24 +40,43 @@ function Details() {
     //const [submitBtnDisabled, setSubmitBtnDisabled] = useState(true);//cidades por microrregião
     const [formData, setFormData] = useState(instructorModel);
     const [isCpf, setIsCpf] = useState(true);
-    const [isCnpj, setIsCnpj] = useState(false);    
+    const [isCnpj, setIsCnpj] = useState(false);
 
     useEffect(() => {
+        const role = localStorage.getItem(`${import.meta.env.VITE_ROLE_VAR}`);
+        if (role === utils.role.aluno) {
+            navigate('/search');
+        }
+
+        const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
+        axios.defaults.headers.common['authorization'] = `Bearer ${token}`;
+
+        const user_id = localStorage.getItem(`${import.meta.env.VITE_ID_VAR}`);
+
+        //procurar um instrutor que tenha o 'user-id' retornado após o signup.tsx
+        axios.get(`${import.meta.env.VITE_INSTRUCTOR_API_USER_ID_URL}/${user_id}`)
+            .then((response) => {
+                if (response.data) {
+                    alert("response data existe");
+                    if (typeof response.data === 'object' && Object.keys(response.data).length > 0) {
+                        //verificar se já existe, carregar os dados no formulario                    
+                        setFormData(response.data);
+                    } else {
+                        navigate('/register');
+                    }
+                } else {
+                    alert("response data não existe");
+                    navigate('/register');
+                }
+            })
+            .catch((error) => {
+                setMessage(`${error.message}`);
+                alert(error.message);
+            });
+
         setProvinceData(Estados);
         setFormData(instructorModel);
 
-        const token = localStorage.getItem(`${import.meta.env.VITE_LOCAL_STORAGE_VAR}`);
-        const state = location.state;
-        
-        if (state.user) {
-            const user = location.state.user ?? '';
-            axios.defaults.headers.common['Authorization'] = location.state.token ? `Bearer ${location.state.token}` : token;
-            setFormData(prevState => ({
-                ...prevState,
-                ['userId']: user._id
-            }));
-            setMessage(`${user.email}, ${user.role}, ${user._id}, ${token}`);
-        }
     }, []);
 
 
@@ -266,8 +285,9 @@ function Details() {
                         } else {
                             //setMessage('Response data is empty or null.');
                             axios.post(import.meta.env.VITE_INSTRUCTOR_API_URL, formData)
-                                .then((response) => {
-                                    navigate('/details', { state: response.data });
+                                .then((/* response */) => {
+
+                                    //navigate('/details', { state: response.data });
                                     /* if (response.data) {
                                         if (Array.isArray(response.data) && response.data.length > 0) {
                                             //response.data -> ID
@@ -288,7 +308,7 @@ function Details() {
 
     return (
         <div className='container mt-lg-5 mb-lg-5'>
-            <p className="text-center"><h1>Cadastro de Instrutores</h1></p>
+            <p className="text-center"><h1>Detalhes do Cadastro de {formData.firstname}</h1></p>
             <hr />
             {/* <div className='row g-3 align-items-center'>
                     <div className='col-md-12'>
@@ -612,9 +632,9 @@ function Details() {
                     </div>
 
                     <div className='d-grid gap-2 col-12 mx-auto'>
-                        <button className='btn btn-primary btn-lg shadow' type='submit'
+                        <button className='btn btn-success btn-lg shadow' type='submit'
                                 /* disabled={submitBtnDisabled} */>
-                            Cadastrar Instrutor
+                            Atualizar Dados
                         </button>
                     </div>
 

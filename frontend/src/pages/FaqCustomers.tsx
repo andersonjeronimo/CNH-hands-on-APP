@@ -7,8 +7,7 @@ function FaqCustomers() {
             <p className="text-center"><h3>Alunos</h3></p>
             <hr />            
             <FAQAlunos></FAQAlunos>            
-        </div>
-            
+        </div>            
     )
 
 }
