@@ -17,7 +17,7 @@ function LandPage() {
             <p className="text-center"><h1>CNH Na Mão</h1></p>
             <p className="text-center"><h3>Selecione o perfil</h3></p>
             <hr />
-            <Cards></Cards>            
+            <Cards></Cards>
         </div>
 
     )

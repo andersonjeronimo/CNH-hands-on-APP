@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+//import { useLocation } from 'react-router-dom';
 import { cpf, cnpj } from 'cpf-cnpj-validator';
 import axios from 'axios';
 
@@ -14,7 +14,7 @@ import utils from '../assets/utils/utils.json';
 function RegisterForm() {
 
     const navigate = useNavigate();
-    const location = useLocation();
+    //const location = useLocation();
 
     const messageClass = {
         primary: 'alert alert-primary',
@@ -44,15 +44,21 @@ function RegisterForm() {
 
     useEffect(() => {
         setProvinceData(Estados);
-        setFormData(instructorModel);
-        alert("CONTINUAR NO REGISTER FORM - USE-EFFECT");
-
-        const role = localStorage.getItem(`${import.meta.env.VITE_ROLE_VAR}`);
-        if (role === utils.role.aluno) {
-            navigate('/search');
-        }
+        setFormData(instructorModel);        
 
         const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
+        const role = localStorage.getItem(`${import.meta.env.VITE_ROLE_VAR}`);
+        if (token) {
+            if (role) {
+                if (role === utils.role.aluno) {
+                    navigate('/search');
+                }
+                if (role === utils.role.instrutor) {
+                    navigate('/details');
+                }
+            }
+        }
+        
         axios.defaults.headers.common['authorization'] = `Bearer ${token}`;
 
         const user_id = localStorage.getItem(`${import.meta.env.VITE_ID_VAR}`);

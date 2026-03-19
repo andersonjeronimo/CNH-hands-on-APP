@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -11,8 +12,6 @@ function SignInPage() {
 
     const navigate = useNavigate();
 
-    userModel.role = utils.role.instrutor;
-
     const [formData, setFormData] = useState(userModel);
     //const [userData, setUserData] = useState(userModel);
     const [passwordTest, setPasswordTest] = useState("");
@@ -20,6 +19,29 @@ function SignInPage() {
     const [showPasswordTest, setShowPasswordTest] = useState(false);
     const [passwordFieldMessage, setPasswordFieldMessage] = useState("Mensagem");
     const [message, setMessage] = useState("");
+
+    //caso não tenha o token
+    const profile = localStorage.getItem(`${import.meta.env.VITE_PROFILE_VAR}`);
+    formData.role = profile ?? '';
+
+    useEffect(() => {
+        const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
+        const role = localStorage.getItem(`${import.meta.env.VITE_ROLE_VAR}`);
+        if (token) {
+            if (role) {
+                if (role === utils.role.aluno) {
+                    navigate('/search');
+                }
+                if (role === utils.role.instrutor) {
+                    navigate('/details');
+                }
+            }
+        }
+        if (!profile) {
+            navigate('/home');
+        }
+
+    }, []);
 
     const handlePwdInputChange = (e: any) => {
         const { value } = e.target;
@@ -71,22 +93,9 @@ function SignInPage() {
                         //https://www.youtube.com/watch?v=r4gjCn2r-iw
 
                         navigate('/signup-result', { state: userId });
-                        //axios.get(`${import.meta.env.VITE_INSTRUCTOR_API_USER_ID_URL}/${userId}`)
-                        //    .then((response) => {
-                        //        if (response.data) {
-                        //
-                        //            if (typeof response.data === 'object' && Object.keys(response.data).length > 0) {
-                        //                //setMessage(typeof response.data);
-                        //                navigate('/details', { state: response.data });
-                        //            }
-                        //
-                        //        } else {
-                        //            navigate('/register', { state: userId });
-                        //        }
-                        //    })
+
 
                     } else {
-                        //
                         setMessage(typeof response.data);
                     }
 
@@ -101,38 +110,6 @@ function SignInPage() {
                     }));
                     setPasswordTest('');
                 });
-
-
-            /* if (typeof response.data === 'object' && Object.keys(response.data).length > 0) {
-                //setMessage('Data is a non-empty object.');
-                setMessage(response.data);
-
-                if (response.data.role === utils.role.aluno) {
-                    navigate('/search', { state: response.data });
-
-                } else if (response.data.role === utils.role.instrutor) {
-                    //buscar o instructor pelo 'userId'
-
-                    //se não existir
-                    if (false) {
-                        //passar o ID e completar o cadastro
-                        navigate('/register', { state: response.data });
-                    }
-                    //se existir, ir para página de perfil
-                    navigate('/details', { state: response.data });
-                    
-
-                } else {
-                    setMessage(response.data.message);
-                }
-
-            }
-        } else {
-            setMessage(response.data.message);
-        } */
-
-
-
         }
     };
 
@@ -237,7 +214,7 @@ function SignInPage() {
                                         <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m.256 7a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1zm3.63-4.54c.18-.613 1.048-.613 1.229 0l.043.148a.64.64 0 0 0 .921.382l.136-.074c.561-.306 1.175.308.87.869l-.075.136a.64.64 0 0 0 .382.92l.149.045c.612.18.612 1.048 0 1.229l-.15.043a.64.64 0 0 0-.38.921l.074.136c.305.561-.309 1.175-.87.87l-.136-.075a.64.64 0 0 0-.92.382l-.045.149c-.18.612-1.048.612-1.229 0l-.043-.15a.64.64 0 0 0-.921-.38l-.136.074c-.561.305-1.175-.309-.87-.87l.075-.136a.64.64 0 0 0-.382-.92l-.148-.045c-.613-.18-.613-1.048 0-1.229l.148-.043a.64.64 0 0 0 .382-.921l-.074-.136c-.306-.561.308-1.175.869-.87l.136.075a.64.64 0 0 0 .92-.382zM14 12.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0" />
                                     </svg>
                                 </span>
-                                <select name='role' id='role' className='form-select form-select-lg' value={formData.role} onChange={handleInputChange} required>
+                                <select disabled name='role' id='role' className='form-select form-select-lg' value={formData.role} onChange={handleInputChange} required>
                                     <option selected value={utils.role.instrutor}>
                                         {utils.role.instrutor}
                                     </option>

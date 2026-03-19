@@ -29,8 +29,8 @@ function Details() {
         danger: 'form-control focus-ring focus-ring-danger py-1 px-2 text-decoration-none border rounded-2'
     }
 
-    const [message, setMessage] = useState('Preencha os campos abaixo');
-    const [alertClass, setAlertClass] = useState(messageClass.primary);
+    const [message, setMessage] = useState('Se necessário, atualize as informações acerca de seu perfil');
+    const [alertClass, setAlertClass] = useState(messageClass.success);
     const [inputClass, setInputClass] = useState(inputFocusClass.default);
     const [provinceData, setProvinceData] = useState([provinceModel]);
     const [selectedProvince, setSelectedProvince] = useState(provinceModel);
@@ -56,26 +56,23 @@ function Details() {
         //procurar um instrutor que tenha o 'user-id' retornado após o signup.tsx
         axios.get(`${import.meta.env.VITE_INSTRUCTOR_API_USER_ID_URL}/${user_id}`)
             .then((response) => {
-                if (response.data) {
-                    alert("response data existe");
+                if (response.data) {                    
                     if (typeof response.data === 'object' && Object.keys(response.data).length > 0) {
                         //verificar se já existe, carregar os dados no formulario                    
                         setFormData(response.data);
                     } else {
                         navigate('/register');
                     }
-                } else {
-                    alert("response data não existe");
+                } else {                    
                     navigate('/register');
                 }
             })
             .catch((error) => {
-                setMessage(`${error.message}`);
-                alert(error.message);
+                setMessage(`${error.message}`);                
             });
 
         setProvinceData(Estados);
-        setFormData(instructorModel);
+        //setFormData(instructorModel);
 
     }, []);
 
@@ -331,7 +328,9 @@ function Details() {
                     <div className='col-md-6'>
                         <label className='form-label'>1 - Estado</label>
                         <select name='state' id='state' className='form-select' value={formData.state} onChange={handleInputChange} required>
-                            <option selected disabled value={''}>Selecione o Estado</option>
+                            <option selected value={formData.state}>
+                                {formData.state}
+                            </option>
                             {provinceData.map((option) => (
                                 <option key={option.id} value={option.nome}>
                                     {option.sigla} - {option.nome}
@@ -343,7 +342,9 @@ function Details() {
                     <div className='col-md-6'>
                         <label className='form-label'>2 - Cidade</label>
                         <select name='city' id='city' className='form-select' value={formData.city} onChange={handleInputChange} required>
-                            <option selected disabled value={''}>Selecione a cidade</option>
+                            <option selected value={formData.city}>
+                                {formData.city}
+                            </option>
                             {citiesData.map((option) => (
                                 <option key={option.id} value={option.nome}>
                                     {option.nome}
@@ -382,7 +383,9 @@ function Details() {
                     <div className='col-md-1'>
                         <label className='form-label'>6 - DDD</label>
                         <select name='ddd' id='ddd' className='form-select' value={formData.ddd} onChange={handleInputChange} required>
-                            <option selected value={'00'}>00</option>
+                            <option selected value={formData.ddd}>
+                                {formData.ddd}
+                            </option>
                             {selectedProvince.ddd.map((ddd) => (
                                 <option value={ddd}>
                                     {ddd}
