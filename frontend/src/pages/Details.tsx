@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 //import { useLocation } from 'react-router-dom';
 import { cpf, cnpj } from 'cpf-cnpj-validator';
@@ -29,7 +30,7 @@ function Details() {
         danger: 'form-control focus-ring focus-ring-danger py-1 px-2 text-decoration-none border rounded-2'
     }
 
-    const [message, setMessage] = useState('Se necessário, atualize as informações acerca de seu perfil');
+    const [message, setMessage] = useState('Se necessário, atualize as informações acerca de seu perfil (em breve)');
     const [alertClass, setAlertClass] = useState(messageClass.success);
     const [inputClass, setInputClass] = useState(inputFocusClass.default);
     const [provinceData, setProvinceData] = useState([provinceModel]);
@@ -43,37 +44,40 @@ function Details() {
     const [isCnpj, setIsCnpj] = useState(false);
 
     useEffect(() => {
+        //se logado, aluno não acessa 'details'
         const role = localStorage.getItem(`${import.meta.env.VITE_ROLE_VAR}`);
-        if (role === utils.role.aluno) {
-            navigate('/search');
+        if (role) {
+            if (role === utils.role.aluno) {
+                navigate('/search');
+            }
         }
 
         const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
-        axios.defaults.headers.common['authorization'] = `Bearer ${token}`;
+        if (token) {
+            axios.defaults.headers.common['authorization'] = `Bearer ${token}`;
+        }
 
         const user_id = localStorage.getItem(`${import.meta.env.VITE_ID_VAR}`);
-
-        //procurar um instrutor que tenha o 'user-id' retornado após o signup.tsx
-        axios.get(`${import.meta.env.VITE_INSTRUCTOR_API_USER_ID_URL}/${user_id}`)
-            .then((response) => {
-                if (response.data) {                    
-                    if (typeof response.data === 'object' && Object.keys(response.data).length > 0) {
-                        //verificar se já existe, carregar os dados no formulario                    
-                        setFormData(response.data);
+        if (user_id) {
+            //procurar um instrutor que tenha o 'user-id' retornado após o signup.tsx
+            axios.get(`${import.meta.env.VITE_INSTRUCTOR_API_USER_ID_URL}/${user_id}`)
+                .then((response) => {
+                    if (response.data) {
+                        if (typeof response.data === 'object' && Object.keys(response.data).length > 0) {
+                            //verificar se já existe, carregar os dados no formulario                    
+                            setFormData(response.data);
+                        } else {
+                            navigate('/register');
+                        }
                     } else {
                         navigate('/register');
                     }
-                } else {                    
-                    navigate('/register');
-                }
-            })
-            .catch((error) => {
-                setMessage(`${error.message}`);                
-            });
-
+                })
+                .catch((error) => {
+                    setMessage(`${error.message}`);
+                });
+        }
         setProvinceData(Estados);
-        //setFormData(instructorModel);
-
     }, []);
 
 
@@ -635,7 +639,7 @@ function Details() {
                     </div>
 
                     <div className='d-grid gap-2 col-12 mx-auto'>
-                        <button className='btn btn-success btn-lg shadow' type='submit'
+                        <button disabled className='btn btn-success btn-lg shadow' type='submit'
                                 /* disabled={submitBtnDisabled} */>
                             Atualizar Dados
                         </button>

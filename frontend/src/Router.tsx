@@ -30,8 +30,8 @@ function Router() {
 
     //implementar login
     function PrivateRoute({ children }: Props) {
-        const isAuth = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);        
-        return isAuth ? children : <Navigate to="/home" />
+        const isAuth = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
+        return (isAuth != null) ? children : <Navigate to="/home" />
     }
 
     return (
@@ -42,6 +42,8 @@ function Router() {
                 <Route path='/signin' element={<SignInPage />} />
                 <Route path='/signup' element={<SignUpPage />} />
                 <Route path='/construction' element={<Construction />} />
+                <Route path='/signup-result' element={<SignUpResult />}></Route>
+                <Route path='/register-result' element={<RegisterResult />}></Route>
 
                 <Route path='/register' element={
                     <PrivateRoute>
@@ -50,19 +52,19 @@ function Router() {
                 }>
                 </Route>
 
-                <Route path='/signup-result' element={
+                {/* <Route path='/signup-result' element={
                     <PrivateRoute>
                         <SignUpResult />
                     </PrivateRoute>
                 }>
-                </Route>
+                </Route> */}
 
-                <Route path='/register-result' element={
+                {/* <Route path='/register-result' element={
                     <PrivateRoute>
                         <RegisterResult />
                     </PrivateRoute>
                 }>
-                </Route>
+                </Route> */}
 
                 <Route path='/search' element={
                     <PrivateRoute>

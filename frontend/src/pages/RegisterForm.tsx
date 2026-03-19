@@ -43,30 +43,30 @@ function RegisterForm() {
     const [isCnpj, setIsCnpj] = useState(false);
 
     useEffect(() => {
-        setProvinceData(Estados);
-        setFormData(instructorModel);        
+        const role = localStorage.getItem(`${import.meta.env.VITE_ROLE_VAR}`);
+        if (role === utils.role.aluno) {
+            navigate('/search');
+        }
+        //if (role) {
+        //}
 
         const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
-        const role = localStorage.getItem(`${import.meta.env.VITE_ROLE_VAR}`);
-        if (token) {
-            if (role) {
-                if (role === utils.role.aluno) {
-                    navigate('/search');
-                }
-                if (role === utils.role.instrutor) {
-                    navigate('/details');
-                }
-            }
-        }
-        
         axios.defaults.headers.common['authorization'] = `Bearer ${token}`;
+        //if (token) {
+        //}
 
         const user_id = localStorage.getItem(`${import.meta.env.VITE_ID_VAR}`);
-        setFormData(prevState => ({
-            ...prevState,
-            ['userId']: user_id ?? ''
-        }));
-                
+        formData.userId = user_id ?? '';
+
+        //setMessage(`Perfil: ${role}, Token: ${token}, User-ID: ${user_id}`);
+        //if (user_id) {
+        //} else {
+        //    navigate('/home');
+        //}
+
+        setProvinceData(Estados);
+        setFormData(instructorModel);
+
     }, []);
 
 
@@ -213,7 +213,7 @@ function RegisterForm() {
             }));
 
 
-        } else if (formData.userId === "") {
+        } else if (!formData.userId) {
             setMessage(`Acesso indevido: sem autenticação. Acessar tela de login`);
         } else {
             //Prosseguir Cadastro de instrutores. Preencha os campos obrigatórios
@@ -241,7 +241,7 @@ function RegisterForm() {
                             //setMessage('Response data is empty or null.');                            
                             axios.post(import.meta.env.VITE_INSTRUCTOR_API_URL, formData)
                                 .then((response) => {
-                                    navigate('/details', { state: response.data });
+                                    navigate('/register-result', { state: response.data });
                                     /* if (response.data) {
                                         if (Array.isArray(response.data) && response.data.length > 0) {
                                             //response.data -> ID
@@ -276,7 +276,7 @@ function RegisterForm() {
                             //setMessage('Response data is empty or null.');
                             axios.post(import.meta.env.VITE_INSTRUCTOR_API_URL, formData)
                                 .then((response) => {
-                                    navigate('/details', { state: response.data });
+                                    navigate('/register-result', { state: response.data });
                                     /* if (response.data) {
                                         if (Array.isArray(response.data) && response.data.length > 0) {
                                             //response.data -> ID

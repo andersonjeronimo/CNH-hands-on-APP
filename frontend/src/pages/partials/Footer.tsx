@@ -23,7 +23,7 @@ function Footer() {
                                     <a href="#" className="nav-link p-0 text-body-secondary">Perfil do Instrutor</a>
                                 </li>
                                 <li className="nav-item mb-2">
-                                    <a href="#" className="nav-link p-0 text-body-secondary">Busca</a>
+                                    <a href="/search" className="nav-link p-0 text-body-secondary">Busca</a>
                                 </li>
                                 <li className="nav-item mb-2">
                                     <a href="/faq-customers" className="nav-link p-0 text-body-secondary">FAQ: Alunos</a>

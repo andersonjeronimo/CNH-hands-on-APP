@@ -20,26 +20,29 @@ function SignInPage() {
     const [passwordFieldMessage, setPasswordFieldMessage] = useState("Mensagem");
     const [message, setMessage] = useState("");
 
-    //caso não tenha o token
-    const profile = localStorage.getItem(`${import.meta.env.VITE_PROFILE_VAR}`);
-    formData.role = profile ?? '';
-
     useEffect(() => {
-        const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
+        //se estiver logado, redireciona conforme o perfil
         const role = localStorage.getItem(`${import.meta.env.VITE_ROLE_VAR}`);
-        if (token) {
-            if (role) {
-                if (role === utils.role.aluno) {
-                    navigate('/search');
-                }
-                if (role === utils.role.instrutor) {
-                    navigate('/details');
-                }
+        if (role) {            
+            if (role === utils.role.aluno) {
+                navigate('/search');
+            } else if (role === utils.role.instrutor) {
+                navigate('/details');
             }
         }
+
+        //perfil selecionado na '/home'
+        const profile = localStorage.getItem(`${import.meta.env.VITE_PROFILE_VAR}`);
         if (!profile) {
             navigate('/home');
+        } else {
+            //formData.role = profile;
+            setFormData(prevState => ({
+                ...prevState,
+                ['role']: profile
+            }));
         }
+
 
     }, []);
 
@@ -83,21 +86,9 @@ function SignInPage() {
         } else {
             axios.post(`${import.meta.env.VITE_USER_API_URL}`, formData)
                 .then((response) => {
-                    if (response.data) {
-                        //if (response.status === 201) {                            
-                        //   setMessage(typeof response.data);
-                        //}                        
-                        const userId = response.data;
-
-                        //ATENÇÃO!! Enviar para tela de cadastro realizado com sucesso e efetuar login
-                        //https://www.youtube.com/watch?v=r4gjCn2r-iw
-
-                        navigate('/signup-result', { state: userId });
-
-
-                    } else {
-                        setMessage(typeof response.data);
-                    }
+                    //alert(typeof response.data);
+                    const userId = response.data;
+                    navigate('/signup-result', { state: userId });                  
 
                 })
                 .catch((error) => {

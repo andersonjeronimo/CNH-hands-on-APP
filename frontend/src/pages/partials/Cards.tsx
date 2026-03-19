@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-
+import { useEffect } from 'react';
 import driver from '../../assets/images/driver.png';
 import student from '../../assets/images/student.png';
 //import driver from '../../assets/images/instrutor.svg';
@@ -10,31 +10,29 @@ function Cards() {
 
     const navigate = useNavigate();
 
-    const handleStudenBtnClick = async () => {
+    useEffect(() => {
         const role = localStorage.getItem(`${import.meta.env.VITE_ROLE_VAR}`);
         if (role) {
             if (role === utils.role.aluno) {
                 navigate('/search');
+            } else if (role === utils.role.instrutor) {
+                navigate('/details');
             }
-        } else {
-            localStorage.removeItem(`${import.meta.env.VITE_PROFILE_VAR}`);
-            localStorage.setItem(`${import.meta.env.VITE_PROFILE_VAR}`, utils.role.aluno);
-            navigate('/signup');
         }
 
+    }, []);
+
+
+    const handleStudenBtnClick = async () => {
+        localStorage.removeItem(`${import.meta.env.VITE_PROFILE_VAR}`);
+        localStorage.setItem(`${import.meta.env.VITE_PROFILE_VAR}`, utils.role.aluno);
+        navigate('/signin');
     };
 
     const handleInstructorBtnClick = async () => {
-        const role = localStorage.getItem(`${import.meta.env.VITE_ROLE_VAR}`);
-        if (role) {
-            if (role === utils.role.instrutor) {
-                navigate('/details');
-            }
-        } else {
-            localStorage.removeItem(`${import.meta.env.VITE_PROFILE_VAR}`);
-            localStorage.setItem(`${import.meta.env.VITE_PROFILE_VAR}`, utils.role.instrutor);
-            navigate('/signup');
-        }
+        localStorage.removeItem(`${import.meta.env.VITE_PROFILE_VAR}`);
+        localStorage.setItem(`${import.meta.env.VITE_PROFILE_VAR}`, utils.role.instrutor);
+        navigate('/signin');
     };
 
     return (

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+//import { useLocation } from 'react-router-dom';
 
 import axios from 'axios';
 
@@ -16,7 +16,7 @@ import utils from '../assets/utils/utils.json';
 function SearchForm() {
 
     const navigate = useNavigate();
-    const location = useLocation();
+    //const location = useLocation();
 
     const messageClass = {
         primary: 'alert alert-primary',
@@ -36,17 +36,20 @@ function SearchForm() {
 
 
     useEffect(() => {
-        setProvinceData(Estados);        
-        if (location.state) {
-            const user = location.state.user;
-            const token = location.state.token;
-            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-            setFormData(prevState => ({
-                ...prevState,
-                ['userId']: user._id
-            }));
-            setMessage(`${user.email}, ${user.role}, ${user._id}`);
-        }        
+        //instrutor não faz busca
+        const role = localStorage.getItem(`${import.meta.env.VITE_ROLE_VAR}`);
+        if (role) {
+            if (role === utils.role.instrutor) {
+                navigate('/details');
+            }
+        }
+
+        const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
+        if (token) {
+            axios.defaults.headers.common['authorization'] = `Bearer ${token}`;
+        }
+        setProvinceData(Estados);
+
     }, []);
 
     const handleInputChange = async (e: any) => {
