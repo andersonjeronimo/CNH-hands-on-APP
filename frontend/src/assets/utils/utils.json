@@ -17,5 +17,10 @@
     "role": {
         "aluno": "Aluno",
         "instrutor": "Instrutor"
-    }
+    },
+    "passwordSize" : {
+        "min": 6,
+        "max": 15
+    },
+    "cnpj": "65.810.829/0001-03"
 }

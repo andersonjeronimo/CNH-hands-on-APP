@@ -44,9 +44,9 @@ function SearchForm() {
         }
 
         const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
-        if (token) {
-            axios.defaults.headers.common['authorization'] = `Bearer ${token}`;
-        }
+        axios.defaults.headers.common['authorization'] = `Bearer ${token}`;
+        //if (token) {
+        //}
         setProvinceData(Estados);
 
     }, []);
@@ -195,7 +195,7 @@ function SearchForm() {
                     <div className='col-md-12'>
                         <div className={alertClass} role='alert'>
                             <p className="fs-5">
-                                {message}
+                                {message}                                
                             </p>
                         </div>
                     </div>
@@ -229,7 +229,7 @@ function SearchForm() {
                             <input className="form-check-input"
                                 type="checkbox"
                                 name="callByMicroregion"
-                                id="callByMicroregion"
+                                id="callByMicroregion"                                
                                 checked={formData.callByMicroregion}
                                 onChange={handleInputChange}
                             />
@@ -264,7 +264,7 @@ function SearchForm() {
                                 onChange={handleInputChange}
                                 id='category' />
                             <label className='form-check-label'>
-                                "B" - Automóvel
+                                "B" - Carro
                             </label>
                         </div>
                         <div className='form-check'>
@@ -276,7 +276,7 @@ function SearchForm() {
                                 onChange={handleInputChange}
                                 id='category' />
                             <label className='form-check-label'>
-                                "A" e "B" - Motocicleta e Automóvel
+                                "A" e "B" - Motocicleta e Carro
                             </label>
                         </div>
                     </div>

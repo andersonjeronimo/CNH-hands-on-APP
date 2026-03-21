@@ -1,3 +1,4 @@
+import utils from '../assets/utils/utils.json';
 function Terms() {
     return (
 
@@ -8,13 +9,55 @@ function Terms() {
                 <p className="text-center"><h3>CNH Na Mão</h3></p>
                 <hr />
                 <p className="fw-normal text-start">
-                    <strong>CNH NA MÃO</strong> é uma prestadora de serviços de anúncios online realizados entre promitentes contratantes (“Alunos”) e promitentes anunciantes de serviços ('Instrutores'), por meio do aplicativo (em breve) e do site CNH na Mão ('Plataforma').
+                    <strong>CNH NA MÃO, CNPJ {utils.cnpj}</strong> é uma prestadora de serviços de anúncios online realizados entre promitentes contratantes (“Alunos”) e promitentes anunciantes de serviços ('Instrutores'), por meio do aplicativo (em breve) e do site CNH na Mão ('Plataforma').
                 </p>
                 <p className="fw-normal text-start">
                     Por intermédio destes Termos e Condições Gerais de Uso ('Termos'), o CNH na Mão apresenta aos usuários em geral, Alunos e Instrutores (em conjunto denominados 'Usuários'), as condições essenciais para o uso dos serviços oferecidos na Plataforma.
                 </p>
                 <p className="fw-normal text-start">
                     O acesso, cadastro ou utilização da Plataforma implica leitura, compreensão e aceitação integral e irrestrita destes Termos, da Política de Privacidade e demais documentos complementares.
+                </p>
+                <p>
+                    <p>
+                        <strong>AVISO DE NÃO INTERMEDIAÇÃO FINANCEIRA</strong>: Este aplicativo não intermedia pagamentos nem presta serviços de aula prática. Atua exclusivamente como plataforma de divulgação.
+                    </p>
+
+                    <p>
+                        <strong>ACEITAÇÃO DOS TERMOS</strong>: Ao acessar ou utilizar este aplicativo, o usuário declara que leu, compreendeu e concorda integralmente com estes Termos de Uso, com a <a href="/privacy"><strong>Política de Privacidade</strong></a> e com o Disclaimer de Responsabilidade.
+                    </p>
+
+                    <p>
+                        <strong>DISCLAIMER</strong>: A plataforma atua exclusivamente como meio de divulgação e aproximação entre instrutores de trânsito autônomos e alunos interessados em aulas práticas de direção.
+                        <br />
+                        Ao utilizar o aplicativo, o usuário declara estar ciente de que:
+                        <br />
+                        <ul>
+                            <li>A plataforma não contrata, não intermedia, não fiscaliza e não executa aulas práticas de direção;</li>
+                            <li>O vínculo existente é diretamente entre aluno e instrutor, inexistindo qualquer relação trabalhista, societária ou de consumo entre a plataforma e o instrutor;</li>
+                            <li>O instrutor atua como profissional autônomo e independente, sendo o único e integral responsável por:</li>
+                            <li>Sua habilitação e credenciamento junto ao Detran;</li>
+                            <li>A legalidade da aula ministrada;</li>
+                            <li>A confirmação junto ao aluno quanto a LADV - Licença para Aprendizagem de Direção Veicular (note que aqui é um link onde explica o que é isso)</li>
+                            <li>A regularidade do veículo utilizado;</li>
+                            <li>A segurança durante a aula;</li>
+                            <li>Danos materiais, pessoais, morais ou infrações de trânsito que venham a ocorrer.</li>
+                        </ul>
+
+                        A plataforma não se responsabiliza, em nenhuma hipótese, por:
+                        <ul>
+                            <li>Acidentes de trânsito;</li>
+                            <li>Multas ou penalidades;</li>
+                            <li>Conduta do instrutor ou do aluno;</li>
+                            <li>Valores cobrados;</li>
+                            <li>Resultados obtidos nas provas práticas;</li>
+                            <li>Qualquer prejuízo decorrente da relação entre aluno e instrutor.</li>
+                        </ul>                                                
+                        <strong>
+                            <h5>
+                            O uso do aplicativo implica aceitação expressa e integral deste disclaimer.
+                            </h5>
+                        </strong>
+                    </p>
                 </p>
                 <div className="accordion" id="accordionPanelsStayOpen">
                     <div className="accordion-item">
@@ -236,7 +279,7 @@ function Terms() {
                         </h2>
                         <div id="panelsStayOpen-collapse8" className="accordion-collapse collapse">
                             <div className="accordion-body">
-                                <p className="fw-normal text-start">                                                                        
+                                <p className="fw-normal text-start">
                                     I – Poderá ser disponibilizado sistema de comentários e avaliações.
                                     <br />
                                     II – As opiniões publicadas são de exclusiva responsabilidade de seus autores.
@@ -257,7 +300,7 @@ function Terms() {
                         </h2>
                         <div id="panelsStayOpen-collapse9" className="accordion-collapse collapse">
                             <div className="accordion-body">
-                                <p className="fw-normal text-start">                                                                        
+                                <p className="fw-normal text-start">
                                     É vedado aos Usuários:
                                     <br />
                                     I – fornecer informações falsas;
@@ -300,7 +343,7 @@ function Terms() {
                         </h2>
                         <div id="panelsStayOpen-collapse10" className="accordion-collapse collapse">
                             <div className="accordion-body">
-                                <p className="fw-normal text-start">                                                                        
+                                <p className="fw-normal text-start">
                                     I – A CNH na Mão responde exclusivamente pela disponibilização do ambiente digital.
                                     <br />
                                     II – A Plataforma não se responsabiliza por:
@@ -347,7 +390,7 @@ function Terms() {
                         </h2>
                         <div id="panelsStayOpen-collapse11" className="accordion-collapse collapse">
                             <div className="accordion-body">
-                                <p className="fw-normal text-start">                                                                        
+                                <p className="fw-normal text-start">
                                     I – A marca, layout, sistema, textos e banco de dados são protegidos por direitos autorais e propriedade intelectual.
                                     <br />
                                     II – É vedada reprodução sem autorização.
@@ -368,7 +411,7 @@ function Terms() {
                         </h2>
                         <div id="panelsStayOpen-collapse12" className="accordion-collapse collapse">
                             <div className="accordion-body">
-                                <p className="fw-normal text-start">                                                                        
+                                <p className="fw-normal text-start">
                                     I – A CNH na Mão poderá, a seu exclusivo critério:
                                     <br />
                                     a) advertir;
@@ -409,7 +452,7 @@ function Terms() {
                         </h2>
                         <div id="panelsStayOpen-collapse13" className="accordion-collapse collapse">
                             <div className="accordion-body">
-                                <p className="fw-normal text-start">                                                                        
+                                <p className="fw-normal text-start">
                                     I – Estes Termos poderão ser modificados a qualquer tempo.
                                     <br />
                                     II – A versão vigente estará disponível na Plataforma.
@@ -430,7 +473,7 @@ function Terms() {
                         </h2>
                         <div id="panelsStayOpen-collapse14" className="accordion-collapse collapse">
                             <div className="accordion-body">
-                                <p className="fw-normal text-start">                                                                        
+                                <p className="fw-normal text-start">
                                     O tratamento de dados pessoais observará a Política de Privacidade e a Lei nº 13.709/2018 (LGPD).
                                 </p>
                             </div>
@@ -447,7 +490,7 @@ function Terms() {
                         </h2>
                         <div id="panelsStayOpen-collapse15" className="accordion-collapse collapse">
                             <div className="accordion-body">
-                                <p className="fw-normal text-start">                                                                        
+                                <p className="fw-normal text-start">
                                     I – Em nenhuma hipótese a CNH na Mão será responsável por lucros cessantes ou danos indiretos decorrentes de negociações entre Usuários.
                                     <br />
                                     II – O Usuário reconhece que a Plataforma atua exclusivamente como meio de divulgação online.
@@ -468,7 +511,7 @@ function Terms() {
                         </h2>
                         <div id="panelsStayOpen-collapse16" className="accordion-collapse collapse">
                             <div className="accordion-body">
-                                <p className="fw-normal text-start">                                                                        
+                                <p className="fw-normal text-start">
                                     I – Em caso de dúvidas ou divergências, o Usuário poderá contatar a Plataforma por meio dos canais de atendimento (“Fale Conosco”).
                                     <br />
                                     II – A Plataforma buscará solução conforme suas regras e a legislação aplicável.
@@ -487,7 +530,7 @@ function Terms() {
                         </h2>
                         <div id="panelsStayOpen-collapse17" className="accordion-collapse collapse">
                             <div className="accordion-body">
-                                <p className="fw-normal text-start">                                                                        
+                                <p className="fw-normal text-start">
                                     I – A Plataforma disponibiliza filtros para aproximar Instrutores e Alunos de uma mesma região, facilitando o encontro entre as partes.
                                     <br />
                                     II – O CNH na Mão se compromete a manter ambiente seguro e favorável às negociações, sem, contudo, assumir responsabilidade pelas relações estabelecidas.
@@ -510,7 +553,7 @@ function Terms() {
                         </h2>
                         <div id="panelsStayOpen-collapse18" className="accordion-collapse collapse">
                             <div className="accordion-body">
-                                <p className="fw-normal text-start">                                                                        
+                                <p className="fw-normal text-start">
                                     I – Estes Termos são regidos pelas leis da República Federativa do Brasil.
                                     <br />
                                     II – Fica eleito o foro da Comarca de São José dos Campos/SP, com renúncia expressa a qualquer outro, por mais privilegiado que seja.

@@ -1,13 +1,14 @@
+import utils from '../assets/utils/utils.json';
 function About() {
     return (
         <div className="container mt-lg-5 mb-lg-5">
-            <p className="text-center"><h1>Sobre</h1></p>
+            <p className="text-center"><h1>Sobre a Plataforma CNH Na Mão</h1></p>
             <p className="text-center">
                 <h3><i>Fazendo match entre alunos e instrutores de todo o Brasil</i></h3>
             </p>
             <hr />
             <p>
-                <strong>O CNH na Mão</strong> é uma plataforma criada para aproximar alunos que querem aprender a dirigir de instrutores de trânsito credenciados.
+                <strong>O CNH na Mão, CNPJ {utils.cnpj},</strong> é uma plataforma criada para aproximar alunos que querem aprender a dirigir de instrutores de trânsito credenciados.
                 Nosso objetivo é tornar mais fácil encontrar aulas de direção, permitindo que alunos encontrem instrutores próximos e entrem em contato diretamente para combinar suas aulas.
                 Ao mesmo tempo, a plataforma oferece aos instrutores uma forma simples e acessível de divulgar seus serviços na internet e alcançar novos alunos.</p>
 

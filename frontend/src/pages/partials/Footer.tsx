@@ -1,10 +1,12 @@
+import utils from "../../assets/utils/utils.json";
+
 function Footer() {
     return (
 
         <div className="container">
             <footer className="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
                 <p className="col-md-2 mb-0 text-body-secondary">
-                    &copy; 2026 CNH Na Mão
+                    &copy; 2026 CNH Na Mão, CNPJ {utils.cnpj}
                 </p>
 
                 <ul className="nav col-md-6 justify-content-end">
@@ -70,7 +72,7 @@ function Footer() {
                         <a href="/faq-instructors" className="nav-link px-2 text-body-secondary">FAQ-Instrutores</a>
                     </li>
                     <li className="nav-item">
-                        <a href="/termos" className="nav-link px-2 text-body-secondary">Termos</a>
+                        <a href="/terms" className="nav-link px-2 text-body-secondary">Termos</a>
                     </li>
                     <li className="nav-item">
                         <a href="/privacy" className="nav-link px-2 text-body-secondary">Privacidade</a>

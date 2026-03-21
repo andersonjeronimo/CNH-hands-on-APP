@@ -61,9 +61,11 @@ function SignInPage() {
                     localStorage.setItem(`${import.meta.env.VITE_TOKEN_VAR}`, response.data.token);
                     localStorage.setItem(`${import.meta.env.VITE_ID_VAR}`, response.data.user._id);
                     localStorage.setItem(`${import.meta.env.VITE_EMAIL_VAR}`, response.data.user.email);
-                    localStorage.setItem(`${import.meta.env.VITE_ROLE_VAR}`, response.data.user.role);
+                    localStorage.setItem(`${import.meta.env.VITE_ROLE_VAR}`, response.data.user.role);                    
 
                     axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+
+                    window.location.reload();
 
                     if (response.data.user.role === utils.role.aluno) {
                         navigate('/search');

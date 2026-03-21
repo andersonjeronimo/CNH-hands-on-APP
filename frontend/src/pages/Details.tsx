@@ -34,7 +34,7 @@ function Details() {
     const [selectedProvince, setSelectedProvince] = useState(provinceModel);
     const [citiesData, setCitiesData] = useState([cityModel]);//cidades por UF
     const [selectedCity, setSelectedCity] = useState(cityModel);
-    const [microregionData, setMicroregionData] = useState([cityModel]);    
+    const [microregionData, setMicroregionData] = useState([cityModel]);
     const [formData, setFormData] = useState(instructorModel);
     const [isCpf, setIsCpf] = useState(true);
     const [isCnpj, setIsCnpj] = useState(false);
@@ -304,347 +304,102 @@ function Details() {
     };
 
     return (
-        <div className='container mt-lg-5 mb-lg-5'>
-            <p className="text-center"><h1>Detalhes do Cadastro de {formData.firstname}</h1></p>
-            <hr />
-            {/* <div className='row g-3 align-items-center'>
-                    <div className='col-md-12'>
-                        <img src={Instrutores} className='rounded mx-auto img-fluid d-block shadow'
-                            alt='Imagem com vários instrutores de trânsito' />
-                    </div>
-                </div> */}
 
-            <form className="row g-3 needs-validation" onSubmit={handleSubmit} >
-
-                <div className='row g-3 align-items-center'>
-
-                    <div className='col-md-12'>
-                        <div className={alertClass} role='alert'>
-                            <p className="fs-5">
-                                {message}
-                            </p>
-                        </div>
-                    </div>
-                    <div className='col-md-6'>
-                        <label className='form-label'>1 - Estado</label>
-                        <select name='state' id='state' className='form-select' value={formData.state} onChange={handleInputChange} required>
-                            <option selected value={formData.state}>
-                                {formData.state}
-                            </option>
-                            {provinceData.map((option) => (
-                                <option key={option.id} value={option.nome}>
-                                    {option.sigla} - {option.nome}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-
-                    <div className='col-md-6'>
-                        <label className='form-label'>2 - Cidade</label>
-                        <select name='city' id='city' className='form-select' value={formData.city} onChange={handleInputChange} required>
-                            <option selected value={formData.city}>
-                                {formData.city}
-                            </option>
-                            {citiesData.map((option) => (
-                                <option key={option.id} value={option.nome}>
-                                    {option.nome}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-
-                    <div className='col-md-12'>
-                        <label className='form-label'>3 - Microrregião</label>
-                        <div className="form-check">
-                            <input className="form-check-input"
-                                type="checkbox"
-                                name="callByMicroregion"
-                                id="callByMicroregion"
-                                checked={formData.callByMicroregion}
-                                onChange={handleInputChange}
-                            />
-                            <label className="form-check-label">
-                                Receber solicitações de alunos da microrregião (cidades vizinhas)?
-                            </label>
-                        </div>
-                    </div>
-
-                    <div className='col-md-6'>
-                        <label className='form-label'>4 - Nome</label>
-                        <input type='text' className='form-control' name='firstname' id='firstname'
-                            value={formData.firstname} onChange={handleInputChange} required autoComplete='off' />
-                    </div>
-                    <div className='col-md-6'>
-                        <label className='form-label'>5 - Sobrenome</label>
-                        <input type='text' className='form-control' name='lastname' id='lastname'
-                            value={formData.lastname} onChange={handleInputChange} required />
-                    </div>
-
-                    <div className='col-md-1'>
-                        <label className='form-label'>6 - DDD</label>
-                        <select name='ddd' id='ddd' className='form-select' value={formData.ddd} onChange={handleInputChange} required>
-                            <option selected value={formData.ddd}>
-                                {formData.ddd}
-                            </option>
-                            {selectedProvince.ddd.map((ddd) => (
-                                <option value={ddd}>
-                                    {ddd}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-
-                    <div className='col-md-6'>
-                        <label className='form-label'>7 - Celular | Whatsapp</label>
-                        <div className='input-group'>
-                            <span className='input-group-text' id='email'>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-whatsapp" viewBox="0 0 16 16">
-                                    <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232" />
-                                </svg>
-                            </span>
-                            <input type='number' className='form-control' name='phone' id='phone' min='10000000' max='999999999'
-                                value={formData.phone} onChange={handleInputChange}
-                                placeholder='Apenas números, sem DDD, pontos ou traços. Ex.: 9 9888 9999' required />
-                        </div>
-
-                    </div>
-
-                    <div className='col-md-5'>
-                        <label className='form-label'>8 - CPF</label>
-                        <div className="form-check">
-                            <input className="form-check-input"
-                                type="radio"
-                                name="cpf-radio"
-                                id="cpf-radio"
-                                checked={isCpf}
-                                onChange={handleCpfCnpjRadioChange}
-                            />
-
-                            <input type='text' className={inputClass} name='cpf' id='cpf'
-                                value={formData.cpf} onChange={handleInputChange}
-                                placeholder='Apenas números, sem pontos ou traços. Ex.: 111 222 333 44'
-                                required={isCpf} disabled={isCnpj} />
-                        </div>
-                    </div>
-
-                    <div className='col-md-6'>
-                        <label className='form-label'>9 - CNPJ</label>
-                        <div className="form-check">
-                            <input className="form-check-input"
-                                type="radio"
-                                name="cnpj-radio"
-                                id="cnpj-radio"
-                                checked={isCnpj}
-                                onChange={handleCpfCnpjRadioChange}
-                            />
-
-                            <input type='text' className={inputClass} name='cnpj' id='cnpj'
-                                value={formData.cnpj} onChange={handleInputChange}
-                                placeholder='Apenas números, sem pontos ou traços. Ex.: 11 222 333 0001 22'
-                                required={isCnpj} disabled={isCpf} />
-                        </div>
-                    </div>
-
-                    <div className='col-md-5'>
-
-                    </div>
-
-                    <div className='col-md-12'>
-                        <label className='form-label'>10 -Descrição do veículo (opcional)</label>
-                        <textarea className='form-control' name='description' id='description'
-                            value={formData.description} onChange={handleInputChange} rows={3}
-                            placeholder='Se for veículo próprio, você pode colocar aqui a marca, modelo, tipo de câmbio, etc. Isso pode ajudar na escolha do instrutor'></textarea>
-                    </div>
-
-                    <hr />
-
-                    <div className='col-md-4'>
-                        <label className='form-label'>11 - Status</label>
-                        <div className='form-check'>
-                            <input className='form-check-input'
-                                type='radio'
-                                name='status'
-                                value={utils.status.ativo}
-                                checked={formData.status === utils.status.ativo}
-                                onChange={handleInputChange}
-                                id='status' />
-                            <label className='form-check-label'>
-                                Ativo
-                            </label>
-                        </div>
-                        <div className='form-check'>
-                            <input className='form-check-input'
-                                type='radio'
-                                name='status'
-                                value={utils.status.pausado}
-                                checked={formData.status === utils.status.pausado}
-                                onChange={handleInputChange}
-                                id='status' disabled />
-                            <label className='form-check-label'>
-                                Pausado
-                            </label>
-                        </div>
-                        <div className='form-check'>
-                            <input className='form-check-input'
-                                type='radio'
-                                name='status'
-                                value={utils.status.inativo}
-                                checked={formData.status === utils.status.inativo}
-                                onChange={handleInputChange}
-                                id='status' disabled />
-                            <label className='form-check-label'>
-                                Inativo
-                            </label>
-                        </div>
-                    </div>
-
-                    <div className='col-md-4'>
-                        <label className='form-label'>12 - Categoria</label>
-                        <div className='form-check'>
-                            <input className='form-check-input'
-                                type='radio'
-                                name='category'
-                                value={utils.category.A}
-                                checked={formData.category === utils.category.A}
-                                onChange={handleInputChange}
-                                id='category' />
-                            <label className='form-check-label'>
-                                "A" - Motocicleta
-                            </label>
-                        </div>
-                        <div className='form-check'>
-                            <input className='form-check-input'
-                                type='radio'
-                                name='category'
-                                value={utils.category.B}
-                                checked={formData.category === utils.category.B}
-                                onChange={handleInputChange}
-                                id='category' />
-                            <label className='form-check-label'>
-                                "B" - Automóvel
-                            </label>
-                        </div>
-                        <div className='form-check'>
-                            <input className='form-check-input'
-                                type='radio'
-                                name='category'
-                                value={utils.category.AB}
-                                checked={formData.category === utils.category.AB}
-                                onChange={handleInputChange}
-                                id='category' />
-                            <label className='form-check-label'>
-                                "A" e "B" - Motocicleta e Automóvel
-                            </label>
-                        </div>
-                    </div>
-
-                    <div className='col-md-4'>
-                        <label className='form-label'>13 - Veículo</label>
-                        <div className='form-check'>
-                            <input className='form-check-input'
-                                type='radio'
-                                name='vehicle'
-                                value={utils.vehicle.instrutor}
-                                checked={formData.vehicle === utils.vehicle.instrutor}
-                                onChange={handleInputChange}
-                                id='vehicle' />
-                            <label className='form-check-label'>
-                                Veículo do INSTRUTOR
-                            </label>
-                        </div>
-                        <div className='form-check'>
-                            <input className='form-check-input'
-                                type='radio'
-                                name='vehicle'
-                                value={utils.vehicle.aluno}
-                                checked={formData.vehicle === utils.vehicle.aluno}
-                                onChange={handleInputChange}
-                                id='vehicle' />
-                            <label className='form-check-label'>
-                                Veículo do ALUNO
-                            </label>
-                        </div>
-                        <div className='form-check'>
-                            <input className='form-check-input'
-                                type='radio'
-                                name='vehicle'
-                                value={utils.vehicle.ambos}
-                                checked={formData.vehicle === utils.vehicle.ambos}
-                                onChange={handleInputChange}
-                                id='vehicle' />
-                            <label className='form-check-label'>
-                                Veículo do INSTRUTOR / do ALUNO (a combinar)
-                            </label>
-                        </div>
-                    </div>
-
-                    <hr />
-
-                    <div className='col-md-12'>
-                        <label className='form-label'>14 - Termos e Condições Gerais de uso</label>
-                        <div className="form-check">
-                            <input className="form-check-input"
-                                type="checkbox"
-                                name="agree"
-                                id="agree"
-                                checked={formData.agree}
-                                onChange={handleInputChange}
-                                required />
-
-                            <label className="form-check-label">
-                                Declaro que li e concordo com os <span>
-                                    <a href="#" role="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Termos de Uso da CNH Na Mão</a>
-                                </span>, assumindo integral responsabilidade pelas informações prestadas e pelos serviços oferecidos.
-
-                                <div className="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex={-1} aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                                    <div className="modal-dialog">
-                                        <div className="modal-content">
-                                            <div className="modal-header">
-                                                <h1 className="modal-title fs-5" id="staticBackdropLabel">Termos e Condições Gerais de Uso</h1>
-                                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div className="modal-body">
-
-                                                <TermsShort></TermsShort>
-
-                                            </div>
-                                            <div className="modal-footer">
-
-                                                <div className="form-check">
-                                                    <input className="form-check-input"
-                                                        type="checkbox"
-                                                        name="agree"
-                                                        id="agree"
-                                                        checked={formData.agree}
-                                                        onChange={handleInputChange}
-                                                        required />
-                                                    <label className="form-check-label">
-                                                        Li e concordo com os termos
-                                                    </label>
-                                                </div>
-
-                                                <hr />
-
-                                                <button type="button" className="btn btn-primary" data-bs-dismiss="modal">Fechar</button>
-                                            </div>
-                                        </div>
+        <section className="vh-100">
+            <div className="container py-5 h-100">
+                <div className="row d-flex justify-content-center align-items-center h-100">
+                    <div className="col-md-6 col-xl-4">
+                        <div className="card" >
+                            <div className="card-body text-center">
+                                <div className="mt-0 mb-4">
+                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
+                                        className="rounded-circle img-fluid" />
+                                </div>
+                                <h4 className="mb-2">Julie L. Arsenault</h4>
+                                <p className="text-muted mb-4">@Programmer <span className="mx-2">|</span> <a
+                                    href="#!">mdbootstrap.com</a></p>
+                                <div className="mb-4 pb-2">
+                                    <button type="button" data-mdb-button-init data-mdb-ripple-init className="btn btn-outline-primary btn-floating">
+                                        <i className="fab fa-facebook-f fa-lg"></i>
+                                    </button>
+                                    <button type="button" data-mdb-button-init data-mdb-ripple-init className="btn btn-outline-primary btn-floating">
+                                        <i className="fab fa-twitter fa-lg"></i>
+                                    </button>
+                                    <button type="button" data-mdb-button-init data-mdb-ripple-init className="btn btn-outline-primary btn-floating">
+                                        <i className="fab fa-skype fa-lg"></i>
+                                    </button>
+                                </div>
+                                <button type="button" data-mdb-button-init data-mdb-ripple-init className="btn btn-primary btn-rounded btn-lg">
+                                    Message now
+                                </button>
+                                <div className="d-flex justify-content-between text-center mt-5 mb-2">
+                                    <div>
+                                        <p className="mb-2 h5">8471</p>
+                                        <p className="text-muted mb-0">Wallets Balance</p>
+                                    </div>
+                                    <div className="px-3">
+                                        <p className="mb-2 h5">8512</p>
+                                        <p className="text-muted mb-0">Income amounts</p>
+                                    </div>
+                                    <div>
+                                        <p className="mb-2 h5">4751</p>
+                                        <p className="text-muted mb-0">Total Transactions</p>
                                     </div>
                                 </div>
-                            </label>
+                            </div>
                         </div>
                     </div>
 
-                    <div className='d-grid gap-2 col-12 mx-auto'>
-                        <button disabled className='btn btn-success btn-lg shadow' type='submit'
-                                /* disabled={submitBtnDisabled} */>
-                            Atualizar Dados
-                        </button>
+
+
+                    <div className="col-md-6 col-xl-4">
+
+                        <div className="card" >
+                            <div className="card-body text-center">
+                                <div className="mt-0 mb-4">
+                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
+                                        className="rounded-circle img-fluid" />
+                                </div>
+                                <h4 className="mb-2">Julie L. Arsenault</h4>
+                                <p className="text-muted mb-4">@Programmer <span className="mx-2">|</span> <a
+                                    href="#!">mdbootstrap.com</a></p>
+                                <div className="mb-4 pb-2">
+                                    <button type="button" data-mdb-button-init data-mdb-ripple-init className="btn btn-outline-primary btn-floating">
+                                        <i className="fab fa-facebook-f fa-lg"></i>
+                                    </button>
+                                    <button type="button" data-mdb-button-init data-mdb-ripple-init className="btn btn-outline-primary btn-floating">
+                                        <i className="fab fa-twitter fa-lg"></i>
+                                    </button>
+                                    <button type="button" data-mdb-button-init data-mdb-ripple-init className="btn btn-outline-primary btn-floating">
+                                        <i className="fab fa-skype fa-lg"></i>
+                                    </button>
+                                </div>
+                                <button type="button" data-mdb-button-init data-mdb-ripple-init className="btn btn-primary btn-rounded btn-lg">
+                                    Message now
+                                </button>
+                                <div className="d-flex justify-content-between text-center mt-5 mb-2">
+                                    <div>
+                                        <p className="mb-2 h5">8471</p>
+                                        <p className="text-muted mb-0">Wallets Balance</p>
+                                    </div>
+                                    <div className="px-3">
+                                        <p className="mb-2 h5">8512</p>
+                                        <p className="text-muted mb-0">Income amounts</p>
+                                    </div>
+                                    <div>
+                                        <p className="mb-2 h5">4751</p>
+                                        <p className="text-muted mb-0">Total Transactions</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
-
                 </div>
-            </form>
+            </div>
+        </section>
 
-        </div >
+
 
     )
 }
