@@ -16,7 +16,7 @@ function Terms() {
                 <p className="fw-normal text-start">
                     O acesso, cadastro ou utilização da Plataforma implica leitura, compreensão e aceitação integral e irrestrita destes Termos, da Política de Privacidade e demais documentos complementares.
                 </p>
-                <div className="accordion" id="accordionPanelsStayOpenExample">
+                <div className="accordion" id="accordionPanelsStayOpen">
                     <div className="accordion-item">
                         <h2 className="accordion-header">
                             <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse1" aria-expanded="true" aria-controls="panelsStayOpen-collapse1">

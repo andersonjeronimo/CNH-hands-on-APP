@@ -12,7 +12,7 @@ import utils from '../assets/utils/utils.json';
 
 function RegisterForm() {
 
-    const navigate = useNavigate();    
+    const navigate = useNavigate();
 
     const messageClass = {
         primary: 'alert alert-primary',
@@ -34,7 +34,7 @@ function RegisterForm() {
     const [selectedProvince, setSelectedProvince] = useState(provinceModel);
     const [citiesData, setCitiesData] = useState([cityModel]);//cidades por UF
     const [selectedCity, setSelectedCity] = useState(cityModel);
-    const [microregionData, setMicroregionData] = useState([cityModel]);    
+    const [microregionData, setMicroregionData] = useState([cityModel]);
     const [formData, setFormData] = useState(instructorModel);
     const [isCpf, setIsCpf] = useState(true);
     const [isCnpj, setIsCnpj] = useState(false);
@@ -191,6 +191,8 @@ function RegisterForm() {
         //Validar CPF | CNPJ
         const _cpf = formData.cpf;
         const _cnpj = formData.cnpj;
+
+        formData.status = utils.status.ativo;
 
         if (isCpf && !cpf.isValid(_cpf)) {
             setInputClass(inputFocusClass.danger);
@@ -365,35 +367,8 @@ function RegisterForm() {
                             value={formData.lastname} onChange={handleInputChange} required />
                     </div>
 
-                    <div className='col-md-1'>
-                        <label className='form-label'>6 - DDD</label>
-                        <select name='ddd' id='ddd' className='form-select' value={formData.ddd} onChange={handleInputChange} required>
-                            <option selected value={'00'}>00</option>
-                            {selectedProvince.ddd.map((ddd) => (
-                                <option value={ddd}>
-                                    {ddd}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-
                     <div className='col-md-6'>
-                        <label className='form-label'>7 - Celular | Whatsapp</label>
-                        <div className='input-group'>
-                            <span className='input-group-text' id='email'>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-whatsapp" viewBox="0 0 16 16">
-                                    <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232" />
-                                </svg>
-                            </span>
-                            <input type='number' className='form-control' name='phone' id='phone' min='10000000' max='999999999'
-                                value={formData.phone} onChange={handleInputChange}
-                                placeholder='Apenas números, sem DDD, pontos ou traços. Ex.: 9 9888 9999' required />
-                        </div>
-
-                    </div>
-
-                    <div className='col-md-5'>
-                        <label className='form-label'>8 - CPF</label>
+                        <label className='form-label'>6 - CPF</label>
                         <div className="form-check">
                             <input className="form-check-input"
                                 type="radio"
@@ -411,7 +386,7 @@ function RegisterForm() {
                     </div>
 
                     <div className='col-md-6'>
-                        <label className='form-label'>9 - CNPJ</label>
+                        <label className='form-label'>CNPJ</label>
                         <div className="form-check">
                             <input className="form-check-input"
                                 type="radio"
@@ -428,61 +403,39 @@ function RegisterForm() {
                         </div>
                     </div>
 
+                    <div className='col-md-1'>
+                        <label className='form-label'>7 - DDD</label>
+                        <select name='ddd' id='ddd' className='form-select' value={formData.ddd} onChange={handleInputChange} required>
+                            <option selected value={'00'}>00</option>
+                            {selectedProvince.ddd.map((ddd) => (
+                                <option value={ddd}>
+                                    {ddd}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
                     <div className='col-md-5'>
-
-                    </div>
-
-                    <div className='col-md-12'>
-                        <label className='form-label'>10 -Descrição do veículo (opcional)</label>
-                        <textarea className='form-control' name='description' id='description'
-                            value={formData.description} onChange={handleInputChange} rows={3}
-                            placeholder='Se for veículo próprio, você pode colocar aqui a marca, modelo, tipo de câmbio, etc. Isso pode ajudar na escolha do instrutor'></textarea>
-                    </div>
-
-                    <hr />
-
-                    <div className='col-md-4'>
-                        <label className='form-label'>11 - Status</label>
-                        <div className='form-check'>
-                            <input className='form-check-input'
-                                type='radio'
-                                name='status'
-                                value={utils.status.ativo}
-                                checked={formData.status === utils.status.ativo}
-                                onChange={handleInputChange}
-                                id='status' />
-                            <label className='form-check-label'>
-                                Ativo
-                            </label>
+                        <label className='form-label'>8 - Celular | Whatsapp</label>
+                        <div className='input-group'>
+                            <span className='input-group-text' id='email'>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-whatsapp" viewBox="0 0 16 16">
+                                    <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232" />
+                                </svg>
+                            </span>
+                            <input type='number' className='form-control' name='phone' id='phone' min='10000000' max='999999999'
+                                value={formData.phone} onChange={handleInputChange}
+                                placeholder='Números, sem DDD, pontos ou traços. Ex.: 9 9888 9999' required />
                         </div>
-                        <div className='form-check'>
-                            <input className='form-check-input'
-                                type='radio'
-                                name='status'
-                                value={utils.status.pausado}
-                                checked={formData.status === utils.status.pausado}
-                                onChange={handleInputChange}
-                                id='status' disabled />
-                            <label className='form-check-label'>
-                                Pausado
-                            </label>
-                        </div>
-                        <div className='form-check'>
-                            <input className='form-check-input'
-                                type='radio'
-                                name='status'
-                                value={utils.status.inativo}
-                                checked={formData.status === utils.status.inativo}
-                                onChange={handleInputChange}
-                                id='status' disabled />
-                            <label className='form-check-label'>
-                                Inativo
-                            </label>
-                        </div>
-                    </div>
 
-                    <div className='col-md-4'>
-                        <label className='form-label'>12 - Categoria</label>
+                    </div >
+
+                    <div className='col-md-5'></div>     
+
+                    <hr />               
+
+                    <div className='col-md-6'>
+                        <label className='form-label'>9 - Categoria</label>
                         <div className='form-check'>
                             <input className='form-check-input'
                                 type='radio'
@@ -521,8 +474,8 @@ function RegisterForm() {
                         </div>
                     </div>
 
-                    <div className='col-md-4'>
-                        <label className='form-label'>13 - Veículo</label>
+                    <div className='col-md-6'>
+                        <label className='form-label'>10 - Veículo</label>
                         <div className='form-check'>
                             <input className='form-check-input'
                                 type='radio'
@@ -561,10 +514,17 @@ function RegisterForm() {
                         </div>
                     </div>
 
+                    <div className='col-md-12'>
+                        <label className='form-label'>11 - Descrição do veículo (opcional)</label>
+                        <textarea className='form-control' name='description' id='description'
+                            value={formData.description} onChange={handleInputChange} rows={3}
+                            placeholder='Ajude o aluno a te escolher, fale um pouco sobre você, seu perfil profissional, veiculo que utiliza, tempo na carreira, etc...'></textarea>
+                    </div>
+
                     <hr />
 
                     <div className='col-md-12'>
-                        <label className='form-label'>14 - Termos e Condições Gerais de uso</label>
+                        <label className='form-label'>12 - Termos e Condições Gerais de uso</label>
                         <div className="form-check">
                             <input className="form-check-input"
                                 type="checkbox"

@@ -1,9 +1,10 @@
-import Logo from "./partials/Logo";
-
 function About() {
     return (
-        <div className="container mt-lg-5 mb-lg-5">           
-            <Logo></Logo>
+        <div className="container mt-lg-5 mb-lg-5">
+            <p className="text-center"><h1>Sobre</h1></p>
+            <p className="text-center">
+                <h3><i>Fazendo match entre alunos e instrutores de todo o Brasil</i></h3>
+            </p>
             <hr />
             <p>
                 <strong>O CNH na Mão</strong> é uma plataforma criada para aproximar alunos que querem aprender a dirigir de instrutores de trânsito credenciados.
@@ -41,7 +42,7 @@ function About() {
                     <li>carro utilizado nas aulas e na prova</li>
                     <li>experiência profissional</li>
                     <li>formas de contato</li>
-                </ul>                
+                </ul>
                 Assim, quando um aluno procura por aulas de direção na sua região, ele pode encontrar instrutores disponíveis e
                 entrar em contato diretamente com eles.
                 <br />

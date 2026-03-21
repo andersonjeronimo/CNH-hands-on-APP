@@ -43,7 +43,7 @@ function Cards() {
                             <img src={driver} className="card-img-top w-50" alt="..." />
                             <hr />
                             <h1 className="card-title">Instrutor</h1>
-                            <p className="card-text fs-5">Gerencie os dados de sua conta aqui</p>
+                            <p className="card-text fs-5">Cadastre-se aqui</p>
                             <div className="d-grid gap-2">
                                 <button className="btn btn-primary btn-lg shadow" onClick={handleInstructorBtnClick}>
                                     Sou Instrutor <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" className="bi bi-box-arrow-in-right" viewBox="0 0 16 16">
@@ -61,7 +61,7 @@ function Cards() {
                             <img src={student} className="card-img-top w-50" alt="..." />
                             <hr />
                             <h1 className="card-title">Aluno</h1>
-                            <p className="card-text fs-5">Busque os instrutores mais próximos aqui</p>
+                            <p className="card-text fs-5">Encontre instrutores de trânsito da sua região</p>
                             <div className="d-grid gap-2">
                                 <button className="btn btn-success btn-lg shadow" onClick={handleStudenBtnClick}>
                                     Sou Aluno <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" className="bi bi-box-arrow-in-right" viewBox="0 0 16 16">

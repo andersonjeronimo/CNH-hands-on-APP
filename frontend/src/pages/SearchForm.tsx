@@ -149,7 +149,7 @@ function SearchForm() {
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         paginationModel.pageNumber = 1;
-        paginationModel.pageSize = Number(import.meta.env.VITE_PAGE_SIZE);
+        paginationModel.pageSize = Number(import.meta.env.VITE_PAGE_SIZE);        
 
         const payload = {
             pagination: paginationModel,
