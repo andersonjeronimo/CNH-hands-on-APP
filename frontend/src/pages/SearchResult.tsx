@@ -19,7 +19,7 @@ function SerchResult() {
         paginationModel.pageNumber = 1;
         paginationModel.pageSize = Number(import.meta.env.VITE_PAGE_SIZE);
         setPaginationData(paginationModel);
-        
+
 
     }, []);
 
@@ -97,13 +97,18 @@ function SerchResult() {
                     </li>
                 </ul>
             </nav> */}
+            <a className="btn btn-primary w-100 py-2 shadow" href="/search">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                </svg> Realizar Nova Busca
+            </a>
+            <hr />
 
             <table className="table table-striped">
                 <thead>
                     <tr>
                         <th scope="col">Nome</th>
-                        <th scope="col">Cidade</th>
-                        <th scope="col">Telefone</th>
+                        <th scope="col">Cidade</th>                        
                         <th scope="col">Categoria</th>
                         <th scope="col">Veículo</th>
                         <th scope="col">Contato</th>
@@ -118,10 +123,7 @@ function SerchResult() {
                             </th>
                             <th scope="row">
                                 {instructor.city}
-                            </th>
-                            <td>
-                                +55 ({instructor.ddd}) {instructor.phone}
-                            </td>
+                            </th>                            
                             <td>
                                 {instructor.category}
                             </td>
@@ -144,7 +146,7 @@ function SerchResult() {
                 </tbody>
             </table>
 
-            <nav aria-label="Page navigation example">
+            <nav aria-label="Page navigation">
                 <ul className="pagination justify-content-center">
                     <li className="page-item">
                         <button className='btn btn-success shadow' name='previousPage' id='previousPage' onClick={handlePagination}>
@@ -158,7 +160,7 @@ function SerchResult() {
                         </button>
                     </li>
                 </ul>
-            </nav>
+            </nav>            
         </div>
     )
 

@@ -149,7 +149,7 @@ function SearchForm() {
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         paginationModel.pageNumber = 1;
-        paginationModel.pageSize = Number(import.meta.env.VITE_PAGE_SIZE);        
+        paginationModel.pageSize = Number(import.meta.env.VITE_PAGE_SIZE);
 
         const payload = {
             pagination: paginationModel,
@@ -195,7 +195,7 @@ function SearchForm() {
                     <div className='col-md-12'>
                         <div className={alertClass} role='alert'>
                             <p className="fs-5">
-                                {message}                                
+                                {message}
                             </p>
                         </div>
                     </div>
@@ -229,7 +229,7 @@ function SearchForm() {
                             <input className="form-check-input"
                                 type="checkbox"
                                 name="callByMicroregion"
-                                id="callByMicroregion"                                
+                                id="callByMicroregion"
                                 checked={formData.callByMicroregion}
                                 onChange={handleInputChange}
                             />
@@ -377,6 +377,9 @@ function SearchForm() {
                     <div className='d-grid gap-2 col-12 mx-auto'>
                         <button className='btn btn-success btn-lg shadow' type='submit'
                                 /* disabled={submitBtnDisabled} */>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
+                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                            </svg>
                             Buscar Instrutor
                         </button>
                     </div>
