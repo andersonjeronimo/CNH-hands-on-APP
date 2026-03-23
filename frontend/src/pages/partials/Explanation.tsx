@@ -58,7 +58,7 @@ function Explanation() {
                                     A plataforma não interfere na sua rotina, apenas aproxima você de quem precisa das suas aulas.
                                 </p>
                                 <p className="text-center">
-                                    <a className="btn btn-primary shadow" href="/register">Quero me cadastrar</a>
+                                    <a className="btn btn-primary shadow" href="/#">Quero me cadastrar</a>
                                 </p>
                             </p>
                         </div>
@@ -82,7 +82,7 @@ function Explanation() {
                                     — tudo para economizar tempo e ter liberdade para escolher como, quando e com quem aprender.
                                 </p>
                                 <p className="text-center">
-                                    <a className="btn btn-success shadow" href="/search">Buscar um instrutor</a>
+                                    <a className="btn btn-success shadow" href="/#">Buscar um instrutor</a>
                                 </p>
                             </p>
                         </div>

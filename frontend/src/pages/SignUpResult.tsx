@@ -1,4 +1,4 @@
-import successImg from '../assets/images/support.png';
+import successImg from '../assets/images/success.svg';
 
 function SignUpResult() {
 

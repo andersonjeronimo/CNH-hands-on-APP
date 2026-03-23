@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 
-import successImg from '../assets/images/support.png';
+import successImg from '../assets/images/success.svg';
 
 import model from '../assets/utils/instructor-model.json';
 

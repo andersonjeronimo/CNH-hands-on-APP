@@ -1,4 +1,4 @@
-import noResults from '../assets/images/no-results.png'
+import noResults from '../assets/images/no-results.svg'
 
 function SerchResultFail() {
 

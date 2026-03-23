@@ -5,7 +5,12 @@ function Terms() {
         <>
 
             <div className="container mt-lg-5 mb-lg-5">
-                <p className="text-center"><h1>Termos e Condições Gerais de Uso</h1></p>
+                <p className="text-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="currentColor" className="bi bi-file-earmark-text" viewBox="0 0 16 16">
+                        <path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5" />
+                        <path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z" />
+                    </svg></p>
+                <p className="text-center"><h1> Termos e Condições Gerais de Uso</h1></p>
                 <p className="text-center"><h3>CNH Na Mão</h3></p>
                 <hr />
                 <p className="fw-normal text-start">
@@ -51,10 +56,10 @@ function Terms() {
                             <li>Valores cobrados;</li>
                             <li>Resultados obtidos nas provas práticas;</li>
                             <li>Qualquer prejuízo decorrente da relação entre aluno e instrutor.</li>
-                        </ul>                                                
+                        </ul>
                         <strong>
                             <h5>
-                            O uso do aplicativo implica aceitação expressa e integral deste disclaimer.
+                                O uso do aplicativo implica aceitação expressa e integral deste disclaimer.
                             </h5>
                         </strong>
                     </p>
