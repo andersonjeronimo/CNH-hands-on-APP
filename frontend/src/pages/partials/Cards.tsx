@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import driver from '../../assets/images/instrutor_auto_escola.jpg';
-import student from '../../assets/images/aluno_auto_escola.jpg';
+import driver from '../../assets/images/instrutor_auto_escola.jpeg';
+import student from '../../assets/images/aluno_auto_escola.jpeg';
 import utils from '../../assets/utils/utils.json';
 
 function Cards() {
@@ -48,7 +48,7 @@ function Cards() {
 
     return (
 
-        <div className="container mt-lg-5 mb-lg-5">
+        <div>
             <div className='row'>
 
                 <div className='col-md-6'>

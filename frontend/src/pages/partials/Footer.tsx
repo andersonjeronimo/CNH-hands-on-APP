@@ -3,8 +3,9 @@ import utils from "../../assets/utils/utils.json";
 function Footer() {
     return (
 
-        <div className="container">
-            <footer className="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+        <div className="container mt-lg-5 mb-lg-5">            
+                <hr />
+            <footer className="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 mt-lg-5">
                 <p className="col-md-2 mb-0 text-body-secondary">
                     &copy; 2026 CNH Na Mão, CNPJ {utils.cnpj}
                 </p>

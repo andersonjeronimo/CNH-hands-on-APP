@@ -5,8 +5,7 @@ import Logo from "../../assets/images/logo.png";
 
 function Feature() {
 
-    return (
-        <>
+    return (        
             <div className="container mt-lg-5 mb-lg-5">
 
                 <div className="row text-center">
@@ -91,8 +90,7 @@ function Feature() {
                             role="img" width="500" />
                     </div>
                 </div>
-            </div>
-        </>
+            </div>       
     )
 
 }

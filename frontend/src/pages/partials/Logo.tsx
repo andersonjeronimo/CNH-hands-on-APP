@@ -1,7 +1,7 @@
 import LogoImg from "../../assets/images/logo.png";
 function Logo() {
     return (
-        <div className="container mt-lg-5">
+        <div>
             <div className='row'>
                 <div className='col-md-12'>
                     <div className="text-center">

@@ -2,14 +2,14 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 /* import { useLocation } from 'react-router-dom'; */
 import { useNavigate } from 'react-router-dom';
-import { cpf, cnpj } from 'cpf-cnpj-validator';
+/* import { cpf, cnpj } from 'cpf-cnpj-validator'; */
 import axios from 'axios';
 
 import driver from '../assets/images/driver.jpg';
 
-import Estados from '../assets/utils/estados.json';
-import provinceModel from '../assets/utils/estado-model.json';
-import cityModel from '../assets/utils/cidade-model.json';
+/* import Estados from '../assets/utils/estados.json';
+import provinceModel from '../assets/utils/estado-model.json'; */
+/* import cityModel from '../assets/utils/cidade-model.json'; */
 import instructorModel from '../assets/utils/instructor-model.json';
 import userModel from '../assets/utils/user-model.json';
 import utils from '../assets/utils/utils.json';
@@ -18,30 +18,30 @@ function Details() {
 
     const navigate = useNavigate();
     //const location = useLocation();
-    const messageClass = {
+    /* const messageClass = {
         primary: 'alert alert-primary',
         success: 'alert alert-success',
         danger: 'alert alert-danger',
         warning: 'alert alert-warning',
         info: 'alert alert-info'
-    }
+    } */
 
-    const inputFocusClass = {
+    /* const inputFocusClass = {
         default: 'form-control',
         danger: 'form-control focus-ring focus-ring-danger py-1 px-2 text-decoration-none border rounded-2'
-    }
+    } */
 
-    const [message, setMessage] = useState('Se necessário, atualize as informações acerca de seu perfil (em breve)');
-    const [alertClass, setAlertClass] = useState(messageClass.success);
-    const [inputClass, setInputClass] = useState(inputFocusClass.default);
-    const [provinceData, setProvinceData] = useState([provinceModel]);
-    const [selectedProvince, setSelectedProvince] = useState(provinceModel);
+    /* const [message, setMessage] = useState('Se necessário, atualize as informações acerca de seu perfil (em breve)'); */
+    /* const [alertClass, setAlertClass] = useState(messageClass.success);
+    const [inputClass, setInputClass] = useState(inputFocusClass.default); */
+    /* const [provinceData, setProvinceData] = useState([provinceModel]); */
+    /* const [selectedProvince, setSelectedProvince] = useState(provinceModel);
     const [citiesData, setCitiesData] = useState([cityModel]);//cidades por UF
     const [selectedCity, setSelectedCity] = useState(cityModel);
-    const [microregionData, setMicroregionData] = useState([cityModel]);
+    const [microregionData, setMicroregionData] = useState([cityModel]); */
     const [instructorData, setInstructorData] = useState(instructorModel);
-    const [isCpf, setIsCpf] = useState(true);
-    const [isCnpj, setIsCnpj] = useState(false);
+    /* const [isCpf, setIsCpf] = useState(true);
+    const [isCnpj, setIsCnpj] = useState(false); */
 
     const [userData, setUserData] = useState(userModel);
 
@@ -93,10 +93,11 @@ function Details() {
                     }
                 })
                 .catch((error) => {
-                    setMessage(`${error.message}`);
+                    /* setMessage(`${error.message}`); */
+                    console.log(`${error.message}`)
                 });
         }
-        setProvinceData(Estados);
+        /* setProvinceData(Estados); */
     }, []);
 
 
@@ -349,6 +350,16 @@ function Details() {
                             <p className="text-muted mb-4">{userData.email}<span className="mx-2">|</span>
                                 <a href="#!">Editar Perfil?</a></p>
                             <hr />
+                            <div className="alert alert-info col-md-12" role="alert">
+                                <h5 className="alert-heading">Prezado(a) Instrutor(a):</h5>
+                                <p>
+                                    <h4>
+                                        A partir de agora você já poderá ser localizado pelos alunos através de nossa plataforma!
+                                    </h4>
+                                </p>
+                            </div>
+                            <hr />
+
                             <h5 className="mb-2">Acesse e compartilhe nosso perfil nas Redes Sociais!</h5>
 
                             <div className="mb-4 pb-2">

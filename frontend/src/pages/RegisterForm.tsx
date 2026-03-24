@@ -4,6 +4,7 @@ import { cpf, cnpj } from 'cpf-cnpj-validator';
 import axios from 'axios';
 
 import TermsShort from './TermsInstructor';
+import RegisterExplanation from './partials/RegisterExplanation';
 import Estados from '../assets/utils/estados.json';
 import provinceModel from '../assets/utils/estado-model.json';
 import cityModel from '../assets/utils/cidade-model.json';
@@ -296,6 +297,12 @@ function RegisterForm() {
 
     return (
         <div className='container mt-lg-5 mb-lg-5'>
+            <p className='text-center'>
+                <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="currentColor" className="bi bi-person-vcard" viewBox="0 0 16 16">
+                    <path d="M5 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4m4-2.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5M9 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4A.5.5 0 0 1 9 8m1 2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5" />
+                    <path d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zM1 4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H8.96q.04-.245.04-.5C9 10.567 7.21 9 5 9c-2.086 0-3.8 1.398-3.984 3.181A1 1 0 0 1 1 12z" />
+                </svg>
+            </p>
             <p className="text-center"><h1>Cadastro de Instrutores</h1></p>
             <hr />
             {/* <div className='row g-3 align-items-center'>
@@ -430,9 +437,9 @@ function RegisterForm() {
 
                     </div >
 
-                    <div className='col-md-5'></div>     
+                    <div className='col-md-5'></div>
 
-                    <hr />               
+                    <hr />
 
                     <div className='col-md-6'>
                         <label className='form-label'>9 - Categoria</label>
@@ -580,12 +587,20 @@ function RegisterForm() {
                     <div className='d-grid gap-2 col-12 mx-auto'>
                         <button className='btn btn-primary btn-lg shadow' type='submit'
                                 /* disabled={submitBtnDisabled} */>
-                            Cadastrar Instrutor
+                            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" className="bi bi-person-plus" viewBox="0 0 16 16">
+                                <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" />
+                                <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5" />
+                            </svg> Cadastrar Instrutor
                         </button>
                     </div>
 
                 </div>
             </form>
+
+            <hr />
+
+            <RegisterExplanation />
+
 
         </div >
 
