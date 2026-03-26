@@ -1,36 +1,59 @@
-import noResults from '../assets/images/no-results.svg'
-
 function SerchResultFail() {
 
     return (
 
-        <div className="container mt-lg-5 mb-lg-5">
-            {/* <p className="text-center"><h1>{modelData.email}</h1></p> */}
-            <p className="text-center"><h1>Busca por Instrutores</h1></p>
-            <p className="text-center"><h3>Nenhum instrutor se cadastrou ainda em sua região.</h3></p>
-            <p className='text-center fs-4'>
-                <p>
-                    A divulgação da plataforma ajuda com que mais instrutores conheçam o CNH na Mão.
-                </p>
-                <p>
-                    Quanto mais alunos compartilharem a plataforma, maiores serão as chances de localizar um instrutor próximo.
-                </p>
+        <div className="container container-fluid mt-lg-5 mb-lg-5">
+            <p className='text-center'>
+                <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="currentColor" className="bi bi-x-circle" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+                </svg>
             </p>
+            <p className="text-center"><h1>Busca por Instrutores</h1></p>
             <hr />
+            <div className="alert alert-danger" role="alert">
+                <h5 className="alert-heading">Caro aluno</h5>
+                <p>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-exclamation-triangle" viewBox="0 0 16 16">
+                        <path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z" />
+                        <path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z" />
+                    </svg> <strong>A busca com os critérios informados não retornou nenhum resultado.</strong>
+                </p>
+                <p>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-chat-left-dots" viewBox="0 0 16 16">
+                        <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
+                        <path d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0" />
+                    </svg> Envie-nos uma mensagem informando sua cidade e Estado: <strong><i>Iremos intensificar a divulgação em sua região.</i></strong>
+                </p>
+                <p>
+                    <div className='col-md-12'>
+                        <div className="form-check">
+                            <input className="form-check-input"
+                                type="checkbox"
+                                name="notification"
+                                id="notification"
+                            //checked={formData.callByMicroregion}
+                            //onChange={handleInputChange}
+                            />
+                            <label className="form-check-label">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-bell" viewBox="0 0 16 16">
+                                    <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6" />
+                                </svg> Receber notificação quando um novo instrutor de sua região se cadastrar?
+                            </label>
+                        </div>
+                    </div>
+                </p>
+            </div>
+
 
             <div className='row justify-content-md-center'>
-                <div className='col-md-6 text-center'>
+                {/* <div className='col-md-6 text-center'>
                     <br />
                     <div className='form-data'>
                         <img src={noResults} className="img-fluid w-50" alt="icone representando falha na busca"></img>
                     </div>
 
-                </div>
-                <div className='col-md-12 text-center'>
-                    <br />
-                    <p className='text-center fs-4'>Envie-nos uma mensagem informando sua cidade e Estado: Iremos intensificar a divulgação em sua região.
-                    </p>
-                </div>
+                </div> */}                
                 <div className='col-md-8 text-center'>
                     <div className='form-data'>
                         <a className="btn btn-success w-100 py-2 shadow" href="https://api.whatsapp.com/send/?phone=5512988679768&text&type=phone_number&app_absent=0" target="_blank" aria-label="Whatsapp">
@@ -52,18 +75,8 @@ function SerchResultFail() {
                             </svg> Realizar Nova Busca
                         </a>
                     </div>
-                    <div className='form-data'>
-                        <hr />
-                        <p className='text-center fs-4'>
-                            A equipe do CNH Na Mão agradece!
-                        </p>
-                    </div>
-
                 </div>
-
             </div>
-
-
         </div>
     )
 }

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import utils from '../../assets/utils/utils.json';
 
-function Header() {
+function Header() {    
 
     const [isAuth, setIsAuth] = useState(false);
     const [email, setEmail] = useState("");

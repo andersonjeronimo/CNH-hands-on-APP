@@ -1,6 +1,6 @@
 function Privacy() {
     return (
-        <div className="container mt-lg-5 mb-lg-5">
+        <div className="container container-fluid mt-lg-5 mb-lg-5">
             <p className="text-center">
                 <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="currentColor" className="bi bi-database-fill-lock" viewBox="0 0 16 16">
                     <path d="M8 1c-1.573 0-3.022.289-4.096.777C2.875 2.245 2 2.993 2 4s.875 1.755 1.904 2.223C4.978 6.711 6.427 7 8 7s3.022-.289 4.096-.777C13.125 5.755 14 5.007 14 4s-.875-1.755-1.904-2.223C11.022 1.289 9.573 1 8 1" />

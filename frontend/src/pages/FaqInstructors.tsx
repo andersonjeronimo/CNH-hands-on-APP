@@ -2,7 +2,7 @@ import FAQInstrutores from "./partials/FAQInstrutores";
 
 function FaqInstructors() {
     return (
-        <div className="container mt-lg-5 mb-lg-5">
+        <div className="container container-fluid mt-lg-5 mb-lg-5">
             <p className="text-center">
                 <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="currentColor" className="bi bi-question-circle" viewBox="0 0 16 16">
                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />

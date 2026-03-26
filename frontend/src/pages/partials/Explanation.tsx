@@ -1,7 +1,7 @@
 function Explanation() {
     return (
 
-        <div className="container mt-lg-5 mb-lg-5">
+        <div className="container container-fluid mt-lg-5 mb-lg-5">
             <div className="accordion" id="accordionPanelsStayOpen">
                 <div className="accordion-item">
                     <h2 className="accordion-header">

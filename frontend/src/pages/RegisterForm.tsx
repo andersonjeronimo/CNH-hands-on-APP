@@ -179,7 +179,7 @@ function RegisterForm() {
                         `);
                 } else {
                     setAlertClass(messageClass.info);
-                    setMessage(`Receber solicitações de cidades vizinhas? Selecione no campo 3 (Microrregião) deste formulário`);
+                    setMessage(`Receber solicitações de cidades vizinhas? Selecione no campo 3 - microrregião - deste formulário`);
                 }
             }
 
@@ -296,7 +296,7 @@ function RegisterForm() {
     };
 
     return (
-        <div className='container mt-lg-5 mb-lg-5'>
+        <div className="container container-fluid mt-lg-5 mb-lg-5">
             <p className='text-center'>
                 <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="currentColor" className="bi bi-person-vcard" viewBox="0 0 16 16">
                     <path d="M5 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4m4-2.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5M9 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4A.5.5 0 0 1 9 8m1 2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5" />

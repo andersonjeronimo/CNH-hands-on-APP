@@ -27,7 +27,7 @@ function RegisterResult() {
     }, []);
 
     return (
-        <div className="container mt-lg-5 mb-lg-5">            
+        <div className="container container-fluid mt-lg-5 mb-lg-5">
             <p className="text-center"><h1>Cadastro concluído.</h1></p>
             <p className="text-center"><h3>Instrutor {modelData.firstname}, os alunos já podem te encontrar!</h3></p>
             <p className='text-center fs-4'>

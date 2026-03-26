@@ -160,6 +160,7 @@ function SearchForm() {
             .post(import.meta.env.VITE_INSTRUCTOR_SEARCH_API_URL, payload)
             .then((response) => {
                 if (response.data) {
+
                     if (typeof response.data === 'object' && Object.keys(response.data).length > 0) {
                         navigate('/search-result', { state: { data: response.data, query: formData } });
                     } else if (Array.isArray(response.data) && response.data.length > 0) {
@@ -169,16 +170,17 @@ function SearchForm() {
                         navigate('/search-result-fail');
                     }
                 }
-                else {
-                    navigate('/search-result-fail');
-                }
             })
-            .catch((error) => console.log(error.message));
+            .catch((error) => {
+                setMessage(`${error.message} : Sua sessão expirou. Efetue Login novamente.`);
+                alert(`${error.message} : Sua sessão expirou. Efetue Login novamente.`);
+                console.log(error.message);
+            });
 
     };
 
     return (
-        <div className='container mt-lg-5 mb-lg-5'>
+        <div className="container container-fluid mt-lg-5 mb-lg-5">
             <p className="text-center">
                 <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
                     <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
@@ -205,10 +207,18 @@ function SearchForm() {
                 <p>
                     <ol>
                         <li>
-                            <a href="https://www.gov.br/transportes/pt-br/cnh-do-brasil" target='_blank'>Link CNH do BRASIL aqui</a>
+                            <a href="https://www.gov.br/transportes/pt-br/cnh-do-brasil" target='_blank'>CNH do BRASIL <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5" />
+                                <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z" />
+                            </svg>
+                            </a>
                         </li>
                         <li>
-                            <a href="https://www.gov.br/pt-br" target='_blank'>Link GOV.BR aqui</a>
+                            <a href="https://www.gov.br/pt-br" target='_blank'>GOV.BR <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5" />
+                                <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z" />
+                            </svg>
+                            </a>
                         </li>
                     </ol>
                 </p>

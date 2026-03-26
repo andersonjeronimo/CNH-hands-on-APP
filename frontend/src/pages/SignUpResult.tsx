@@ -3,7 +3,7 @@ import successImg from '../assets/images/success.svg';
 function SignUpResult() {
 
     return (
-        <div className="container mt-lg-5 mb-lg-5">
+        <div className="container container-fluid mt-lg-5 mb-lg-5">
             {/* <p className="text-center"><h1>{modelData.email}</h1></p> */}
             <p className="text-center"><h1>Credenciais de usuário validadas.</h1></p>
             <p className="text-center"><h3>Faça o login e:</h3></p>

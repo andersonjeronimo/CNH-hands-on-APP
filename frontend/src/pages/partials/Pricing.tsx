@@ -1,9 +1,7 @@
 function Pricing() {
     return (
 
-        <div className="container mt-lg-5 mb-lg-5">
-
-
+        <div className="container container-fluid mt-lg-5 mb-lg-5">
             <div className="row">
                 <div className="col-sm-6 mb-3 mb-sm-0">
                     <div className="card">

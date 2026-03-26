@@ -128,7 +128,7 @@ function SignInPage() {
 
 
     return (
-        <div className="container mt-lg-5 mb-lg-5">
+        <div className="container container-fluid mt-lg-5 mb-lg-5">
             <p className="text-center">
                 <h1>
                     <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" className="bi bi-person-plus" viewBox="0 0 16 16">
