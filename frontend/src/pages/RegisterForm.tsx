@@ -45,25 +45,37 @@ function RegisterForm() {
         if (role === utils.role.aluno) {
             navigate('/search');
         }
-        //if (role) {
-        //}
 
         const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
         axios.defaults.headers.common['authorization'] = `Bearer ${token}`;
-        //if (token) {
-        //}
 
         const user_id = localStorage.getItem(`${import.meta.env.VITE_ID_VAR}`);
         formData.userId = user_id ?? '';
 
-        //setMessage(`Perfil: ${role}, Token: ${token}, User-ID: ${user_id}`);
-        //if (user_id) {
-        //} else {
-        //    navigate('/home');
-        //}
-
         setProvinceData(Estados);
         setFormData(instructorModel);
+
+        if (user_id) {
+            axios.get(`${import.meta.env.VITE_INSTRUCTOR_API_USER_ID_URL}/${user_id}`)
+                .then((response) => {
+                    if (response.data) {
+                        if (typeof response.data === 'object' && Object.keys(response.data).length > 0) {
+                            /* verificar se já existe, carregar os dados no formulario */
+                            setFormData(response.data);                            
+                        }
+                    } /* else {
+                        setProvinceData(Estados);
+                        setFormData(instructorModel);
+                    } */
+                })
+                .catch((error) => {
+                    /* setMessage(`${error.message}`); */
+                    console.log(`${error.message}`)
+                });
+        }
+
+        //setProvinceData(Estados);
+        //setFormData(instructorModel);
 
     }, []);
 

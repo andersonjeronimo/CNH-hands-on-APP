@@ -35,20 +35,21 @@ function SearchForm() {
 
 
     useEffect(() => {
+        const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
+        if (!token) {
+            navigate('/home');
+        }
+        axios.defaults.headers.common['authorization'] = `Bearer ${token}`;
+
         //instrutor não faz busca
         const role = localStorage.getItem(`${import.meta.env.VITE_ROLE_VAR}`);
         if (role) {
             if (role === utils.role.instrutor) {
                 navigate('/details');
             }
-        }
-
-        const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
-        axios.defaults.headers.common['authorization'] = `Bearer ${token}`;
-        //if (token) {
-        //}
+        }        
+        
         setProvinceData(Estados);
-
     }, []);
 
     const handleInputChange = async (e: any) => {
@@ -188,7 +189,7 @@ function SearchForm() {
             <p className="text-center"><h1> Busca por Instrutores</h1></p>
             <hr />
             <div className="alert alert-info" role="alert">
-                <h5 className="alert-heading">Caro aluno,</h5>
+                <h5 className="alert-heading">Caro aluno</h5>
                 <p>
                     Nossa plataforma exibe instrutores autônomos para você finalizar seu processo de habilitação fazendo as aulas práticas.
                 </p>
