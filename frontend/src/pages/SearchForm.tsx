@@ -47,8 +47,8 @@ function SearchForm() {
             if (role === utils.role.instrutor) {
                 navigate('/details');
             }
-        }        
-        
+        }
+
         setProvinceData(Estados);
     }, []);
 
@@ -162,11 +162,11 @@ function SearchForm() {
             .then((response) => {
                 if (response.data) {
 
-                    if (typeof response.data === 'object' && Object.keys(response.data).length > 0) {
+                    if (typeof response.data === 'object' && Object.keys(response.data.result).length > 0) {
+                        navigate('/search-result', { state: { data: response.data.result, query: formData } });
+                    } /* else if (Array.isArray(response.data) && response.data.length > 0) {
                         navigate('/search-result', { state: { data: response.data, query: formData } });
-                    } else if (Array.isArray(response.data) && response.data.length > 0) {
-                        navigate('/search-result', { state: { data: response.data, query: formData } });
-                    }
+                    } */
                     else {
                         navigate('/search-result-fail');
                     }

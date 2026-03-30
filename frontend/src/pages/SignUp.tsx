@@ -108,7 +108,7 @@ function SignInPage() {
             axios.post(`${import.meta.env.VITE_USER_API_URL}`, formData)
                 .then((response) => {
                     //alert(typeof response.data);
-                    const userId = response.data;
+                    const userId = response.data.result;
                     navigate('/signup-result', { state: userId });
 
                 })

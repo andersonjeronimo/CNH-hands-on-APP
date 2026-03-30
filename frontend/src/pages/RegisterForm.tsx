@@ -58,10 +58,10 @@ function RegisterForm() {
         if (user_id) {
             axios.get(`${import.meta.env.VITE_INSTRUCTOR_API_USER_ID_URL}/${user_id}`)
                 .then((response) => {
-                    if (response.data) {
-                        if (typeof response.data === 'object' && Object.keys(response.data).length > 0) {
+                    if (response.data.result) {
+                        if (typeof response.data.result === 'object' && Object.keys(response.data.result).length > 0) {
                             /* verificar se já existe, carregar os dados no formulario */
-                            setFormData(response.data);                            
+                            setFormData(response.data.result);
                         }
                     } /* else {
                         setProvinceData(Estados);
@@ -235,11 +235,11 @@ function RegisterForm() {
             if (isCpf) {
                 axios.get(`${import.meta.env.VITE_INSTRUCTOR_API_CPF_URL}/${formData.cpf}`)
                     .then((response) => {
-                        if (response.data) {
+                        if (response.data.result) {
                             /* if (Array.isArray(response.data) && response.data.length > 0) {
                                 setMessage('Data is a non-empty array.');
                             } else */
-                            if (typeof response.data === 'object' && Object.keys(response.data).length > 0) {
+                            if (typeof response.data.result === 'object' && Object.keys(response.data.result).length > 0) {
                                 //setMessage('Data is a non-empty object.');
                                 setAlertClass(messageClass.danger);
                                 setMessage(`Já existe um usuário com o CPF ${formData.cpf} cadastrado.`);
@@ -253,7 +253,7 @@ function RegisterForm() {
                             //setMessage('Response data is empty or null.');                            
                             axios.post(import.meta.env.VITE_INSTRUCTOR_API_URL, formData)
                                 .then((response) => {
-                                    navigate('/register-result', { state: response.data });
+                                    navigate('/register-result', { state: response.data.result });
                                     /* if (response.data) {
                                         if (Array.isArray(response.data) && response.data.length > 0) {
                                             //response.data -> ID
@@ -270,11 +270,11 @@ function RegisterForm() {
             } else if (isCnpj) {
                 axios.get(`${import.meta.env.VITE_INSTRUCTOR_API_CNPJ_URL}/${formData.cnpj}`)
                     .then((response) => {
-                        if (response.data) {
+                        if (response.data.result) {
                             /* if (Array.isArray(response.data) && response.data.length > 0) {
                                 setMessage('Data is a non-empty array.');
                             } else */
-                            if (typeof response.data === 'object' && Object.keys(response.data).length > 0) {
+                            if (typeof response.data.result === 'object' && Object.keys(response.data.result).length > 0) {
                                 //setMessage('Data is a non-empty object.');
                                 setAlertClass(messageClass.danger);
                                 setMessage(`Já existe um usuário com o CNPJ ${formData.cnpj} cadastrado.`);
@@ -288,7 +288,7 @@ function RegisterForm() {
                             //setMessage('Response data is empty or null.');
                             axios.post(import.meta.env.VITE_INSTRUCTOR_API_URL, formData)
                                 .then((response) => {
-                                    navigate('/register-result', { state: response.data });
+                                    navigate('/register-result', { state: response.data.result });
                                     /* if (response.data) {
                                         if (Array.isArray(response.data) && response.data.length > 0) {
                                             //response.data -> ID

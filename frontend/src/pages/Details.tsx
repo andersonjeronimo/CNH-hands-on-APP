@@ -85,10 +85,10 @@ function Details() {
             /* procurar um instrutor que tenha o 'user-id' retornado após o signup.tsx */
             axios.get(`${import.meta.env.VITE_INSTRUCTOR_API_USER_ID_URL}/${user_id}`)
                 .then((response) => {
-                    if (response.data) {
-                        if (typeof response.data === 'object' && Object.keys(response.data).length > 0) {
+                    if (response.data.result) {
+                        if (typeof response.data.result === 'object' && Object.keys(response.data.result).length > 0) {
                             /* verificar se já existe, carregar os dados no formulario */
-                            setInstructorData(response.data);
+                            setInstructorData(response.data.result);
                         } else {
                             navigate('/register');
                         }

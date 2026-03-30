@@ -10,8 +10,8 @@ function FAQInstrutores() {
     useEffect(() => {
         axios
             .get(import.meta.env.VITE_PRICE_API_URL)
-            .then((response) => {
-                setPriceData(response.data);
+            .then((response) => {                
+                setPriceData(response.data.result);
             })
             .catch((error) => console.log(error));
     }, []);
