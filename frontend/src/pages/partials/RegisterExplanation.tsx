@@ -8,8 +8,7 @@ function RegisterExplanation() {
     const [priceData, setPriceData] = useState(priceModel);
 
     useEffect(() => {
-        axios
-            .get(import.meta.env.VITE_PRICE_API_URL)
+        axios.get(import.meta.env.VITE_PRICE_API_URL)
             .then((response) => {
                 setPriceData(response.data.result);
             })

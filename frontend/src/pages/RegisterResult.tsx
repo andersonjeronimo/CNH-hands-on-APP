@@ -1,25 +1,29 @@
 import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-
-import successImg from '../assets/images/success.svg';
 
 import model from '../assets/utils/instructor-model.json';
 
 function RegisterResult() {
 
     const location = useLocation();
+    const navigate = useNavigate();
 
     const [modelData, setModelData] = useState(model);
 
     useEffect(() => {
+        const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
+        if (!token) {
+            navigate('/home');
+        }
+        
         const _id = location.state;
         if (_id) {
             axios
                 .get(`${import.meta.env.VITE_INSTRUCTOR_API_URL}/${_id}`)
                 .then((response) => {
-                    if (typeof response.data === 'object' && Object.keys(response.data).length > 0) {
-                        setModelData(response.data);
+                    if (typeof response.data.result === 'object' && Object.keys(response.data.result).length > 0) {
+                        setModelData(response.data.result);
                     }
                 })
                 .catch((error) => console.log(error.message));
@@ -28,25 +32,32 @@ function RegisterResult() {
 
     return (
         <div className="container container-fluid mt-lg-5 mb-lg-5">
+            <div className='text-center'>
+                <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="currentColor" className="bi bi-check-circle" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                    <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05" />
+                </svg>
+            </div>
             <p className="text-center"><h1>Cadastro concluído.</h1></p>
-            <p className="text-center"><h3>Instrutor {modelData.firstname}, os alunos já podem te encontrar!</h3></p>
-            <p className='text-center fs-4'>
-                <p>
-                    A divulgação da plataforma ajuda mais alunos a conhecerem o CNH na Mão.
+
+            <div className="alert alert-primary" role="alert">
+                <h4 className="alert-heading">Instrutor {modelData.firstname}, os alunos já podem te encontrar!</h4>
+                <hr />
+                <p className='fs-5'>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" className="bi bi-share" viewBox="0 0 16 16">
+                        <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.5 2.5 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5m-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3m11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3" />
+                    </svg> A divulgação da plataforma ajuda mais alunos a conhecerem o CNH na Mão.
                 </p>
-                <p>
-                    Quanto mais alunos acessarem a plataforma, maiores serão suas chances de ser encontrado e contratado.
+                <p className='fs-5'>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" className="bi bi-person-workspace" viewBox="0 0 16 16">
+                        <path d="M4 16s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-5.95a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5" />
+                        <path d="M2 1a2 2 0 0 0-2 2v9.5A1.5 1.5 0 0 0 1.5 14h.653a5.4 5.4 0 0 1 1.066-2H1V3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v9h-2.219c.554.654.89 1.373 1.066 2h.653a1.5 1.5 0 0 0 1.5-1.5V3a2 2 0 0 0-2-2z" />
+                    </svg> Quanto mais alunos acessarem a plataforma, maiores serão suas chances de ser encontrado e contratado.
                 </p>
-            </p>
-            <hr />
+            </div>
 
             <div className='row justify-content-md-center'>
                 <div className='col-md-6 text-center'>
-                    <br />
-                    <div className='form-data'>
-                        <img src={successImg} className="img-fluid w-50" alt="icone representando sucesso"></img>
-                    </div>
-                    <br />
                     <div className='form-data'>
                         <a href='/details' className="btn btn-primary w-100 py-2 shadow">
                             Acessar Perfil <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" className="bi bi-person-gear" viewBox="0 0 16 16">

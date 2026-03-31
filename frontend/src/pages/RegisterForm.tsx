@@ -63,10 +63,7 @@ function RegisterForm() {
                             /* verificar se já existe, carregar os dados no formulario */
                             setFormData(response.data.result);
                         }
-                    } /* else {
-                        setProvinceData(Estados);
-                        setFormData(instructorModel);
-                    } */
+                    } 
                 })
                 .catch((error) => {
                     /* setMessage(`${error.message}`); */

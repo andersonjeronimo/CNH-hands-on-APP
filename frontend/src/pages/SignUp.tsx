@@ -16,7 +16,8 @@ function SignInPage() {
     const [passwordTest, setPasswordTest] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [showPasswordTest, setShowPasswordTest] = useState(false);
-    const [passwordFieldMessage, setPasswordFieldMessage] = useState("Mensagem");
+    const [passwordField1Message, setPasswordField1Message] = useState("");
+    const [passwordField2Message, setPasswordField2Message] = useState("");
     const [message, setMessage] = useState("");
     const [hasProfile, setHasProfile] = useState(false);
 
@@ -73,38 +74,33 @@ function SignInPage() {
     const handleSubmit = async (e: any) => {
         e.preventDefault();
 
-        //const min = utils.passwordSize.min;
-        //const max = utils.passwordSize.max;
-
+        const min = utils.passwordSize.min;
+        const max = utils.passwordSize.max;
         //const passwdRegEx = new RegExp(`^[a-z | 0-9]{${min},${max}$`);
         //const passwdRegEx = /^[a-zA-Z | 0-9]{min,max}$/;        
 
-        /* if (!passwdRegEx.test(formData.password) || !passwdRegEx.test(passwordTest)) {
-            setPasswordFieldMessage(`Atenção: Senhas informadas devem conter no mínimo ${min} caracteres e no máximo ${max} caracteres`);
+        if (formData.password.length < min || formData.password.length > max) {
+            setPasswordField1Message(`Atenção: Senhas informadas devem conter no mínimo ${min} caracteres e no máximo ${max} caracteres`);
+            setFormData(prevState => ({
+                ...prevState,
+                ['password']: ''
+            }));            
+
+        } else if (passwordTest.length < min || passwordTest.length > max) {
+            setPasswordField2Message(`Atenção: Senhas informadas devem conter no mínimo ${min} caracteres e no máximo ${max} caracteres`);
+            setPasswordTest('');
+
+        } else if (formData.password !== passwordTest) {
+            setPasswordField1Message(`Atenção: Senhas informadas devem ser iguais`);
+            setPasswordField2Message(`Atenção: Senhas informadas devem ser iguais`);
 
             setFormData(prevState => ({
                 ...prevState,
                 ['password']: ''
             }));
-
-            setPasswordTest('');
-        } */
-
-        if (formData.password !== passwordTest) {
-            setPasswordFieldMessage(`Atenção: Senhas informadas devem ser iguais`);
-
-            setFormData(prevState => ({
-                ...prevState,
-                ['password']: ''
-            }));
-
             setPasswordTest('');
 
-        }
-
-
-
-        else {
+        } else {
             axios.post(`${import.meta.env.VITE_USER_API_URL}`, formData)
                 .then((response) => {
                     //alert(typeof response.data);
@@ -178,11 +174,11 @@ function SignInPage() {
                                     }
                                 </span>
                                 <input type={showPassword ? 'text' : 'password'} className='form-control form-control-lg' name='password' id='password'
-                                    value={formData.password} onChange={handleInputChange} minLength={utils.passwordSize.min} maxLength={utils.passwordSize.max}
+                                    value={formData.password} onChange={handleInputChange} /* minLength={utils.passwordSize.min} maxLength={utils.passwordSize.max} */
                                     aria-describedby='passwordHelpBlock' required />
                             </div>
                             <div id="passwordHelpBlock" className="form-text">
-                                <strong>{passwordFieldMessage}</strong>
+                                <strong>{passwordField1Message}</strong>
                             </div>
                         </div>
                         <br />
@@ -205,11 +201,11 @@ function SignInPage() {
                                     }
                                 </span>
                                 <input type={showPasswordTest ? 'text' : 'password'} className='form-control form-control-lg' name='password_test' id='password_test'
-                                    value={passwordTest} onChange={handlePwdInputChange} minLength={utils.passwordSize.min} maxLength={utils.passwordSize.max}
+                                    value={passwordTest} onChange={handlePwdInputChange} /* minLength={utils.passwordSize.min} maxLength={utils.passwordSize.max} */
                                     aria-describedby='passwordHelpBlock' required />
                             </div>
                             <div id="passwordHelpBlock" className="form-text">
-                                <strong>{passwordFieldMessage}</strong>
+                                <strong>{passwordField2Message}</strong>
                             </div>
                         </div>
 

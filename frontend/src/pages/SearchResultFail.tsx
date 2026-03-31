@@ -1,4 +1,16 @@
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 function SerchResultFail() {
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
+        if (!token) {
+            navigate('/home');
+        }
+    }, []);
 
     return (
 
@@ -47,13 +59,7 @@ function SerchResultFail() {
 
 
             <div className='row justify-content-md-center'>
-                {/* <div className='col-md-6 text-center'>
-                    <br />
-                    <div className='form-data'>
-                        <img src={noResults} className="img-fluid w-50" alt="icone representando falha na busca"></img>
-                    </div>
 
-                </div> */}                
                 <div className='col-md-8 text-center'>
                     <div className='form-data'>
                         <a className="btn btn-success w-100 py-2 shadow" href="https://api.whatsapp.com/send/?phone=5512988679768&text&type=phone_number&app_absent=0" target="_blank" aria-label="Whatsapp">

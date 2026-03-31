@@ -1,15 +1,9 @@
 import { useState } from 'react';
 import { useEffect } from 'react';
-/* import { useLocation } from 'react-router-dom'; */
 import { useNavigate } from 'react-router-dom';
-/* import { cpf, cnpj } from 'cpf-cnpj-validator'; */
 import axios from 'axios';
 
 import driver from '../assets/images/driver.jpg';
-
-/* import Estados from '../assets/utils/estados.json';
-import provinceModel from '../assets/utils/estado-model.json'; */
-/* import cityModel from '../assets/utils/cidade-model.json'; */
 import instructorModel from '../assets/utils/instructor-model.json';
 import userModel from '../assets/utils/user-model.json';
 import utils from '../assets/utils/utils.json';
@@ -17,44 +11,10 @@ import utils from '../assets/utils/utils.json';
 function Details() {
 
     const navigate = useNavigate();
-    //const location = useLocation();
-    /* const messageClass = {
-        primary: 'alert alert-primary',
-        success: 'alert alert-success',
-        danger: 'alert alert-danger',
-        warning: 'alert alert-warning',
-        info: 'alert alert-info'
-    } */
-
-    /* const inputFocusClass = {
-        default: 'form-control',
-        danger: 'form-control focus-ring focus-ring-danger py-1 px-2 text-decoration-none border rounded-2'
-    } */
-
-    /* const [message, setMessage] = useState('Se necessário, atualize as informações acerca de seu perfil (em breve)'); */
-    /* const [alertClass, setAlertClass] = useState(messageClass.success);
-    const [inputClass, setInputClass] = useState(inputFocusClass.default); */
-    /* const [provinceData, setProvinceData] = useState([provinceModel]); */
-    /* const [selectedProvince, setSelectedProvince] = useState(provinceModel);
-    const [citiesData, setCitiesData] = useState([cityModel]);//cidades por UF
-    const [selectedCity, setSelectedCity] = useState(cityModel);
-    const [microregionData, setMicroregionData] = useState([cityModel]); */
-    const [instructorData, setInstructorData] = useState(instructorModel);
-    /* const [isCpf, setIsCpf] = useState(true);
-    const [isCnpj, setIsCnpj] = useState(false); */
-
-    const [userData, setUserData] = useState(userModel);
-
-    /* useEffect(() => {
-        setTableData(location.state.data);
-        setQueryData(location.state.query);
     
-        paginationModel.pageNumber = 1;
-        paginationModel.pageSize = Number(import.meta.env.VITE_PAGE_SIZE);
-        setPaginationData(paginationModel);
-    
-    
-    }, []); */    
+    const [instructorData, setInstructorData] = useState(instructorModel);    
+
+    const [userData, setUserData] = useState(userModel);    
 
     useEffect(() => {
         const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
@@ -101,7 +61,7 @@ function Details() {
                     console.log(`${error.message}`)
                 });
         }
-        /* setProvinceData(Estados); */
+        
     }, []);
 
     return (
@@ -181,21 +141,7 @@ function Details() {
                                 </svg> Fale Conosco
                             </a>
                         </div>
-                    </div>
-                    {/* <div className="d-flex justify-content-between text-center mt-5 mb-2">
-                                    <div>
-                                        <p className="mb-2 h5">8471</p>
-                                        <p className="text-muted mb-0">Wallets Balance</p>
-                                    </div>
-                                    <div className="px-3">
-                                        <p className="mb-2 h5">8512</p>
-                                        <p className="text-muted mb-0">Income amounts</p>
-                                    </div>
-                                    <div>
-                                        <p className="mb-2 h5">4751</p>
-                                        <p className="text-muted mb-0">Total Transactions</p>
-                                    </div>
-                                </div> */}
+                    </div>                    
 
                 </div>
             </div>

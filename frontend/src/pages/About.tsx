@@ -1,5 +1,7 @@
 import utils from '../assets/utils/utils.json';
+
 function About() {
+    
     return (
         <div className="container container-fluid mt-lg-5 mb-lg-5">
             <p className='text-center'>

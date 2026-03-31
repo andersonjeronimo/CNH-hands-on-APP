@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 import instructorModel from '../assets/utils/instructor-model.json';
@@ -8,11 +8,18 @@ import paginationModel from '../assets/utils/pagination.json';
 function SerchResult() {
 
     const location = useLocation();
+    const navigate = useNavigate();
+
     const [tableData, setTableData] = useState([instructorModel]);
     const [queryData, setQueryData] = useState({});
     const [paginationData, setPaginationData] = useState(paginationModel);
 
     useEffect(() => {
+        const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
+        if (!token) {
+            navigate('/home');
+        }
+        
         setTableData(location.state.data);
         setQueryData(location.state.query);
 
@@ -85,22 +92,7 @@ function SerchResult() {
             </p>
             <p className="text-center"><h1>Instrutores Localizados</h1></p>
             <hr />
-
-            {/* <nav aria-label="Page navigation example">
-                <ul className="pagination justify-content-center">
-                    <li className="page-item">
-                        <button className='btn btn-success shadow' name='previousPage' id='previousPage' onClick={handlePagination}>
-                            Página Anterior
-                        </button>
-                    </li>
-                    <li className="page-item"><a className="page-link" href="#">Página {paginationData.pageNumber}</a></li>
-                    <li className="page-item">
-                        <button className='btn btn-primary shadow' name='nextPage' id='nextPage' onClick={handlePagination}>
-                            Próxima Página
-                        </button>
-                    </li>
-                </ul>
-            </nav> */}
+            
             <div className='text-center'>
 
                 <a className="btn btn-primary w-100 py-2 shadow-lg" href="/search">

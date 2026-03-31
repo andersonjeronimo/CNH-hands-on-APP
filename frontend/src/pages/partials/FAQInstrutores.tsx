@@ -8,9 +8,8 @@ function FAQInstrutores() {
     const [priceData, setPriceData] = useState(priceModel);
 
     useEffect(() => {
-        axios
-            .get(import.meta.env.VITE_PRICE_API_URL)
-            .then((response) => {                
+        axios.get(import.meta.env.VITE_PRICE_API_URL)
+            .then((response) => {
                 setPriceData(response.data.result);
             })
             .catch((error) => console.log(error));
@@ -284,7 +283,7 @@ function FAQInstrutores() {
                     </h2>
                     <div id="panelsStayOpen-collapse14" className="accordion-collapse collapse">
                         <div className="accordion-body">
-                            Disponibilizamos um canal de atendimento via 
+                            Disponibilizamos um canal de atendimento via
                             <a href="https://api.whatsapp.com/send/?phone=5512988679768&text&type=phone_number&app_absent=0" target="_blank" aria-label="Whatsapp">
                                 <strong> WhatsApp </strong>
                             </a> para auxiliar os instrutores e tirar eventuais dúvidas durante o uso da plataforma.
