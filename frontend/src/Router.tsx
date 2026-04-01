@@ -19,7 +19,7 @@ import Terms from './pages/Terms';
 import FaqCustomers from './pages/FaqCustomers';
 import FaqInstructors from './pages/FaqInstructors';
 
-
+import utils from './assets/utils/utils.json';
 import Construction from './pages/partials/Construction';
 
 function Router() {
@@ -28,10 +28,14 @@ function Router() {
         children: JSX.ReactElement;
     }
 
-    //implementar login
     function PrivateRoute({ children }: Props) {
         const isAuth = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
         return (isAuth != null) ? children : <Navigate to="/home" />
+    }
+
+    function InstructorRoute({ children }: Props) {
+        const role = localStorage.getItem(`${import.meta.env.VITE_ROLE_VAR}`);
+        return (role === utils.role.instrutor) ? children : <Navigate to="/home" />
     }
 
     return (
@@ -42,76 +46,65 @@ function Router() {
                 <Route path='/signin' element={<SignInPage />} />
                 <Route path='/signup' element={<SignUpPage />} />
                 <Route path='/construction' element={<Construction />} />
-                <Route path='/signup-result' element={<SignUpResult />}></Route>
-                <Route path='/register-result' element={<RegisterResult />}></Route>
+                <Route path='/signup-result' element={<SignUpResult />} />
 
-                <Route path='/register' element={
-                    <PrivateRoute>
-                        <RegisterForm />
-                    </PrivateRoute>
-                }>
-                </Route>
-
-                {/* <Route path='/signup-result' element={
-                    <PrivateRoute>
-                        <SignUpResult />
-                    </PrivateRoute>
-                }>
-                </Route> */}
-
-                {/* <Route path='/register-result' element={
+                <Route path='/register-result' element={
                     <PrivateRoute>
                         <RegisterResult />
                     </PrivateRoute>
-                }>
-                </Route> */}
+                } />
+
+                <Route path='/register' element={
+                    <PrivateRoute>
+                        <InstructorRoute>
+                            <RegisterForm />
+                        </InstructorRoute>
+                    </PrivateRoute>
+                } />
 
                 <Route path='/search' element={
                     <PrivateRoute>
                         <SearchForm />
                     </PrivateRoute>
-                }>
-                </Route>
+                } />
 
                 <Route path='/search-result' element={
                     <PrivateRoute>
                         <SearchResult />
                     </PrivateRoute>
-                }>
-                </Route>
+                } />
 
                 <Route path='/search-result-fail' element={
                     <PrivateRoute>
                         <SerchResultFail />
                     </PrivateRoute>
-                }>
-                </Route>
+                } />
 
                 <Route path='/customersfilter' element={
                     <PrivateRoute>
                         <CustomerDetails />
                     </PrivateRoute>
-                }></Route>
+                } />
 
                 <Route path='/details' element={
                     <PrivateRoute>
-                        <Details />
+                        <InstructorRoute>
+                            <Details />
+                        </InstructorRoute>
                     </PrivateRoute>
-                }>
-                </Route>
+                } />
 
                 <Route path='/customers' element={
                     <PrivateRoute>
                         <Customers />
                     </PrivateRoute>
-                }>
-                </Route>
+                } />
 
-                <Route path='/about' element={<About />}></Route>
-                <Route path='/privacy' element={<Privacy />}></Route>
-                <Route path='/terms' element={<Terms />}></Route>
-                <Route path='/faq-customers' element={<FaqCustomers />}></Route>
-                <Route path='/faq-instructors' element={<FaqInstructors />}></Route>
+                <Route path='/about' element={<About />} />
+                <Route path='/privacy' element={<Privacy />} />
+                <Route path='/terms' element={<Terms />} />
+                <Route path='/faq-customers' element={<FaqCustomers />} />
+                <Route path='/faq-instructors' element={<FaqInstructors />} />
 
             </Routes>
         </BrowserRouter>

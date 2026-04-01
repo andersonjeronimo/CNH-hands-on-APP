@@ -1,6 +1,6 @@
 function TermsInstructor() {
     return (
-        <div className="container container-fluid mt-lg-5 mb-lg-5">
+        <div className="container container-fluid mt-lg-1 mb-lg-1">
             <p className="fw-normal text-start">
                 Ao se cadastrar na plataforma CNH na Mão, o Instrutor declara que:
             </p>

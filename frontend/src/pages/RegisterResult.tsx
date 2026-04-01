@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 import model from '../assets/utils/instructor-model.json';
@@ -7,16 +7,10 @@ import model from '../assets/utils/instructor-model.json';
 function RegisterResult() {
 
     const location = useLocation();
-    const navigate = useNavigate();
 
     const [modelData, setModelData] = useState(model);
 
     useEffect(() => {
-        const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
-        if (!token) {
-            navigate('/home');
-        }
-        
         const _id = location.state;
         if (_id) {
             axios

@@ -1,19 +1,6 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-
-function SerchResultFail() {
-
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
-        if (!token) {
-            navigate('/home');
-        }
-    }, []);
-
+function SerchResultFail() {   
+    
     return (
-
         <div className="container container-fluid mt-lg-5 mb-lg-5">
             <p className='text-center'>
                 <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="currentColor" className="bi bi-x-circle" viewBox="0 0 16 16">

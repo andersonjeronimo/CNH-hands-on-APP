@@ -1,7 +1,7 @@
 function TermsCustomer() {
     return (
 
-        <div className="container container-fluid mt-lg-5 mb-lg-5">
+        <div className="container container-fluid mt-lg-1 mb-lg-1">
             <p className="fw-normal text-start">
                 Termos de Uso para ALUNOS
             </p>

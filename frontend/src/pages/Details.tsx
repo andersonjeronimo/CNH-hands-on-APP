@@ -6,32 +6,21 @@ import axios from 'axios';
 import driver from '../assets/images/driver.jpg';
 import instructorModel from '../assets/utils/instructor-model.json';
 import userModel from '../assets/utils/user-model.json';
-import utils from '../assets/utils/utils.json';
 
 function Details() {
 
     const navigate = useNavigate();
-    
-    const [instructorData, setInstructorData] = useState(instructorModel);    
 
-    const [userData, setUserData] = useState(userModel);    
+    const [instructorData, setInstructorData] = useState(instructorModel);
+
+    const [userData, setUserData] = useState(userModel);
 
     useEffect(() => {
         const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
-        if (!token) {
-            navigate('/home');
-        }
+
         axios.defaults.headers.common['authorization'] = `Bearer ${token}`;
 
-        const role = localStorage.getItem(`${import.meta.env.VITE_ROLE_VAR}`);        
-        /* se logado, aluno não acessa 'details' */
-        if (role) {
-            if (role === utils.role.aluno) {
-                navigate('/search');
-            }
-        }
-
-        const user_id = localStorage.getItem(`${import.meta.env.VITE_ID_VAR}`);
+        const role = localStorage.getItem(`${import.meta.env.VITE_ROLE_VAR}`);
         const email = localStorage.getItem(`${import.meta.env.VITE_EMAIL_VAR}`);
 
         setUserData(prevState => ({
@@ -39,7 +28,9 @@ function Details() {
             ['email']: email ?? '',
             ['role']: role ?? ''
 
-        }));        
+        }));
+
+        const user_id = localStorage.getItem(`${import.meta.env.VITE_ID_VAR}`);
 
         if (user_id) {
             /* procurar um instrutor que tenha o 'user-id' retornado após o signup.tsx */
@@ -49,8 +40,6 @@ function Details() {
                         if (typeof response.data.result === 'object' && Object.keys(response.data.result).length > 0) {
                             /* verificar se já existe, carregar os dados no formulario */
                             setInstructorData(response.data.result);
-                        } else {
-                            navigate('/register');
                         }
                     } else {
                         navigate('/register');
@@ -61,12 +50,12 @@ function Details() {
                     console.log(`${error.message}`)
                 });
         }
-        
+
     }, []);
 
     return (
 
-        <div className="container container-fluid py-5 h-100">            
+        <div className="container container-fluid py-5 h-100">
             <p className='text-center'>
                 <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="currentColor" className="bi bi-person-lines-fill" viewBox="0 0 16 16">
                     <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z" />
@@ -141,7 +130,7 @@ function Details() {
                                 </svg> Fale Conosco
                             </a>
                         </div>
-                    </div>                    
+                    </div>
 
                 </div>
             </div>

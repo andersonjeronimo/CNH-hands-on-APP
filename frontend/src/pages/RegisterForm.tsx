@@ -40,11 +40,7 @@ function RegisterForm() {
     const [isCpf, setIsCpf] = useState(true);
     const [isCnpj, setIsCnpj] = useState(false);
 
-    useEffect(() => {
-        const role = localStorage.getItem(`${import.meta.env.VITE_ROLE_VAR}`);
-        if (role === utils.role.aluno) {
-            navigate('/search');
-        }
+    useEffect(() => {        
 
         const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
         axios.defaults.headers.common['authorization'] = `Bearer ${token}`;

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 import instructorModel from '../assets/utils/instructor-model.json';
@@ -8,17 +8,12 @@ import paginationModel from '../assets/utils/pagination.json';
 function SerchResult() {
 
     const location = useLocation();
-    const navigate = useNavigate();
 
     const [tableData, setTableData] = useState([instructorModel]);
     const [queryData, setQueryData] = useState({});
     const [paginationData, setPaginationData] = useState(paginationModel);
 
-    useEffect(() => {
-        const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
-        if (!token) {
-            navigate('/home');
-        }
+    useEffect(() => {        
         
         setTableData(location.state.data);
         setQueryData(location.state.query);
@@ -48,9 +43,9 @@ function SerchResult() {
                 axios
                     .post(import.meta.env.VITE_INSTRUCTOR_SEARCH_API_URL, payload)
                     .then((response) => {
-                        if (response.data) {
-                            if (typeof response.data === 'object' && Object.keys(response.data).length > 0) {
-                                setTableData(response.data);
+                        if (response.data.result) {
+                            if (typeof response.data.result === 'object' && Object.keys(response.data.result).length > 0) {
+                                setTableData(response.data.result);
                             }
                         }
                     })
