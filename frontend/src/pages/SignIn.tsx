@@ -13,8 +13,7 @@ function SignInPage() {
 
     const [modelData, setModelData] = useState(userModel);
     const [showPassword, setShowPassword] = useState(false);
-    const [passwordFieldMessage, setPasswordFieldMessage] = useState("");
-    const [message, setMessage] = useState("");
+    const [passwordFieldMessage, setPasswordFieldMessage] = useState("");    
 
     useEffect(() => {
         const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
