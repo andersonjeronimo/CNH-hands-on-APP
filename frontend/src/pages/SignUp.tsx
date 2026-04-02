@@ -109,8 +109,7 @@ function SignInPage() {
 
                 })
                 .catch((error) => {
-                    setMessage(`${error.message}, (Já existe um usuário cadastrado com este e-mail.)`);
-                    alert(`${error.message}, (Já existe um usuário cadastrado com este e-mail.)`);
+                    setMessage(`${error.message}: Problemas de conexão com o banco de dados. Tente novamente mais tarde.`);                    
                     setFormData(prevState => ({
                         ...prevState,
                         ['password']: '',

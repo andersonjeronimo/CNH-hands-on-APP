@@ -49,7 +49,7 @@ function SerchResult() {
                             }
                         }
                     })
-                    .catch((error) => console.log(error.message));
+                    .catch((error) => alert(error.message));
             }
 
         }
@@ -71,7 +71,7 @@ function SerchResult() {
                             }
                         }
                     })
-                    .catch((error) => console.log(error.message));
+                    .catch((error) => alert(error.message));
             }
         }
 

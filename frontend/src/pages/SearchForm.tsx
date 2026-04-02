@@ -75,7 +75,7 @@ function SearchForm() {
                     } else {
                         setCitiesData([cityModel]);
                     }
-                }).catch((error) => console.log(error.message));
+                }).catch((error) => setMessage(error.message));
         }
         //Cidade===============================================
         else if (name === 'city') {
@@ -112,8 +112,7 @@ function SearchForm() {
                     } else {
                         setMicroregionData([cityModel]);
                     }
-                })
-                .catch((error) => console.log(error.message));
+                }).catch((error) => setMessage(error.message));
 
         }
         //Termos e condições===================================

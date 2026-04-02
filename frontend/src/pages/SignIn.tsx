@@ -52,11 +52,7 @@ function SignInPage() {
 
         axios.post(`${import.meta.env.VITE_AUTH_API_URL}`, modelData)
             .then((response) => {
-                if (response.data) {
-                    if (response.status === 400) {
-                        setMessage(typeof response.data);
-                    }
-
+                if (response.data.success) {
                     //!!SETAR O TOKEN PARA PRÓXIMAS REQUISIÇÕES!!
                     localStorage.setItem(`${import.meta.env.VITE_TOKEN_VAR}`, response.data.token);
                     localStorage.setItem(`${import.meta.env.VITE_ID_VAR}`, response.data.user._id);
@@ -74,15 +70,13 @@ function SignInPage() {
                         navigate('/details');
                     }
 
-                } else {
-                    setMessage(typeof response.data);
+                } else {                    
+                    setPasswordFieldMessage(`${response.data.message}`);
                 }
 
             })
-            .catch((error) => {
-                setMessage(`${error.message}, (E-mail ou senha inválidos.)`);
-                setPasswordFieldMessage(`${error.message}, (E-mail ou senha inválidos.)`);
-                alert(`${error.message}, (E-mail ou senha inválidos.)`);
+            .catch((error) => {                
+                setPasswordFieldMessage(`${error.message}`);
             });
 
     };
@@ -98,7 +92,6 @@ function SignInPage() {
                 </h1>
             </p>
             <p className="text-center"><h3>Insira as credenciais</h3></p>
-            {message}
             <hr />
             <main className="form-signin">
                 <form className='row g-3 needs-validation justify-content-md-center' onSubmit={handleSubmit}>
