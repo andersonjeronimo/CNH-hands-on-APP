@@ -2,8 +2,6 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-//import axios from 'axios';
-
 import userModel from '../assets/utils/user-model.json';
 import utils from '../assets/utils/utils.json';
 
@@ -47,10 +45,10 @@ function SignInPage() {
     };
 
     const handleSubmit = async (e: any) => {
-        e.preventDefault();        
+        e.preventDefault();
 
         const url = `${import.meta.env.VITE_AUTH_API_URL}`;
-        const _response = await fetch(url, {
+        const response = await fetch(url, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -58,66 +56,33 @@ function SignInPage() {
             body: JSON.stringify(modelData),
         });
 
-        if (!_response.ok) {
+        if (!response.ok) {
             //throw new Error(`Response status: ${_response.status}`);
-            setPasswordFieldMessage(`${_response.status}`);
+            alert(`${response.status}`);
+            setPasswordFieldMessage(`${response.status}`);
         }
 
-        const response = JSON.parse(JSON.stringify(await _response.json()));        
+        const data = await response.json();
 
-        if (response.success === true) {
-                        
-            localStorage.setItem(`${import.meta.env.VITE_TOKEN_VAR}`, response.token);
-            localStorage.setItem(`${import.meta.env.VITE_ID_VAR}`, response.user._id);
-            localStorage.setItem(`${import.meta.env.VITE_EMAIL_VAR}`, response.user.email);
-            localStorage.setItem(`${import.meta.env.VITE_ROLE_VAR}`, response.user.role);
+        if (data.success === true) {
+            localStorage.setItem(`${import.meta.env.VITE_TOKEN_VAR}`, data.token);
+            localStorage.setItem(`${import.meta.env.VITE_ID_VAR}`, data.user._id);
+            localStorage.setItem(`${import.meta.env.VITE_EMAIL_VAR}`, data.user.email);
+            localStorage.setItem(`${import.meta.env.VITE_ROLE_VAR}`, data.user.role);
 
-            //axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+            //axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
             window.location.reload();
 
-            if (response.user.role === utils.role.aluno) {
+            if (data.user.role === utils.role.aluno) {
                 navigate('/search');
 
-            } else if (response.user.role === utils.role.instrutor) {
+            } else if (data.user.role === utils.role.instrutor) {
                 navigate('/details');
             }
 
         } else {
-            setPasswordFieldMessage(`${response.message}`);
+            setPasswordFieldMessage(`${data.message}`);
         }
-
-
-
-
-        //axios.post(`${import.meta.env.VITE_AUTH_API_URL}`, modelData)
-        //    .then((response) => {
-        //        if (response.data.success) {
-        //            //!!SETAR O TOKEN PARA PRÓXIMAS REQUISIÇÕES!!
-        //            localStorage.setItem(`${import.meta.env.VITE_TOKEN_VAR}`, response.data.token);
-        //            localStorage.setItem(`${import.meta.env.VITE_ID_VAR}`, response.data.user._id);
-        //            localStorage.setItem(`${import.meta.env.VITE_EMAIL_VAR}`, response.data.user.email);
-        //            localStorage.setItem(`${import.meta.env.VITE_ROLE_VAR}`, response.data.user.role);
-        //
-        //            //axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
-        //
-        //            window.location.reload();
-        //
-        //            if (response.data.user.role === utils.role.aluno) {
-        //                navigate('/search');
-        //
-        //            } else if (response.data.user.role === utils.role.instrutor) {
-        //                navigate('/details');
-        //            }
-        //
-        //        } else {
-        //            setPasswordFieldMessage(`${response.data.message}`);
-        //        }
-        //
-        //    })
-        //    .catch((error) => {
-        //        setPasswordFieldMessage(`${error.message}`);
-        //    });
-
     };
 
     return (

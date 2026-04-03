@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cpf, cnpj } from 'cpf-cnpj-validator';
-import axios from 'axios';
 
 import TermsShort from './TermsInstructor';
 import RegisterExplanation from './partials/RegisterExplanation';
@@ -40,35 +39,39 @@ function RegisterForm() {
     const [isCpf, setIsCpf] = useState(true);
     const [isCnpj, setIsCnpj] = useState(false);
 
-    useEffect(() => {        
-
+    async function getInstructorByUserId(user_id: string) {
         const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
-        axios.defaults.headers.common['authorization'] = `Bearer ${token}`;
 
-        const user_id = localStorage.getItem(`${import.meta.env.VITE_ID_VAR}`);
-        formData.userId = user_id ?? '';
+        const url = `${import.meta.env.VITE_INSTRUCTOR_API_USER_ID_URL}/${user_id}`;
 
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
+        });
+
+        if (!response.ok) {
+            //throw new Error(`Response status: ${_response.status}`);
+            setMessage(`${response.status}`);
+        }
+
+        const data = await response.json();
+        if (typeof data.result === 'object' && Object.keys(data.result).length > 0) {
+            /* verificar se já existe, carregar os dados no formulario */
+            setFormData(data.result);
+        }
+    }
+
+    useEffect(() => {
         setProvinceData(Estados);
         setFormData(instructorModel);
 
-        if (user_id) {
-            axios.get(`${import.meta.env.VITE_INSTRUCTOR_API_USER_ID_URL}/${user_id}`)
-                .then((response) => {
-                    if (response.data.result) {
-                        if (typeof response.data.result === 'object' && Object.keys(response.data.result).length > 0) {
-                            /* verificar se já existe, carregar os dados no formulario */
-                            setFormData(response.data.result);
-                        }
-                    } 
-                })
-                .catch((error) => {
-                    /* setMessage(`${error.message}`); */
-                    console.log(`${error.message}`)
-                });
-        }
+        const user_id = localStorage.getItem(`${import.meta.env.VITE_ID_VAR}`);
+        getInstructorByUserId(user_id!);
 
-        //setProvinceData(Estados);
-        //setFormData(instructorModel);
+        formData.userId = user_id!;
 
     }, []);
 
@@ -92,6 +95,9 @@ function RegisterForm() {
             ...prevState,
             [name]: type === 'checkbox' ? checked : value
         }));
+
+        //const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
+
         //Estado===============================================
         if (name === 'state') {
             //reset DDD
@@ -111,17 +117,26 @@ function RegisterForm() {
             const url_start = import.meta.env.VITE_IBGE_API_CITIES_START;
             const url_end = import.meta.env.VITE_IBGE_API_CITIES_END;
             const url_cities = `${url_start}${province?.id}${url_end}`;
-            axios.get(url_cities)
-                .then(response => {
-                    if (response.data) {
-                        if (typeof response.data === 'object' && Object.keys(response.data).length > 0) {
-                            setCitiesData(response.data)
-                        }
-                    } else {
-                        setCitiesData([cityModel]);
-                    }
-                })
-                .catch((error) => setMessage(error.message));
+
+            const response = await fetch(url_cities, {
+                method: 'GET',
+                headers: {
+                    'Content-type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                //throw new Error(`Response status: ${_response.status}`);
+                setMessage(`${response.status}`);
+            }
+
+            const data = await response.json();
+
+            if (typeof data === 'object' && Object.keys(data).length > 0) {
+                setCitiesData(data)
+            } else {
+                setCitiesData([cityModel]);
+            }
         }
         //Cidade===============================================
         else if (name === 'city') {
@@ -150,18 +165,26 @@ function RegisterForm() {
             const url_start = import.meta.env.VITE_IBGE_API_MICROREGIONS_START;
             const url_end = import.meta.env.VITE_IBGE_API_MICROREGIONS_END;
             const url_microregions = `${url_start}${city?.microrregiao.id}${url_end}`;
-            axios.get(url_microregions)
-                .then(response => {
-                    if (response.data) {
-                        if (typeof response.data === 'object' && Object.keys(response.data).length > 0) {
-                            setMicroregionData(response.data)
-                        }
-                    } else {
-                        setMicroregionData([cityModel]);
-                    }
-                })
-                .catch((error) => setMessage(error.message));
 
+            const response = await fetch(url_microregions, {
+                method: 'GET',
+                headers: {
+                    'Content-type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                //throw new Error(`Response status: ${_response.status}`);
+                setMessage(`${response.status}`);
+            }
+
+            const data = await response.json();
+
+            if (typeof data === 'object' && Object.keys(data).length > 0) {
+                setMicroregionData(data);
+            } else {
+                setCitiesData([cityModel]);
+            }
         }
         //Termos e condições===================================
         else if (type === 'checkbox') {
@@ -198,6 +221,8 @@ function RegisterForm() {
         const _cpf = formData.cpf;
         const _cnpj = formData.cnpj;
 
+        const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
+
         formData.status = utils.status.ativo;
 
         if (isCpf && !cpf.isValid(_cpf)) {
@@ -226,76 +251,108 @@ function RegisterForm() {
 
             //Verificar se já existe o CPF | CNPJ cadastrado
             if (isCpf) {
-                axios.get(`${import.meta.env.VITE_INSTRUCTOR_API_CPF_URL}/${formData.cpf}`)
-                    .then((response) => {
-                        if (response.data.result) {
-                            /* if (Array.isArray(response.data) && response.data.length > 0) {
-                                setMessage('Data is a non-empty array.');
-                            } else */
-                            if (typeof response.data.result === 'object' && Object.keys(response.data.result).length > 0) {
-                                //setMessage('Data is a non-empty object.');
-                                setAlertClass(messageClass.danger);
-                                setMessage(`Já existe um usuário com o CPF ${formData.cpf} cadastrado.`);
-                                alert(`Já existe um usuário com o CPF ${formData.cpf} cadastrado.`);
-                                setFormData(prevState => ({
-                                    ...prevState,
-                                    ['cpf']: ''
-                                }));
-                            }
-                        } else {
-                            //setMessage('Response data is empty or null.');                            
-                            axios.post(import.meta.env.VITE_INSTRUCTOR_API_URL, formData)
-                                .then((response) => {
-                                    navigate('/register-result', { state: response.data.result });
-                                    /* if (response.data) {
-                                        if (Array.isArray(response.data) && response.data.length > 0) {
-                                            //response.data -> ID
-                                            navigate('/register-result', { state: response.data });
-                                            //Passar ID e carregar o cliente na tela de resultado                                            
-                                        }
-                                    } */
-                                })
-                                .catch((error) => setMessage(error));
-                        }
-                    })
-                    .catch((error) => setMessage(error.message));
+                const cpf_url = `${import.meta.env.VITE_INSTRUCTOR_API_CPF_URL}/${formData.cpf}`;
+                const response = await fetch(cpf_url, {
+                    method: "GET",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    }
+                });
+
+                if (!response.ok) {
+                    //throw new Error(`Response status: ${_response.status}`);
+                    setMessage(`${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.result) {
+                    if (typeof data.result === 'object' && Object.keys(data.result).length > 0) {
+                        //setMessage('Data is a non-empty object.');
+                        setAlertClass(messageClass.danger);
+                        setMessage(`Já existe um usuário com o CPF ${formData.cpf} cadastrado.`);
+                        alert(`Já existe um usuário com o CPF ${formData.cpf} cadastrado.`);
+                        setFormData(prevState => ({
+                            ...prevState,
+                            ['cpf']: ''
+                        }));
+                    }
+                } else {
+                    const api_url = `${import.meta.env.VITE_INSTRUCTOR_API_URL}`;
+                    const response = await fetch(api_url, {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`,
+                        },
+                        body: JSON.stringify(formData),
+                    });
+
+                    if (!response.ok) {
+                        //throw new Error(`Response status: ${_response.status}`);
+                        //alert(`${response.status}`);
+                        setMessage(`${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    navigate('/register-result', { state: data.result });
+                }
 
             } else if (isCnpj) {
-                axios.get(`${import.meta.env.VITE_INSTRUCTOR_API_CNPJ_URL}/${formData.cnpj}`)
-                    .then((response) => {
-                        if (response.data.result) {
-                            /* if (Array.isArray(response.data) && response.data.length > 0) {
-                                setMessage('Data is a non-empty array.');
-                            } else */
-                            if (typeof response.data.result === 'object' && Object.keys(response.data.result).length > 0) {
-                                //setMessage('Data is a non-empty object.');
-                                setAlertClass(messageClass.danger);
-                                setMessage(`Já existe um usuário com o CNPJ ${formData.cnpj} cadastrado.`);
-                                alert(`Já existe um usuário com o CNPJ ${formData.cnpj} cadastrado.`);
-                                setFormData(prevState => ({
-                                    ...prevState,
-                                    ['cnpj']: ''
-                                }));
-                            }
-                        } else {
-                            //setMessage('Response data is empty or null.');
-                            axios.post(import.meta.env.VITE_INSTRUCTOR_API_URL, formData)
-                                .then((response) => {
-                                    navigate('/register-result', { state: response.data.result });
-                                    /* if (response.data) {
-                                        if (Array.isArray(response.data) && response.data.length > 0) {
-                                            //response.data -> ID
-                                            navigate('/register-result', { state: response.data });
-                                            //Passar ID e carregar o cliente na tela de resultado                                            
-                                        }
-                                    } */
-                                })
-                                .catch((error) => setMessage(error));
-                        }
-                    })
-                    .catch((error) => setMessage(error.message));
-            }
+                const cnpj_url = `${import.meta.env.VITE_INSTRUCTOR_API_CNPJ_URL}/${formData.cnpj}`;
 
+                const response = await fetch(cnpj_url, {
+                    method: "GET",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    }
+                });
+
+                if (!response.ok) {
+                    //throw new Error(`Response status: ${_response.status}`);
+                    setMessage(`${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.result) {
+                    /* if (Array.isArray(response.data) && response.data.length > 0) {
+                        setMessage('Data is a non-empty array.');
+                    } else */
+                    if (typeof data.result === 'object' && Object.keys(data.result).length > 0) {
+                        //setMessage('Data is a non-empty object.');
+                        setAlertClass(messageClass.danger);
+                        setMessage(`Já existe um usuário com o CNPJ ${formData.cnpj} cadastrado.`);
+                        alert(`Já existe um usuário com o CNPJ ${formData.cnpj} cadastrado.`);
+                        setFormData(prevState => ({
+                            ...prevState,
+                            ['cnpj']: ''
+                        }));
+                    }
+                } else {
+                    //setMessage('Response data is empty or null.');
+                    const api_url = `${import.meta.env.VITE_INSTRUCTOR_API_URL}`;
+                    const response = await fetch(api_url, {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`,
+                        },
+                        body: JSON.stringify(formData),
+                    });
+
+                    if (!response.ok) {
+                        //throw new Error(`Response status: ${_response.status}`);
+                        //alert(`${response.status}`);
+                        setMessage(`${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    navigate('/register-result', { state: data.result });
+                }
+            }
         }
 
     };
@@ -309,7 +366,7 @@ function RegisterForm() {
                 </svg>
             </p>
             <p className="text-center"><h1>Cadastro de Instrutores</h1></p>
-            <hr />            
+            <hr />
 
             <form className="row g-3 needs-validation" onSubmit={handleSubmit} >
 

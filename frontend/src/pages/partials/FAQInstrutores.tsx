@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 
 import priceModel from '../../assets/utils/price-model.json';
 
@@ -7,16 +6,28 @@ function FAQInstrutores() {
 
     const [priceData, setPriceData] = useState(priceModel);
 
+    async function getPrice() {
+        const url = `${import.meta.env.VITE_PRICE_API_URL}`;
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Response status: ${response.status}`);
+            }
+
+            //const data = JSON.parse(JSON.stringify(await response.json()));
+            const data = await response.json();
+            setPriceData(data.result);
+
+        } catch (error) {
+            console.error("Fetch error:", error);
+        }
+    }
+
     useEffect(() => {
-        axios.get(import.meta.env.VITE_PRICE_API_URL)
-            .then((response) => {
-                setPriceData(response.data.result);
-            })
-            .catch((error) => console.log(error));
+        getPrice();
     }, []);
 
     return (
-
         <div className="container container-fluid mt-lg-5 mb-lg-5">
             <div className="accordion" id="accordionPanelsStayOpenExample">
 

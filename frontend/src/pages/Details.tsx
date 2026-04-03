@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 
 import driver from '../assets/images/driver.jpg';
 import instructorModel from '../assets/utils/instructor-model.json';
@@ -12,14 +11,40 @@ function Details() {
     const navigate = useNavigate();
 
     const [instructorData, setInstructorData] = useState(instructorModel);
-
     const [userData, setUserData] = useState(userModel);
 
-    useEffect(() => {
+    async function getDetails() {
         const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
+        const user_id = localStorage.getItem(`${import.meta.env.VITE_ID_VAR}`);
 
-        axios.defaults.headers.common['authorization'] = `Bearer ${token}`;
+        const url = `${import.meta.env.VITE_INSTRUCTOR_API_USER_ID_URL}/${user_id}`;
 
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
+        });
+
+        if (!response.ok) {
+            //throw new Error(`Response status: ${_response.status}`);
+            alert(`${response.status}`);
+        }
+
+        const data = await response.json();
+        if (data.result) {
+            if (typeof data.result === 'object' && Object.keys(data.result).length > 0) {
+                /* verificar se já existe, carregar os dados no formulario */
+                setInstructorData(data.result);
+            }
+        } else {
+            navigate('/register');
+        }
+
+    }
+
+    useEffect(() => {
         const role = localStorage.getItem(`${import.meta.env.VITE_ROLE_VAR}`);
         const email = localStorage.getItem(`${import.meta.env.VITE_EMAIL_VAR}`);
 
@@ -30,29 +55,7 @@ function Details() {
 
         }));
 
-        const user_id = localStorage.getItem(`${import.meta.env.VITE_ID_VAR}`);
-
-        if (user_id) {
-            /* procurar um instrutor que tenha o 'user-id' retornado após o signup.tsx */
-            axios.get(`${import.meta.env.VITE_INSTRUCTOR_API_USER_ID_URL}/${user_id}`, {
-                withCredentials: true
-            })
-                .then((response) => {
-                    if (response.data.result) {
-                        if (typeof response.data.result === 'object' && Object.keys(response.data.result).length > 0) {
-                            /* verificar se já existe, carregar os dados no formulario */
-                            setInstructorData(response.data.result);
-                        }
-                    } else {
-                        navigate('/register');
-                    }
-                })
-                .catch((error) => {
-                    /* setMessage(`${error.message}`); */
-                    console.log(`${error.message}`)
-                });
-        }
-
+        getDetails();
     }, []);
 
     return (
