@@ -309,13 +309,7 @@ function RegisterForm() {
                 </svg>
             </p>
             <p className="text-center"><h1>Cadastro de Instrutores</h1></p>
-            <hr />
-            {/* <div className='row g-3 align-items-center'>
-                    <div className='col-md-12'>
-                        <img src={Instrutores} className='rounded mx-auto img-fluid d-block shadow'
-                            alt='Imagem com vários instrutores de trânsito' />
-                    </div>
-                </div> */}
+            <hr />            
 
             <form className="row g-3 needs-validation" onSubmit={handleSubmit} >
 

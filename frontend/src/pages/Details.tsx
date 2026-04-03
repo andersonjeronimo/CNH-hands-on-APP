@@ -34,7 +34,9 @@ function Details() {
 
         if (user_id) {
             /* procurar um instrutor que tenha o 'user-id' retornado após o signup.tsx */
-            axios.get(`${import.meta.env.VITE_INSTRUCTOR_API_USER_ID_URL}/${user_id}`)
+            axios.get(`${import.meta.env.VITE_INSTRUCTOR_API_USER_ID_URL}/${user_id}`, {
+                withCredentials: true
+            })
                 .then((response) => {
                     if (response.data.result) {
                         if (typeof response.data.result === 'object' && Object.keys(response.data.result).length > 0) {

@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import axios from 'axios';
+//import axios from 'axios';
 
 import userModel from '../assets/utils/user-model.json';
 import utils from '../assets/utils/utils.json';
@@ -13,7 +13,7 @@ function SignInPage() {
 
     const [modelData, setModelData] = useState(userModel);
     const [showPassword, setShowPassword] = useState(false);
-    const [passwordFieldMessage, setPasswordFieldMessage] = useState("");    
+    const [passwordFieldMessage, setPasswordFieldMessage] = useState("");
 
     useEffect(() => {
         const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
@@ -47,36 +47,76 @@ function SignInPage() {
     };
 
     const handleSubmit = async (e: any) => {
-        e.preventDefault();
+        e.preventDefault();        
 
-        axios.post(`${import.meta.env.VITE_AUTH_API_URL}`, modelData)
-            .then((response) => {
-                if (response.data.success) {
-                    //!!SETAR O TOKEN PARA PRÓXIMAS REQUISIÇÕES!!
-                    localStorage.setItem(`${import.meta.env.VITE_TOKEN_VAR}`, response.data.token);
-                    localStorage.setItem(`${import.meta.env.VITE_ID_VAR}`, response.data.user._id);
-                    localStorage.setItem(`${import.meta.env.VITE_EMAIL_VAR}`, response.data.user.email);
-                    localStorage.setItem(`${import.meta.env.VITE_ROLE_VAR}`, response.data.user.role);
+        const url = `${import.meta.env.VITE_AUTH_API_URL}`;
+        const _response = await fetch(url, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(modelData),
+        });
 
-                    axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+        if (!_response.ok) {
+            //throw new Error(`Response status: ${_response.status}`);
+            setPasswordFieldMessage(`${_response.status}`);
+        }
 
-                    window.location.reload();
+        const response = JSON.parse(JSON.stringify(await _response.json()));        
 
-                    if (response.data.user.role === utils.role.aluno) {
-                        navigate('/search');
+        if (response.success === true) {
+                        
+            localStorage.setItem(`${import.meta.env.VITE_TOKEN_VAR}`, response.token);
+            localStorage.setItem(`${import.meta.env.VITE_ID_VAR}`, response.user._id);
+            localStorage.setItem(`${import.meta.env.VITE_EMAIL_VAR}`, response.user.email);
+            localStorage.setItem(`${import.meta.env.VITE_ROLE_VAR}`, response.user.role);
 
-                    } else if (response.data.user.role === utils.role.instrutor) {
-                        navigate('/details');
-                    }
+            //axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+            window.location.reload();
 
-                } else {                    
-                    setPasswordFieldMessage(`${response.data.message}`);
-                }
+            if (response.user.role === utils.role.aluno) {
+                navigate('/search');
 
-            })
-            .catch((error) => {                
-                setPasswordFieldMessage(`${error.message}`);
-            });
+            } else if (response.user.role === utils.role.instrutor) {
+                navigate('/details');
+            }
+
+        } else {
+            setPasswordFieldMessage(`${response.message}`);
+        }
+
+
+
+
+        //axios.post(`${import.meta.env.VITE_AUTH_API_URL}`, modelData)
+        //    .then((response) => {
+        //        if (response.data.success) {
+        //            //!!SETAR O TOKEN PARA PRÓXIMAS REQUISIÇÕES!!
+        //            localStorage.setItem(`${import.meta.env.VITE_TOKEN_VAR}`, response.data.token);
+        //            localStorage.setItem(`${import.meta.env.VITE_ID_VAR}`, response.data.user._id);
+        //            localStorage.setItem(`${import.meta.env.VITE_EMAIL_VAR}`, response.data.user.email);
+        //            localStorage.setItem(`${import.meta.env.VITE_ROLE_VAR}`, response.data.user.role);
+        //
+        //            //axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+        //
+        //            window.location.reload();
+        //
+        //            if (response.data.user.role === utils.role.aluno) {
+        //                navigate('/search');
+        //
+        //            } else if (response.data.user.role === utils.role.instrutor) {
+        //                navigate('/details');
+        //            }
+        //
+        //        } else {
+        //            setPasswordFieldMessage(`${response.data.message}`);
+        //        }
+        //
+        //    })
+        //    .catch((error) => {
+        //        setPasswordFieldMessage(`${error.message}`);
+        //    });
 
     };
 

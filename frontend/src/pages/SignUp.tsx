@@ -18,7 +18,7 @@ function SignInPage() {
     const [showPasswordTest, setShowPasswordTest] = useState(false);
     const [passwordField1Message, setPasswordField1Message] = useState("");
     const [passwordField2Message, setPasswordField2Message] = useState("");
-    const [message, setMessage] = useState("");
+    //const [message, setMessage] = useState("");
     const [hasProfile, setHasProfile] = useState(false);
 
     useEffect(() => {
@@ -109,7 +109,7 @@ function SignInPage() {
 
                 })
                 .catch((error) => {
-                    setMessage(`${error.message}: Problemas de conexão com o banco de dados. Tente novamente mais tarde.`);                    
+                    alert(`${error.message}.`);
                     setFormData(prevState => ({
                         ...prevState,
                         ['password']: '',
@@ -132,8 +132,7 @@ function SignInPage() {
                     </svg> Cadastro
                 </h1>
             </p>
-            <p className="text-center"><h3>Registre as credenciais</h3></p>
-            <p><h2>{message}</h2></p>
+            <p className="text-center"><h3>Registre as credenciais</h3></p>            
             <hr />
             <main className="form-signin">
                 <form className='row g-3 needs-validation justify-content-md-center' onSubmit={handleSubmit}>
