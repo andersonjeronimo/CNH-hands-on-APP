@@ -103,8 +103,7 @@ function SerchResult() {
                     <tr>
                         <th scope="col">Nome</th>
                         <th scope="col">Cidade</th>
-                        <th scope="col">Categoria</th>
-                        <th scope="col">Veículo</th>
+                        <th scope="col">Categoria</th>                        
                         <th scope="col">Contato</th>
                     </tr>
                 </thead>
@@ -120,10 +119,7 @@ function SerchResult() {
                             </th>
                             <td>
                                 {instructor.category}
-                            </td>
-                            <td>
-                                {instructor.vehicle}
-                            </td>
+                            </td>                            
                             <td>
                                 <a className="btn btn-success shadow form-control"
                                     href={`https://wa.me/55${instructor.ddd}${instructor.phone}?text=Olá!%20Te%20encontrei%20pelo%20aplicativo%20CNH%20Na%20Mão.%20Gostaria%20de%20agendar%20aulas%20de%20direção.%20Aguardo%20seu%20contato!`}
