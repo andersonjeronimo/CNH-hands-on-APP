@@ -8,6 +8,7 @@ import Estados from '../assets/utils/estados.json';
 import provinceModel from '../assets/utils/estado-model.json';
 import cityModel from '../assets/utils/cidade-model.json';
 import instructorModel from '../assets/utils/instructor-model.json';
+import LogoutModal from './partials/LogoutModal';
 import utils from '../assets/utils/utils.json';
 
 function RegisterForm() {
@@ -69,10 +70,10 @@ function RegisterForm() {
         setFormData(instructorModel);
 
         const user_id = localStorage.getItem(`${import.meta.env.VITE_ID_VAR}`);
-        getInstructorByUserId(user_id!);
-
-        formData.userId = user_id!;
-
+        if (user_id) {
+            getInstructorByUserId(user_id);
+            formData.userId = user_id;
+        }
     }, []);
 
 
@@ -250,115 +251,65 @@ function RegisterForm() {
             setInputClass(inputFocusClass.default);
 
             //Verificar se já existe o CPF | CNPJ cadastrado
+            let api_url = '';
+
             if (isCpf) {
-                const cpf_url = `${import.meta.env.VITE_INSTRUCTOR_API_CPF_URL}/${formData.cpf}`;
-                const response = await fetch(cpf_url, {
-                    method: "GET",
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`,
-                    }
-                });
-
-                if (!response.ok) {
-                    //throw new Error(`Response status: ${_response.status}`);
-                    setMessage(`${response.status}`);
-                }
-
-                const data = await response.json();
-
-                if (data.result) {
-                    if (typeof data.result === 'object' && Object.keys(data.result).length > 0) {
-                        //setMessage('Data is a non-empty object.');
-                        setAlertClass(messageClass.danger);
-                        setMessage(`Já existe um usuário com o CPF ${formData.cpf} cadastrado.`);
-                        alert(`Já existe um usuário com o CPF ${formData.cpf} cadastrado.`);
-                        setFormData(prevState => ({
-                            ...prevState,
-                            ['cpf']: ''
-                        }));
-                    }
-                } else {
-                    const api_url = `${import.meta.env.VITE_INSTRUCTOR_API_URL}`;
-                    const response = await fetch(api_url, {
-                        method: "POST",
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`,
-                        },
-                        body: JSON.stringify(formData),
-                    });
-
-                    if (!response.ok) {
-                        //throw new Error(`Response status: ${_response.status}`);
-                        //alert(`${response.status}`);
-                        setMessage(`${response.status}`);
-                    }
-
-                    const data = await response.json();
-                    navigate('/register-result', { state: data.result });
-                }
-
+                api_url = `${import.meta.env.VITE_INSTRUCTOR_API_CPF_URL}/${formData.cpf}`;
             } else if (isCnpj) {
-                const cnpj_url = `${import.meta.env.VITE_INSTRUCTOR_API_CNPJ_URL}/${formData.cnpj}`;
+                api_url = `${import.meta.env.VITE_INSTRUCTOR_API_CNPJ_URL}/${formData.cnpj}`;
+            }
 
-                const response = await fetch(cnpj_url, {
-                    method: "GET",
+            const response = await fetch(api_url, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                }
+            });
+
+            if (response.status === 500) {
+                setAlertClass(messageClass.danger);
+                setMessage(`Erro no servidor. Tente novamente mais tarde.`);
+            }
+
+            const data = await response.json();
+
+            if (data.success) {
+                if (typeof data.result === 'object' && Object.keys(data.result).length > 0) {
+                    //setMessage('Data is a non-empty object.');
+                    setAlertClass(messageClass.danger);
+                    setMessage(`Já existe um usuário com o CPF / CNPJ ${formData.cpf ?? formData.cnpj} cadastrado.`);
+                    alert(`Já existe um usuário com o CPF / CNPJ ${formData.cpf ?? formData.cnpj} cadastrado.`);
+                    setFormData(prevState => ({
+                        ...prevState,
+                        ['cpf']: '',
+                        ['cnpj']: '',
+                    }));
+                }
+
+            } else {
+                const api_url = `${import.meta.env.VITE_INSTRUCTOR_API_URL}`;
+                const response = await fetch(api_url, {
+                    method: "POST",
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`,
-                    }
+                    },
+                    body: JSON.stringify(formData),
                 });
 
-                if (!response.ok) {
-                    //throw new Error(`Response status: ${_response.status}`);
-                    setMessage(`${response.status}`);
-                }
-
                 const data = await response.json();
-
-                if (data.result) {
-                    /* if (Array.isArray(response.data) && response.data.length > 0) {
-                        setMessage('Data is a non-empty array.');
-                    } else */
-                    if (typeof data.result === 'object' && Object.keys(data.result).length > 0) {
-                        //setMessage('Data is a non-empty object.');
-                        setAlertClass(messageClass.danger);
-                        setMessage(`Já existe um usuário com o CNPJ ${formData.cnpj} cadastrado.`);
-                        alert(`Já existe um usuário com o CNPJ ${formData.cnpj} cadastrado.`);
-                        setFormData(prevState => ({
-                            ...prevState,
-                            ['cnpj']: ''
-                        }));
-                    }
-                } else {
-                    //setMessage('Response data is empty or null.');
-                    const api_url = `${import.meta.env.VITE_INSTRUCTOR_API_URL}`;
-                    const response = await fetch(api_url, {
-                        method: "POST",
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`,
-                        },
-                        body: JSON.stringify(formData),
-                    });
-
-                    if (!response.ok) {
-                        //throw new Error(`Response status: ${_response.status}`);
-                        //alert(`${response.status}`);
-                        setMessage(`${response.status}`);
-                    }
-
-                    const data = await response.json();
-                    navigate('/register-result', { state: data.result });
-                }
+                //o result é o ID do instrutor cadastrado
+                navigate('/register-result', { state: data.result });
             }
+            
         }
 
     };
 
     return (
         <div className="container container-fluid mt-lg-5 mb-lg-5">
+            <LogoutModal></LogoutModal>
             <p className='text-center'>
                 <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="currentColor" className="bi bi-person-vcard" viewBox="0 0 16 16">
                     <path d="M5 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4m4-2.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5M9 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4A.5.5 0 0 1 9 8m1 2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5" />

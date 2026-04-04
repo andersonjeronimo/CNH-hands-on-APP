@@ -1,26 +1,40 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import axios from 'axios';
 
 import model from '../assets/utils/instructor-model.json';
 
 function RegisterResult() {
 
     const location = useLocation();
-
     const [modelData, setModelData] = useState(model);
+
+    async function getInstructorById(_id: string) {
+        const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
+        const url = `${import.meta.env.VITE_INSTRUCTOR_API_URL}/${_id}`;
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
+        });
+
+        if (!response.ok) {
+            //throw new Error(`Response status: ${_response.status}`);
+            alert(`${response.status}`);
+        }
+
+        const data = await response.json();
+        if (typeof data.result === 'object' && Object.keys(data.result).length > 0) {
+            /* verificar se já existe, carregar os dados no formulario */
+            setModelData(data.result);
+        }
+    }
 
     useEffect(() => {
         const _id = location.state;
         if (_id) {
-            axios
-                .get(`${import.meta.env.VITE_INSTRUCTOR_API_URL}/${_id}`)
-                .then((response) => {
-                    if (typeof response.data.result === 'object' && Object.keys(response.data.result).length > 0) {
-                        setModelData(response.data.result);
-                    }
-                })
-                .catch((error) => alert(error.message));
+            getInstructorById(_id);
         }
     }, []);
 
@@ -59,12 +73,8 @@ function RegisterResult() {
                             </svg>
                         </a>
                     </div>
-
                 </div>
-
             </div>
-
-
         </div>
     )
 

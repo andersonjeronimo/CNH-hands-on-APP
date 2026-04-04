@@ -1,10 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 //import * as $ from 'jquery';
 declare var $: any;
-
-import axios from 'axios';
 
 import TermsCustomer from './TermsCustomer';
 import Estados from '../assets/utils/estados.json';
@@ -38,12 +35,7 @@ function SearchForm() {
     const [formData, setFormData] = useState(searchFormModel);
 
     useEffect(() => {
-
-        $('#introStaticBackdrop').modal('show');
-
-        const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
-        axios.defaults.headers.common['authorization'] = `Bearer ${token}`;
-
+        $('#introStaticBackdrop').modal('show');        
         setProvinceData(Estados);
     }, []);
 
@@ -66,16 +58,26 @@ function SearchForm() {
             const url_start = import.meta.env.VITE_IBGE_API_CITIES_START;
             const url_end = import.meta.env.VITE_IBGE_API_CITIES_END;
             const url_cities = `${url_start}${province?.id}${url_end}`;
-            axios.get(url_cities)
-                .then(response => {
-                    if (response.data) {
-                        if (typeof response.data === 'object' && Object.keys(response.data).length > 0) {
-                            setCitiesData(response.data)
-                        }
-                    } else {
-                        setCitiesData([cityModel]);
-                    }
-                }).catch((error) => setMessage(error.message));
+
+            const response = await fetch(url_cities, {
+                method: 'GET',
+                headers: {
+                    'Content-type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                //throw new Error(`Response status: ${_response.status}`);
+                setMessage(`${response.status}`);
+            }
+
+            const data = await response.json();
+
+            if (typeof data === 'object' && Object.keys(data).length > 0) {
+                setCitiesData(data)
+            } else {
+                setCitiesData([cityModel]);
+            }
         }
         //Cidade===============================================
         else if (name === 'city') {
@@ -103,16 +105,26 @@ function SearchForm() {
             const url_start = import.meta.env.VITE_IBGE_API_MICROREGIONS_START;
             const url_end = import.meta.env.VITE_IBGE_API_MICROREGIONS_END;
             const url_microregions = `${url_start}${city?.microrregiao.id}${url_end}`;
-            axios.get(url_microregions)
-                .then(response => {
-                    if (response.data) {
-                        if (typeof response.data === 'object' && Object.keys(response.data).length > 0) {
-                            setMicroregionData(response.data)
-                        }
-                    } else {
-                        setMicroregionData([cityModel]);
-                    }
-                }).catch((error) => setMessage(error.message));
+
+            const response = await fetch(url_microregions, {
+                method: 'GET',
+                headers: {
+                    'Content-type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                //throw new Error(`Response status: ${_response.status}`);
+                setMessage(`${response.status}`);
+            }
+
+            const data = await response.json();
+
+            if (typeof data === 'object' && Object.keys(data).length > 0) {
+                setMicroregionData(data);
+            } else {
+                setCitiesData([cityModel]);
+            }
 
         }
         //Termos e condições===================================
@@ -151,27 +163,42 @@ function SearchForm() {
             query: formData
         }
 
-        axios
-            .post(import.meta.env.VITE_INSTRUCTOR_SEARCH_API_URL, payload)
-            .then((response) => {
-                if (response.data.result) {
+        const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
 
-                    if (typeof response.data.result === 'object' && Object.keys(response.data.result).length > 0) {
-                        navigate('/search-result', { state: { data: response.data.result, query: formData } });
-                    } else if (Array.isArray(response.data.result) && response.data.result.length > 0) {
-                        navigate('/search-result', { state: { data: response.data.result, query: formData } });
-                    }
-                    else {
-                        navigate('/search-result-fail');
-                    }
+        const api_url = `${import.meta.env.VITE_INSTRUCTOR_SEARCH_API_URL}`;
+
+        const response = await fetch(api_url, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify(payload),
+        });
+
+        if (response.status === 500) {
+            setAlertClass(messageClass.danger);
+            setMessage(`Erro no servidor. Tente novamente mais tarde.`);
+        }
+
+        const data = await response.json();
+
+        if (data.status === 401) {
+            setMessage(`${data.status} : Sua sessão expirou. Efetue Login novamente.`);
+            $('#logoutModal').modal('show');
+
+        } else if (data.status === 404) {
+            navigate('/search-result-fail', { state: { data: data.result, query: formData } });
+        }
+        else {
+            if (data.status === 200) {
+                if (typeof data.result === 'object' && Object.keys(data.result).length > 0) {
+                    navigate('/search-result', { state: { data: data.result, query: formData } });
+                } else if (Array.isArray(data.result) && data.result.length > 0) {
+                    navigate('/search-result', { state: { data: data.result, query: formData } });
                 }
-            })
-            .catch((error) => {
-                setMessage(`${error.message} : Sua sessão expirou. Efetue Login novamente.`);                
-                $('#logoutModal').modal('show');
-                //window.location.reload();
-
-            });
+            }
+        }
 
     };
 
