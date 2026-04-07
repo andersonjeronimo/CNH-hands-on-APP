@@ -40,6 +40,9 @@ function RegisterForm() {
     const [isCpf, setIsCpf] = useState(true);
     const [isCnpj, setIsCnpj] = useState(false);
 
+    const [isInputText, setIsInputText] = useState(true);
+    const [isDropdown, setIsDropdown] = useState(false);
+
     useEffect(() => {
         setProvinceData(Estados);
         setFormData(instructorModel);
@@ -86,6 +89,19 @@ function RegisterForm() {
         } else {
             setIsCpf(false);
             setIsCnpj(true);
+        }
+    }
+
+    const handleDDDRadioChange = (e: any) => {
+        const { name, checked } = e.target;
+        if (name === 'ddd-dropdown-radio') {
+            if (checked) {
+                setIsDropdown(true);
+                setIsInputText(false);
+            }
+        } else {
+            setIsDropdown(false);
+            setIsInputText(true);
         }
     }
 
@@ -414,17 +430,46 @@ function RegisterForm() {
                         </div>
                     </div>
 
-                    <div className='col-md-1'>
+                    <div className='col-md-6'>
                         <label className='form-label'>7 - DDD</label>
-                        <select name='ddd' id='ddd' className='form-select' value={formData.ddd} onChange={handleInputChange} required>
-                            <option selected value={'00'}>00</option>
-                            {selectedProvince.ddd.map((ddd) => (
-                                <option value={ddd}>
-                                    {ddd}
-                                </option>
-                            ))}
-                        </select>
+                        <div className="form-check">
+                            <input className="form-check-input"
+                                type="radio"
+                                name="ddd-dropdown-radio"
+                                id="ddd-dropdown-radio"
+                                checked={isDropdown}
+                                onChange={handleDDDRadioChange}
+                            />
+
+                            <select name='ddd' id='ddd' className='form-select' value={formData.ddd} onChange={handleInputChange}
+                                required={isDropdown} disabled={isInputText}>
+                                <option selected value={'00'}>00</option>
+                                {selectedProvince.ddd.map((ddd) => (
+                                    <option value={ddd}>
+                                        {ddd}
+                                    </option>
+                                ))}
+                            </select>                            
+                        </div>
                     </div>
+
+                    <div className='col-md-6'>
+                        <label className='form-label'>DDD (celular de outro Estado)</label>
+                        <div className="form-check">
+                            <input className="form-check-input"
+                                type="radio"
+                                name="ddd-text-radio"
+                                id="ddd-text-radio"
+                                checked={isInputText}
+                                onChange={handleDDDRadioChange}
+                            />
+
+                            <input type='number' className={inputClass} name='ddd' id='ddd'
+                                value={formData.ddd} onChange={handleInputChange}
+                                placeholder='00' min={11} max={99}
+                                required={isInputText} disabled={isDropdown} />
+                        </div>
+                    </div>                    
 
                     <div className='col-md-5'>
                         <label className='form-label'>8 - Celular | Whatsapp</label>
