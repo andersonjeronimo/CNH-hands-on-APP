@@ -123,14 +123,13 @@ function SignInPage() {
             const data = await response.json();           
 
             if (data.status === 201) {
-                if (typeof data === 'object' && Object.keys(data).length > 0) {
-                    const userId = data.result;
-                    navigate('/signup-result', { state: userId });
-
-                }
+                const userId = data.result;
+                navigate('/signup-result', { state: userId });                
             } else if (data.status === 409) {
                 if (typeof data === 'object' && Object.keys(data).length > 0) {
-                    alert(`${data.status} : ${data.message}`);
+                    alert(`Erro: ${data.status}. Não autorizado: Usuário já existe.`);
+                    setPasswordField1Message(`${data.status} : ${data.message}`);
+                    setPasswordField2Message(`${data.status} : ${data.message}`);
                 }
                 setFormData(prevState => ({
                     ...prevState,

@@ -8,33 +8,30 @@ function RegisterResult() {
     const location = useLocation();
     const [modelData, setModelData] = useState(model);
 
-    async function getInstructorById(_id: string) {
-        const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
-        const url = `${import.meta.env.VITE_INSTRUCTOR_API_URL}/${_id}`;
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Content-type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        });
-
-        if (!response.ok) {
-            //throw new Error(`Response status: ${_response.status}`);
-            alert(`${response.status}`);
-        }
-
-        const data = await response.json();
-        if (typeof data.result === 'object' && Object.keys(data.result).length > 0) {
-            /* verificar se já existe, carregar os dados no formulario */
-            setModelData(data.result);
-        }
-    }
-
     useEffect(() => {
         const _id = location.state;
         if (_id) {
-            getInstructorById(_id);
+            const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
+            const url = `${import.meta.env.VITE_INSTRUCTOR_API_URL}/${_id}`;
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                }
+            }).then(async (response) => {
+                if (!response.ok) {
+                    //throw new Error(`Response status: ${_response.status}`);
+                    alert(`${response.status}`);
+                }
+                const data = await response.json();
+                if (typeof data.result === 'object' && Object.keys(data.result).length > 0) {
+                    /* verificar se já existe, carregar os dados no formulario */
+                    setModelData(data.result);
+                }                
+            });
+
+
         }
     }, []);
 

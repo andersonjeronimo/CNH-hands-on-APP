@@ -13,37 +13,6 @@ function Details() {
     const [instructorData, setInstructorData] = useState(instructorModel);
     const [userData, setUserData] = useState(userModel);
 
-    async function getDetails() {
-        const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
-        const user_id = localStorage.getItem(`${import.meta.env.VITE_ID_VAR}`);
-
-        const url = `${import.meta.env.VITE_INSTRUCTOR_API_USER_ID_URL}/${user_id}`;
-
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Content-type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        });
-
-        if (!response.ok) {
-            //throw new Error(`Response status: ${_response.status}`);
-            alert(`${response.status}`);
-        }
-
-        const data = await response.json();
-        if (data.result) {
-            if (typeof data.result === 'object' && Object.keys(data.result).length > 0) {
-                /* verificar se já existe, carregar os dados no formulario */
-                setInstructorData(data.result);
-            }
-        } else {
-            navigate('/register');
-        }
-
-    }
-
     useEffect(() => {
         const role = localStorage.getItem(`${import.meta.env.VITE_ROLE_VAR}`);
         const email = localStorage.getItem(`${import.meta.env.VITE_EMAIL_VAR}`);
@@ -55,7 +24,34 @@ function Details() {
 
         }));
 
-        getDetails();
+        const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
+        const user_id = localStorage.getItem(`${import.meta.env.VITE_ID_VAR}`);
+
+        const url = `${import.meta.env.VITE_INSTRUCTOR_API_USER_ID_URL}/${user_id}`;
+
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
+        }).then(async (response) => {
+            if (!response.ok) {
+                //throw new Error(`Response status: ${_response.status}`);
+                alert(`${response.status}`);
+            }
+            const data = await response.json();
+            if (data.status === 404) {
+                navigate('/register');
+            } else {
+                if (typeof data.result === 'object' && Object.keys(data.result).length > 0) {
+                    /* verificar se já existe, carregar os dados no formulario */
+                    setInstructorData(data.result);
+                }
+            }
+
+        });
+
     }, []);
 
     return (

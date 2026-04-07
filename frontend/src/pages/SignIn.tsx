@@ -64,7 +64,7 @@ function SignInPage() {
 
         const data = await response.json();
 
-        if (data.success === true) {
+        if (data.success) {
             localStorage.setItem(`${import.meta.env.VITE_TOKEN_VAR}`, data.token);
             localStorage.setItem(`${import.meta.env.VITE_ID_VAR}`, data.user._id);
             localStorage.setItem(`${import.meta.env.VITE_EMAIL_VAR}`, data.user.email);
@@ -80,8 +80,9 @@ function SignInPage() {
                 navigate('/details');
             }
 
-        } else {
-            setPasswordFieldMessage(`${data.message}`);
+        } else if (!data.success) {
+            alert(`${data.message}`);
+            navigate('/signup');
         }
     };
 

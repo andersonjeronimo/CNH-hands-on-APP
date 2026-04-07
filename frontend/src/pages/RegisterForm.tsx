@@ -40,40 +40,39 @@ function RegisterForm() {
     const [isCpf, setIsCpf] = useState(true);
     const [isCnpj, setIsCnpj] = useState(false);
 
-    async function getInstructorByUserId(user_id: string) {
-        const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
-
-        const url = `${import.meta.env.VITE_INSTRUCTOR_API_USER_ID_URL}/${user_id}`;
-
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Content-type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        });
-
-        if (!response.ok) {
-            //throw new Error(`Response status: ${_response.status}`);
-            setMessage(`${response.status}`);
-        }
-
-        const data = await response.json();
-        if (typeof data.result === 'object' && Object.keys(data.result).length > 0) {
-            /* verificar se já existe, carregar os dados no formulario */
-            setFormData(data.result);
-        }
-    }
-
     useEffect(() => {
         setProvinceData(Estados);
         setFormData(instructorModel);
 
         const user_id = localStorage.getItem(`${import.meta.env.VITE_ID_VAR}`);
         if (user_id) {
-            getInstructorByUserId(user_id);
             formData.userId = user_id;
+
+            const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
+
+            const url = `${import.meta.env.VITE_INSTRUCTOR_API_USER_ID_URL}/${user_id}`;
+
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                }
+            }).then(async (response) => {
+                if (!response.ok) {
+                    //throw new Error(`Response status: ${_response.status}`);
+                    setMessage(`${response.status}`);
+                }
+
+                const data = await response.json();
+                if (typeof data.result === 'object' && Object.keys(data.result).length > 0) {
+                    /* verificar se já existe, carregar os dados no formulario */
+                    setFormData(data.result);
+                }
+
+            });
         }
+
     }, []);
 
 
@@ -274,18 +273,16 @@ function RegisterForm() {
 
             const data = await response.json();
 
-            if (data.success) {
-                if (typeof data.result === 'object' && Object.keys(data.result).length > 0) {
-                    //setMessage('Data is a non-empty object.');
-                    setAlertClass(messageClass.danger);
-                    setMessage(`Já existe um usuário com o CPF / CNPJ ${formData.cpf ?? formData.cnpj} cadastrado.`);
-                    alert(`Já existe um usuário com o CPF / CNPJ ${formData.cpf ?? formData.cnpj} cadastrado.`);
-                    setFormData(prevState => ({
-                        ...prevState,
-                        ['cpf']: '',
-                        ['cnpj']: '',
-                    }));
-                }
+            if (data.status === 200) {
+                //setMessage('Data is a non-empty object.');
+                setAlertClass(messageClass.danger);
+                setMessage(`Já existe um usuário com o CPF / CNPJ ${formData.cpf ?? formData.cnpj} cadastrado.`);
+                alert(`Já existe um usuário com o CPF / CNPJ ${formData.cpf ?? formData.cnpj} cadastrado.`);
+                setFormData(prevState => ({
+                    ...prevState,
+                    ['cpf']: '',
+                    ['cnpj']: '',
+                }));
 
             } else {
                 const api_url = `${import.meta.env.VITE_INSTRUCTOR_API_URL}`;
@@ -302,7 +299,7 @@ function RegisterForm() {
                 //o result é o ID do instrutor cadastrado
                 navigate('/register-result', { state: data.result });
             }
-            
+
         }
 
     };
