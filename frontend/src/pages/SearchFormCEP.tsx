@@ -11,12 +11,12 @@ import cityModel from '../assets/utils/cidade-model.json';
 import searchFormModel from '../assets/utils/search-form-model.json';
 import paginationModel from '../assets/utils/pagination.json';
 import LogoutModal from './partials/LogoutModal';
-//import cepModel from '../assets/utils/cep-model.json';
+import cepModel from '../assets/utils/cep-model.json';
 
 import utils from '../assets/utils/utils.json';
 
 
-function SearchForm() {
+function SearchFormCEP() {
 
     const navigate = useNavigate();
 
@@ -34,7 +34,9 @@ function SearchForm() {
     const [citiesData, setCitiesData] = useState([cityModel]);//cidades por UF
     const [selectedCity, setSelectedCity] = useState(cityModel);
     const [microregionData, setMicroregionData] = useState([cityModel]);
-    const [formData, setFormData] = useState(searchFormModel);    
+    const [formData, setFormData] = useState(searchFormModel);
+    //NEW!    
+    const [cepData, setCEPData] = useState(cepModel);
 
     const loadCities = async (stateName: string) => {
         const province = provinceData.find(estado => estado.nome === stateName);
@@ -103,7 +105,7 @@ function SearchForm() {
         if (typeof data === 'object' && Object.keys(data).length > 0) {
             setMicroregionData(data);
         } else {
-            setMicroregionData([cityModel]);            
+            setCitiesData([cityModel]);
         }
 
     }
@@ -111,8 +113,68 @@ function SearchForm() {
     useEffect(() => {
         $('#introStaticBackdrop').modal('show');
         setProvinceData(Estados);
-    }, []);   
-    
+    }, []);
+
+    const handleCEPInputChange = async (e: any) => {
+        const { name, value } = e.target;
+        setCEPData(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    };
+
+    const searchLocationByCEP = async () => {       
+
+        const brasil_api_url = `${import.meta.env.VITE_BRASIL_API_CEP_URL}${cepData.cep}`;
+
+        const response = await fetch(brasil_api_url, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.status === 500) {
+            setMessage(`Erro no servidor. Busca por CEP indisponível.`);
+        }
+        else if (response.status === 404) {
+            setMessage(`Erro no servidor. Busca por CEP indisponível.`);
+        }
+        else {
+            const data = await response.json();
+            if (typeof data === 'object' && Object.keys(data).length > 0) {
+                setCEPData(data);
+
+                const province = provinceData.find(estado => estado.sigla === data.state);
+
+                loadCities(province?.nome || '');
+
+                const city = citiesData.find(_city => _city.nome === data.city);
+
+                setFormData(prevState => ({
+                    ...prevState,
+                    ['state']: province?.nome || '',
+                    ['stateId']: province?.id || 0,
+                    ['city']: city?.nome || '',
+                    ['cityId']: city?.id || 0
+                }));
+
+                loadMicroregionCities(city?.nome || '');//correto
+            }
+
+        }
+
+        //{
+        //    "cep": "89010025",
+        //    "state": "SC",
+        //    "city": "Blumenau",
+        //    "neighborhood": "Centro",
+        //    "street": "Rua Doutor Luiz de Freitas Melro",
+        //    "service": "viacep"
+        //}
+
+    };
+
     const handleInputChange = async (e: any) => {
         const { name, value, type, checked } = e.target;
         setFormData(prevState => ({
@@ -217,14 +279,35 @@ function SearchForm() {
                         {message}
                     </p>
                 </div>
-            </div>            
+            </div>
+            <div className="row g-3 align-items-center">
+                <label className='form-label'>* Buscar por CEP [<strong>opcional</strong>]</label>
+                <div className="input-group mb-3">
+                    <input type="text" className="form-control" placeholder="Informe o CEP" aria-label="CEP" aria-describedby="button-addon"
+                        name='cep' id='cep' value={cepData.cep} onChange={handleCEPInputChange} />
+                    <button className="btn btn-success shadow" onClick={searchLocationByCEP}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
+                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                        </svg> Buscar Estado e Cidade por CEP</button>
+                </div>
+            </div>           
+
+            <hr />
 
             <form className="row g-3 align-items-center needs-validation" onSubmit={handleSubmit}>
 
                 <div className='col-md-6'>
                     <label className='form-label'>1 - Estado</label>
-                    <select name='state' id='state' className='form-select' value={formData.state} onChange={handleInputChange} required>                        
+                    <select name='state' id='state' className='form-select' value={formData.state} onChange={handleInputChange} required>
+                        {/* {
+                            formData.state ? (
+                                <option selected value={formData.state}>{formData.state}</option>
+                            ) : (
+                                <option selected disabled value={''}>Selecione o Estado</option>
+                            )
+                        } */}
                         <option disabled value={''}>Selecione o Estado</option>
+
                         {provinceData.map((option) => (
                             <option key={option.id} value={option.nome} selected={option.nome === formData.state}>
                                 {option.sigla} - {option.nome}
@@ -236,7 +319,14 @@ function SearchForm() {
                 <div className='col-md-6'>
                     <label className='form-label'>2 - Cidade</label>
                     <select name='city' id='city' className='form-select' value={formData.city} onChange={handleInputChange} required>
-                        <option selected disabled value={''}>Selecione a Cidade</option>                        
+                        {
+                            formData.city ? (
+                                <option selected value={formData.city}>{formData.city}</option>
+                            ) : (
+                                <option selected disabled value={''}>Selecione a Cidade</option>
+                            )
+                        }                       
+                        
                         {citiesData.map((option) => (
                             <option key={option.id} value={option.nome}>
                                 {option.nome}
@@ -490,4 +580,4 @@ function SearchForm() {
     )
 }
 
-export default SearchForm;
+export default SearchFormCEP;

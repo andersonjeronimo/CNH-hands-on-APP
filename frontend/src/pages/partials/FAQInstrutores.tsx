@@ -13,8 +13,7 @@ function FAQInstrutores() {
             if (!response.ok) {
                 throw new Error(`Response status: ${response.status}`);
             }
-
-            //const data = JSON.parse(JSON.stringify(await response.json()));
+            
             const data = await response.json();
             setPriceData(data.result);
 

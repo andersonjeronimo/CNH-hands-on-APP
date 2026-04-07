@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import axios from 'axios';
+declare var $: any;
 
 import instructorModel from '../assets/utils/instructor-model.json';
 import paginationModel from '../assets/utils/pagination.json';
+import LogoutModal from './partials/LogoutModal';
 
 function SerchResult() {
 
@@ -13,8 +14,8 @@ function SerchResult() {
     const [queryData, setQueryData] = useState({});
     const [paginationData, setPaginationData] = useState(paginationModel);
 
-    useEffect(() => {        
-        
+    useEffect(() => {
+
         setTableData(location.state.data);
         setQueryData(location.state.query);
 
@@ -28,6 +29,8 @@ function SerchResult() {
     const handlePagination = async (e: any) => {
         //e.preventDefault();
         const { name } = e.target;
+        const api_url = import.meta.env.VITE_INSTRUCTOR_SEARCH_API_URL;
+        const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
 
         if (name === 'nextPage') {
             if (tableData.length > 0) {
@@ -40,16 +43,35 @@ function SerchResult() {
                     pagination: paginationData,
                     query: queryData
                 }
-                axios
-                    .post(import.meta.env.VITE_INSTRUCTOR_SEARCH_API_URL, payload)
-                    .then((response) => {
-                        if (response.data.result) {
-                            if (typeof response.data.result === 'object' && Object.keys(response.data.result).length > 0) {
-                                setTableData(response.data.result);
-                            }
+
+                const response = await fetch(api_url, {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: JSON.stringify(payload),
+                });
+
+                if (response.status === 500) {
+                    alert(`Erro no servidor. Tente novamente mais tarde.`);
+                }
+
+                const data = await response.json();
+
+                if (data.status === 401) {
+                    alert(`${data.status} : Sua sessão expirou. Efetue Login novamente.`);
+                    $('#logoutModal').modal('show');
+                }
+                else {
+                    if (data.status === 200) {
+                        if (typeof data.result === 'object' && Object.keys(data.result).length > 0) {
+                            setTableData(data.result);
+                        } else if (Array.isArray(data.result) && data.result.length > 0) {
+                            setTableData(data.result);
                         }
-                    })
-                    .catch((error) => alert(error.message));
+                    }
+                }
             }
 
         }
@@ -62,17 +84,36 @@ function SerchResult() {
                     query: queryData
                 }
 
-                axios
-                    .post(import.meta.env.VITE_INSTRUCTOR_SEARCH_API_URL, payload)
-                    .then((response) => {
-                        if (response.data) {
-                            if (typeof response.data === 'object' && Object.keys(response.data).length > 0) {
-                                setTableData(response.data);
-                            }
+                const response = await fetch(api_url, {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: JSON.stringify(payload),
+                });
+
+                if (response.status === 500) {
+                    alert(`Erro no servidor. Tente novamente mais tarde.`);
+                }
+
+                const data = await response.json();
+
+                if (data.status === 401) {
+                    alert(`${data.status} : Sua sessão expirou. Efetue Login novamente.`);
+                    $('#logoutModal').modal('show');
+                }
+                else {
+                    if (data.status === 200) {
+                        if (typeof data.result === 'object' && Object.keys(data.result).length > 0) {
+                            setTableData(data.result);
+                        } else if (Array.isArray(data.result) && data.result.length > 0) {
+                            setTableData(data.result);
                         }
-                    })
-                    .catch((error) => alert(error.message));
+                    }
+                }
             }
+
         }
 
     };
@@ -80,6 +121,7 @@ function SerchResult() {
 
     return (
         <div className="container container-fluid mt-lg-5 mb-lg-5">
+            <LogoutModal></LogoutModal>
             <p className='text-center'>
                 <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="currentColor" className="bi bi-people" viewBox="0 0 16 16">
                     <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002-.014.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a6 6 0 0 0-1.23-.247A7 7 0 0 0 5 9c-4 0-5 3-5 4q0 1 1 1h4.216A2.24 2.24 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.5 5.5 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4" />
@@ -87,7 +129,7 @@ function SerchResult() {
             </p>
             <p className="text-center"><h1>Instrutores Localizados</h1></p>
             <hr />
-            
+
             <div className='text-center'>
 
                 <a className="btn btn-primary w-100 py-2 shadow-lg" href="/search">
@@ -103,7 +145,6 @@ function SerchResult() {
                     <tr>
                         <th scope="col">Nome</th>
                         <th scope="col">Cidade</th>
-                        <th scope="col">Categoria</th>                        
                         <th scope="col">Contato</th>
                     </tr>
                 </thead>
@@ -117,9 +158,6 @@ function SerchResult() {
                             <th scope="row">
                                 {instructor.city}
                             </th>
-                            <td>
-                                {instructor.category}
-                            </td>                            
                             <td>
                                 <a className="btn btn-success shadow form-control"
                                     href={`https://wa.me/55${instructor.ddd}${instructor.phone}?text=Olá!%20Te%20encontrei%20pelo%20aplicativo%20CNH%20Na%20Mão.%20Gostaria%20de%20agendar%20aulas%20de%20direção.%20Aguardo%20seu%20contato!`}

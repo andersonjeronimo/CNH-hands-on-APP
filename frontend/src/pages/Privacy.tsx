@@ -95,7 +95,7 @@ function Privacy() {
                 </li>
 
                 <li>
-                    <p>Compartilhamento de Dados</p>
+                    <p><strong>Compartilhamento de Dados</strong></p>
                     <p>Os dados pessoais não são compartilhados com terceiros, exceto:
                         <ul>
                             <li>Quando exigido por lei ou ordem judicial;</li>

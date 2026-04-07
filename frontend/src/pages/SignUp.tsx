@@ -1,11 +1,9 @@
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 
 import userModel from '../assets/utils/user-model.json';
 import utils from '../assets/utils/utils.json';
-
 
 function SignInPage() {
 
@@ -84,7 +82,7 @@ function SignInPage() {
             setFormData(prevState => ({
                 ...prevState,
                 ['password']: ''
-            }));            
+            }));
 
         } else if (passwordTest.length < min || passwordTest.length > max) {
             setPasswordField2Message(`Atenção: Senhas informadas devem conter no mínimo ${min} caracteres e no máximo ${max} caracteres`);
@@ -101,22 +99,46 @@ function SignInPage() {
             setPasswordTest('');
 
         } else {
-            axios.post(`${import.meta.env.VITE_USER_API_URL}`, formData)
-                .then((response) => {
-                    //alert(typeof response.data);
-                    const userId = response.data.result;
+
+            const api_url = `${import.meta.env.VITE_USER_API_URL}`;
+
+            const response = await fetch(api_url, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData),
+            });
+
+            if (response.status === 500) {
+                alert(`Erro no servidor. Tente novamente mais tarde.`);
+                setFormData(prevState => ({
+                    ...prevState,
+                    ['password']: '',
+                    ['email']: '',
+                }));
+                setPasswordTest('');
+            }
+
+            const data = await response.json();           
+
+            if (data.status === 201) {
+                if (typeof data === 'object' && Object.keys(data).length > 0) {
+                    const userId = data.result;
                     navigate('/signup-result', { state: userId });
 
-                })
-                .catch((error) => {
-                    alert(`${error.message}.`);
-                    setFormData(prevState => ({
-                        ...prevState,
-                        ['password']: '',
-                        ['email']: '',
-                    }));
-                    setPasswordTest('');
-                });
+                }
+            } else if (data.status === 409) {
+                if (typeof data === 'object' && Object.keys(data).length > 0) {
+                    alert(`${data.status} : ${data.message}`);
+                }
+                setFormData(prevState => ({
+                    ...prevState,
+                    ['password']: '',
+                    ['email']: '',
+                }));
+                setPasswordTest('');
+            }
         }
     };
 
@@ -132,7 +154,7 @@ function SignInPage() {
                     </svg> Cadastro
                 </h1>
             </p>
-            <p className="text-center"><h3>Registre as credenciais</h3></p>            
+            <p className="text-center"><h3>Registre as credenciais</h3></p>
             <hr />
             <main className="form-signin">
                 <form className='row g-3 needs-validation justify-content-md-center' onSubmit={handleSubmit}>
