@@ -5,9 +5,9 @@ import Explanation from "./partials/Explanation";
 function LandPage() {
     return (
         <div className="container container-fluid mt-lg-5 mb-lg-5">            
-            <Cards></Cards>            
-            <hr />
             <Logo></Logo>
+            <hr />
+            <Cards></Cards>            
             <Explanation></Explanation>
         </div>
 

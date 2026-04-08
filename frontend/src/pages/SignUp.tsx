@@ -244,9 +244,9 @@ function SignInPage() {
                                     <option selected value={utils.role.instrutor}>
                                         {utils.role.instrutor}
                                     </option>
-                                    <option selected value={utils.role.aluno}>
+                                    {/* <option selected value={utils.role.aluno}>
                                         {utils.role.aluno}
-                                    </option>
+                                    </option> */}
                                 </select>
                             </div>
                         </div>

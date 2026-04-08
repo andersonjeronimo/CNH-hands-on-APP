@@ -40,8 +40,8 @@ function RegisterForm() {
     const [isCpf, setIsCpf] = useState(true);
     const [isCnpj, setIsCnpj] = useState(false);
 
-    const [isInputText, setIsInputText] = useState(true);
-    const [isDropdown, setIsDropdown] = useState(false);
+    const [isDropdown, setIsDropdown] = useState(true);
+    const [isInputText, setIsInputText] = useState(false);
 
     useEffect(() => {
         setProvinceData(Estados);
@@ -430,7 +430,7 @@ function RegisterForm() {
                         </div>
                     </div>
 
-                    <div className='col-md-6'>
+                    <div className='col-md-3'>
                         <label className='form-label'>7 - DDD</label>
                         <div className="form-check">
                             <input className="form-check-input"
@@ -453,8 +453,8 @@ function RegisterForm() {
                         </div>
                     </div>
 
-                    <div className='col-md-6'>
-                        <label className='form-label'>DDD (celular de outro Estado)</label>
+                    <div className='col-md-3'>
+                        <label className='form-label'>DDD de outro Estado</label>
                         <div className="form-check">
                             <input className="form-check-input"
                                 type="radio"
@@ -471,7 +471,7 @@ function RegisterForm() {
                         </div>
                     </div>                    
 
-                    <div className='col-md-5'>
+                    <div className='col-md-6'>
                         <label className='form-label'>8 - Celular | Whatsapp</label>
                         <div className='input-group'>
                             <span className='input-group-text' id='email'>

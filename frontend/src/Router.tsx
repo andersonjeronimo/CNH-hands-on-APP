@@ -63,21 +63,21 @@ function Router() {
                 } />
 
                 <Route path='/search' element={
-                    <PrivateRoute>
+                    
                         <SearchForm />
-                    </PrivateRoute>
+                    
                 } />
 
                 <Route path='/search-result' element={
-                    <PrivateRoute>
+                    
                         <SearchResult />
-                    </PrivateRoute>
+                    
                 } />
 
                 <Route path='/search-result-fail' element={
-                    <PrivateRoute>
+                    
                         <SerchResultFail />
-                    </PrivateRoute>
+                    
                 } />
 
                 <Route path='/customersfilter' element={
