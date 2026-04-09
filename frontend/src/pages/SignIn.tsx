@@ -14,15 +14,13 @@ function SignInPage() {
     const [passwordFieldMessage, setPasswordFieldMessage] = useState("");
 
     useEffect(() => {
+        //verificar se já existe um token, se sim, redirecionar para a página de detalhes
         const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
         const role = localStorage.getItem(`${import.meta.env.VITE_ROLE_VAR}`);
         if (token) {
-            if (role) {
-                if (role === utils.role.aluno) {
-                    navigate('/search');
-                }
+            if (role) {                
                 if (role === utils.role.instrutor) {
-                    navigate('/details');
+                    navigate('/profile');
                 }
             }
         }
@@ -73,11 +71,8 @@ function SignInPage() {
             //axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
             window.location.reload();
 
-            if (data.user.role === utils.role.aluno) {
-                navigate('/search');
-
-            } else if (data.user.role === utils.role.instrutor) {
-                navigate('/details');
+            if (data.user.role === utils.role.instrutor) {
+                navigate('/profile');
             }
 
         } else if (!data.success) {

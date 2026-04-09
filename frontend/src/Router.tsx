@@ -7,12 +7,13 @@ import SignUpPage from './pages/SignUp';
 import SignUpResult from './pages/SignUpResult';
 import RegisterForm from './pages/RegisterForm';
 import RegisterResult from './pages/RegisterResult';
+import EditProfileForm from './pages/EditProfileForm';
 import SearchForm from './pages/SearchForm';
 import SearchResult from './pages/SearchResult';
 import SerchResultFail from './pages/SearchResultFail';
 import Customers from './pages/Instructors';
 import CustomerDetails from './pages/InstructorDetails';
-import Details from './pages/Details';
+import Profile from './pages/Profile';
 import About from './pages/About';
 import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
@@ -62,6 +63,14 @@ function Router() {
                     </PrivateRoute>
                 } />
 
+                <Route path='/edit-profile' element={
+                    <PrivateRoute>
+                        <InstructorRoute>
+                            <EditProfileForm />
+                        </InstructorRoute>
+                    </PrivateRoute>
+                } />
+
                 <Route path='/search' element={
                     
                         <SearchForm />
@@ -86,10 +95,10 @@ function Router() {
                     </PrivateRoute>
                 } />
 
-                <Route path='/details' element={
+                <Route path='/profile' element={
                     <PrivateRoute>
                         <InstructorRoute>
-                            <Details />
+                            <Profile />
                         </InstructorRoute>
                     </PrivateRoute>
                 } />

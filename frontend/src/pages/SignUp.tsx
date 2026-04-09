@@ -23,10 +23,8 @@ function SignInPage() {
         //se estiver logado, redireciona conforme o perfil
         const role = localStorage.getItem(`${import.meta.env.VITE_ROLE_VAR}`);
         if (role) {
-            if (role === utils.role.aluno) {
-                navigate('/search');
-            } else if (role === utils.role.instrutor) {
-                navigate('/details');
+            if (role === utils.role.instrutor) {
+                navigate('/profile');
             }
         }
 
@@ -243,10 +241,7 @@ function SignInPage() {
                                     <option selected disabled value={''}>Selecione o perfil</option>
                                     <option selected value={utils.role.instrutor}>
                                         {utils.role.instrutor}
-                                    </option>
-                                    {/* <option selected value={utils.role.aluno}>
-                                        {utils.role.aluno}
-                                    </option> */}
+                                    </option>                                    
                                 </select>
                             </div>
                         </div>

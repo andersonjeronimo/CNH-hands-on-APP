@@ -7,7 +7,8 @@ function LandPage() {
         <div className="container container-fluid mt-lg-5 mb-lg-5">            
             <Logo></Logo>
             <hr />
-            <Cards></Cards>            
+            <Cards></Cards>
+            <br />           
             <Explanation></Explanation>
         </div>
 
