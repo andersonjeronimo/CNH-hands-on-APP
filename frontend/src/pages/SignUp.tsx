@@ -48,15 +48,12 @@ function SignInPage() {
         setPasswordTest(value);
     }
 
-    const handleShowPassword = async (e: any) => {
-        e.preventDefault();
-        const { id } = e.target;
-        if (id === 'form_password') {
-            setShowPassword(!showPassword);
-        }
-        if (id === 'form_password_test') {
-            setShowPasswordTest(!showPasswordTest);
-        }
+    const handleShowPassword = async () => {
+        setShowPassword(!showPassword);        
+    };
+
+    const handleShowPasswordTest = async () => {        
+        setShowPasswordTest(!showPasswordTest);
     };
 
     const handleInputChange = async (e: any) => {
@@ -118,11 +115,11 @@ function SignInPage() {
                 setPasswordTest('');
             }
 
-            const data = await response.json();           
+            const data = await response.json();
 
             if (data.status === 201) {
                 const userId = data.result;
-                navigate('/signup-result', { state: userId });                
+                navigate('/signup-result', { state: userId });
             } else if (data.status === 409) {
                 if (typeof data === 'object' && Object.keys(data).length > 0) {
                     alert(`Erro: ${data.status}. Não autorizado: Usuário já existe.`);
@@ -154,9 +151,10 @@ function SignInPage() {
             <p className="text-center"><h3>Registre as credenciais</h3></p>
             <hr />
             <main className="form-signin">
-                <form className='row g-3 needs-validation justify-content-md-center' onSubmit={handleSubmit}>
-                    <div className='col-md-6'>
-                        <div className='col-md-12'>
+                <form className='needs-validation' onSubmit={handleSubmit}>
+                    <div className='row g-3 justify-content-md-center'>
+                        
+                        <div className='col-md-6'>
                             <label className='form-label'>Email</label>
                             <div className='input-group'>
                                 <span className='input-group-text' id='email'>
@@ -167,71 +165,88 @@ function SignInPage() {
 
                                 </span>
                                 <input type='email' className='form-control form-control-lg' name='email' id='email'
+                                placeholder='seu_email@exemplo.com'
                                     value={formData.email} onChange={handleInputChange}
                                     aria-describedby='email' required />
                             </div>
                         </div>
+
                         <br />
-                        <div className='col-md-12'>
+
+                        <div className='col-md-6'>
                             <label className='form-label'>Senha</label>
-                            <div className='input-group'>
-                                <span className='input-group-text' id='form_password' onClick={handleShowPassword}>
-                                    {
-                                        showPassword ?
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-eye" viewBox="0 0 16 16">
-                                                <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
-                                                <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
-                                            </svg>
-                                            :
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-eye-slash" viewBox="0 0 16 16">
-                                                <path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7 7 0 0 0-2.79.588l.77.771A6 6 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755q-.247.248-.517.486z" />
-                                                <path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829" />
-                                                <path d="M3.35 5.47q-.27.24-.518.487A13 13 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7 7 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12z" />
-                                            </svg>
-                                    }
-                                </span>
+                            <div className='input-group mb-3'>
+                                {
+                                    showPassword ?
+                                        (<>
+                                            <button className="btn btn-outline-secondary" type="button" id="button-addon2" onClick={handleShowPassword}>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-eye" viewBox="0 0 16 16">
+                                                    <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
+                                                    <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
+                                                </svg>
+                                            </button>
+                                        </>)
+                                        :
+                                        (<>
+                                            <button className="btn btn-outline-secondary" type="button" id="button-addon2" onClick={handleShowPassword}>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-eye-slash" viewBox="0 0 16 16">
+                                                    <path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7 7 0 0 0-2.79.588l.77.771A6 6 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755q-.247.248-.517.486z" />
+                                                    <path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829" />
+                                                    <path d="M3.35 5.47q-.27.24-.518.487A13 13 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7 7 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12z" />
+                                                </svg>
+                                            </button>
+                                        </>)
+                                }
                                 <input type={showPassword ? 'text' : 'password'} className='form-control form-control-lg' name='password' id='password'
-                                    value={formData.password} onChange={handleInputChange} /* minLength={utils.passwordSize.min} maxLength={utils.passwordSize.max} */
+                                    value={formData.password} onChange={handleInputChange}
                                     aria-describedby='passwordHelpBlock' required />
                             </div>
                             <div id="passwordHelpBlock" className="form-text">
                                 <strong>{passwordField1Message}</strong>
-                            </div>
+                            </div>                            
                         </div>
+
                         <br />
-                        <div className='col-md-12'>
-                            <label className='form-label'>Repetir Senha</label>
-                            <div className='input-group'>
-                                <span className='input-group-text' id='form_password_test' onClick={handleShowPassword}>
-                                    {
-                                        showPasswordTest ?
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-eye" viewBox="0 0 16 16">
-                                                <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
-                                                <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
-                                            </svg>
-                                            :
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-eye-slash" viewBox="0 0 16 16">
-                                                <path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7 7 0 0 0-2.79.588l.77.771A6 6 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755q-.247.248-.517.486z" />
-                                                <path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829" />
-                                                <path d="M3.35 5.47q-.27.24-.518.487A13 13 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7 7 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12z" />
-                                            </svg>
-                                    }
-                                </span>
-                                <input type={showPasswordTest ? 'text' : 'password'} className='form-control form-control-lg' name='password_test' id='password_test'
-                                    value={passwordTest} onChange={handlePwdInputChange} /* minLength={utils.passwordSize.min} maxLength={utils.passwordSize.max} */
+
+                        <div className='col-md-6'>
+                            <label className='form-label'>Repetir senha</label>
+                            <div className='input-group mb-3'>
+                                {
+                                    showPasswordTest ?
+                                        (<>
+                                            <button className="btn btn-outline-secondary" type="button" id="button-addon2" onClick={handleShowPasswordTest}>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-eye" viewBox="0 0 16 16">
+                                                    <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
+                                                    <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
+                                                </svg>
+                                            </button>
+                                        </>)
+                                        :
+                                        (<>
+                                            <button className="btn btn-outline-secondary" type="button" id="button-addon2" onClick={handleShowPasswordTest}>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-eye-slash" viewBox="0 0 16 16">
+                                                    <path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7 7 0 0 0-2.79.588l.77.771A6 6 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755q-.247.248-.517.486z" />
+                                                    <path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829" />
+                                                    <path d="M3.35 5.47q-.27.24-.518.487A13 13 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7 7 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12z" />
+                                                </svg>
+                                            </button>
+                                        </>)
+                                }
+                                <input type={showPasswordTest ? 'text' : 'password'} className='form-control form-control-lg' name='passwordTest' id='passwordTest'
+                                    value={passwordTest} onChange={handlePwdInputChange}
                                     aria-describedby='passwordHelpBlock' required />
                             </div>
                             <div id="passwordHelpBlock" className="form-text">
                                 <strong>{passwordField2Message}</strong>
-                            </div>
+                            </div>                            
                         </div>
 
-                        <br />
+                        <br />                        
 
-                        <div className='col-md-12'>
+                        <div className='col-md-6'>
                             <label className='form-label'>Perfil</label>
 
-                            <div className='input-group'>
+                            <div className='input-group mb-3'>
                                 <span className='input-group-text' id='role'>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-person-gear" viewBox="0 0 16 16">
                                         <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m.256 7a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1zm3.63-4.54c.18-.613 1.048-.613 1.229 0l.043.148a.64.64 0 0 0 .921.382l.136-.074c.561-.306 1.175.308.87.869l-.075.136a.64.64 0 0 0 .382.92l.149.045c.612.18.612 1.048 0 1.229l-.15.043a.64.64 0 0 0-.38.921l.074.136c.305.561-.309 1.175-.87.87l-.136-.075a.64.64 0 0 0-.92.382l-.045.149c-.18.612-1.048.612-1.229 0l-.043-.15a.64.64 0 0 0-.921-.38l-.136.074c-.561.305-1.175-.309-.87-.87l.075-.136a.64.64 0 0 0-.382-.92l-.148-.045c-.613-.18-.613-1.048 0-1.229l.148-.043a.64.64 0 0 0 .382-.921l-.074-.136c-.306-.561.308-1.175.869-.87l.136.075a.64.64 0 0 0 .92-.382zM14 12.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0" />
@@ -241,16 +256,16 @@ function SignInPage() {
                                     <option selected disabled value={''}>Selecione o perfil</option>
                                     <option selected value={utils.role.instrutor}>
                                         {utils.role.instrutor}
-                                    </option>                                    
+                                    </option>
                                 </select>
                             </div>
+                            <br />
+                            <hr />
                         </div>
 
                         <br />
-                        <hr />
-                        <br />
 
-                        <div className='col-md-12'>
+                        <div className='col-md-6'>
                             <button className="btn btn-success w-100 py-2 shadow" type="submit">
                                 Cadastrar Usuário <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" className="bi bi-person-plus" viewBox="0 0 16 16">
                                     <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" />
@@ -258,8 +273,10 @@ function SignInPage() {
                                 </svg>
                             </button>
                         </div>
+
                         <br />
-                        <div className='col-md-12'>
+
+                        <div className='col-md-6'>
                             <a className="icon-link icon-link-hover link-success" href="/signin">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="bi" viewBox="0 0 16 16" aria-hidden="true">
                                     <path d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
@@ -267,6 +284,7 @@ function SignInPage() {
                                 <p className="fs-5">Já tem cadastro? Clique aqui!</p>
                             </a>
                         </div>
+
                     </div>
                 </form>
             </main>

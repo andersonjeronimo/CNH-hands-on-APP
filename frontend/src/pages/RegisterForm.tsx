@@ -33,8 +33,7 @@ function RegisterForm() {
     const [inputClass, setInputClass] = useState(inputFocusClass.default);
     const [provinceData, setProvinceData] = useState([provinceModel]);
     const [selectedProvince, setSelectedProvince] = useState(provinceModel);
-    const [citiesData, setCitiesData] = useState([cityModel]);//cidades por UF
-    const [selectedCity, setSelectedCity] = useState(cityModel);
+    const [citiesData, setCitiesData] = useState([cityModel]);//cidades por UF    
     const [microregionData, setMicroregionData] = useState([cityModel]);
     const [formData, setFormData] = useState(instructorModel);
     const [isCpf, setIsCpf] = useState(true);
@@ -42,6 +41,54 @@ function RegisterForm() {
 
     const [isDropdown, setIsDropdown] = useState(true);
     const [isInputText, setIsInputText] = useState(false);
+
+    //load cities by province id
+    //buscar cidades na API do IBGE
+    async function loadCitiesByProvinceId(provinceId: number) {
+        const url_start = import.meta.env.VITE_IBGE_API_CITIES_START;
+        const url_end = import.meta.env.VITE_IBGE_API_CITIES_END;
+        const url_cities = `${url_start}${provinceId}${url_end}`;
+        const response = await fetch(url_cities, {
+            method: 'GET',
+            headers: {
+                'Content-type': 'application/json'
+            }
+        });
+        if (!response.ok) {
+            //throw new Error(`Response status: ${_response.status}`);
+            setMessage(`${response.status}`);
+        }
+        const data = await response.json();
+        if (typeof data === 'object' && Object.keys(data).length > 0) {
+            setCitiesData(data)
+        } else {
+            setCitiesData([cityModel]);
+        }
+    }
+
+    //buscar cidades da microrregião na API do IBGE            
+    //`https://servicodados.ibge.gov.br/api/v1/localidades/microrregioes/${city?.microrregiao.id}/municipios`
+    async function loadCitiesByMicroregionId(microregionId: number) {
+        const url_start = import.meta.env.VITE_IBGE_API_MICROREGIONS_START;
+        const url_end = import.meta.env.VITE_IBGE_API_MICROREGIONS_END;
+        const url_microregions = `${url_start}${microregionId}${url_end}`;
+        const response = await fetch(url_microregions, {
+            method: 'GET',
+            headers: {
+                'Content-type': 'application/json'
+            }
+        });
+        if (!response.ok) {
+            //throw new Error(`Response status: ${_response.status}`);
+            setMessage(`${response.status}`);
+        }
+        const data = await response.json();
+        if (typeof data === 'object' && Object.keys(data).length > 0) {
+            setMicroregionData(data);
+        } else {
+            setMicroregionData([cityModel]);
+        }
+    }
 
     useEffect(() => {
         setProvinceData(Estados);
@@ -116,91 +163,42 @@ function RegisterForm() {
 
         //Estado===============================================
         if (name === 'state') {
-            //reset DDD
-            setFormData(prevState => ({
-                ...prevState,
-                ['ddd']: ''
-            }));
-
             const province = provinceData.find(estado => estado.nome === value);
             setSelectedProvince(province || provinceModel);
             setFormData(prevState => ({
                 ...prevState,
-                ['stateId']: province?.id || 0
+                ['stateId']: province?.id || 0,
+                ['state']: province?.nome || '',                
+                ['cityId']: 0,
+                ['city']: '',
+                ['microregionId']: 0,
+                ['callByMicroregion']: false,
             }));
+            //resetar cidades e microrregião para evitar inconsistências
+            setMicroregionData([cityModel]);
 
             //buscar cidades na API do IBGE
-            const url_start = import.meta.env.VITE_IBGE_API_CITIES_START;
-            const url_end = import.meta.env.VITE_IBGE_API_CITIES_END;
-            const url_cities = `${url_start}${province?.id}${url_end}`;
+            await loadCitiesByProvinceId(province?.id || 0);
 
-            const response = await fetch(url_cities, {
-                method: 'GET',
-                headers: {
-                    'Content-type': 'application/json'
-                }
-            });
-
-            if (!response.ok) {
-                //throw new Error(`Response status: ${_response.status}`);
-                setMessage(`${response.status}`);
-            }
-
-            const data = await response.json();
-
-            if (typeof data === 'object' && Object.keys(data).length > 0) {
-                setCitiesData(data)
-            } else {
-                setCitiesData([cityModel]);
-            }
+            setAlertClass(messageClass.info);
+            setMessage(`Selecione o município no campo 2 - cidade - deste formulário`);
         }
         //Cidade===============================================
         else if (name === 'city') {
             const city = citiesData.find(_city => _city.nome === value);
-            setSelectedCity(city || cityModel);
             setFormData(prevState => ({
                 ...prevState,
-                ['cityId']: city?.id || 0
-            }));
-
-            setFormData(prevState => ({
-                ...prevState,
-                ['microregionId']: city?.microrregiao.id || 0
-            }));
-
-            setFormData(prevState => ({
-                ...prevState,
-                ['callByMicroregion']: false
+                ['cityId']: city?.id || 0,
+                ['city']: city?.nome || '',
+                ['microregionId']: city?.microrregiao.id || 0,
+                ['callByMicroregion']: false,
             }));
 
             setAlertClass(messageClass.info);
-            setMessage(`Receber solicitações de cidades vizinhas? Selecione no campo 3 (Microrregião) deste formulário`);
+            setMessage(`Receber solicitações de cidades vizinhas? Selecione no campo 3 - microrregião - deste formulário`);
 
             //buscar cidades da microrregião na API do IBGE            
-            //`https://servicodados.ibge.gov.br/api/v1/localidades/microrregioes/${city?.microrregiao.id}/municipios`
-            const url_start = import.meta.env.VITE_IBGE_API_MICROREGIONS_START;
-            const url_end = import.meta.env.VITE_IBGE_API_MICROREGIONS_END;
-            const url_microregions = `${url_start}${city?.microrregiao.id}${url_end}`;
-
-            const response = await fetch(url_microregions, {
-                method: 'GET',
-                headers: {
-                    'Content-type': 'application/json'
-                }
-            });
-
-            if (!response.ok) {
-                //throw new Error(`Response status: ${_response.status}`);
-                setMessage(`${response.status}`);
-            }
-
-            const data = await response.json();
-
-            if (typeof data === 'object' && Object.keys(data).length > 0) {
-                setMicroregionData(data);
-            } else {
-                setCitiesData([cityModel]);
-            }
+            await loadCitiesByMicroregionId(city?.microrregiao.id || 0);
         }
         //Termos e condições===================================
         else if (type === 'checkbox') {
@@ -217,13 +215,15 @@ function RegisterForm() {
             }
             if (name === 'callByMicroregion') {
                 if (checked) {
-                    setAlertClass(messageClass.info);
-                    setMessage(`
-                        Microrregião de ${selectedCity.nome} : ${microregionData.map((city) => (` ${city.nome}`))}
-                        `);
+                    if (formData.city) {
+                        setAlertClass(messageClass.info);
+                        setMessage(`Microrregião de ${formData.city} : ${microregionData.map((city) => (` ${city.nome}`))}`);
+                    }
                 } else {
-                    setAlertClass(messageClass.info);
-                    setMessage(`Receber solicitações de cidades vizinhas? Selecione no campo 3 - microrregião - deste formulário`);
+                    if (formData.city) {
+                        setAlertClass(messageClass.info);
+                        setMessage(`Não receber solicitações de cidades vizinhas. Somente de ${formData.city}`);
+                    }
                 }
             }
 
@@ -346,7 +346,7 @@ function RegisterForm() {
                     <div className='col-md-6'>
                         <label className='form-label'>1 - Estado</label>
                         <select name='state' id='state' className='form-select' value={formData.state} onChange={handleInputChange} required>
-                            <option selected disabled value={''}>Selecione o Estado</option>
+                            <option selected={formData.state === ''} disabled value={''}>Selecione o Estado</option>
                             {provinceData.map((option) => (
                                 <option key={option.id} value={option.nome}>
                                     {option.sigla} - {option.nome}
@@ -358,7 +358,7 @@ function RegisterForm() {
                     <div className='col-md-6'>
                         <label className='form-label'>2 - Cidade</label>
                         <select name='city' id='city' className='form-select' value={formData.city} onChange={handleInputChange} required>
-                            <option selected disabled value={''}>Selecione a cidade</option>
+                            <option selected={formData.city === ''} disabled value={''}>Selecione a cidade</option>
                             {citiesData.map((option) => (
                                 <option key={option.id} value={option.nome}>
                                     {option.nome}
@@ -367,20 +367,25 @@ function RegisterForm() {
                         </select>
                     </div>
 
-                    <div className='col-md-12'>
-                        <label className='form-label'>3 - Microrregião</label>
-                        <div className="form-check">
-                            <input className="form-check-input"
-                                type="checkbox"
-                                name="callByMicroregion"
-                                id="callByMicroregion"
-                                checked={formData.callByMicroregion}
-                                onChange={handleInputChange}
-                            />
-                            <label className="form-check-label">
-                                Receber solicitações de alunos da microrregião (cidades vizinhas)?
-                            </label>
+                    <div className='col-md-6'>
+                        <div className='alert alert-warning' role='alert'>
+                            <label className='form-label'>3 - Microrregião</label>
+                            <div className="form-check">
+                                <input className="form-check-input"
+                                    type="checkbox"
+                                    name="callByMicroregion"
+                                    id="callByMicroregion"
+                                    checked={formData.callByMicroregion}
+                                    onChange={handleInputChange}
+                                />
+                                <label className="form-check-label">
+                                    Receber solicitações de alunos da microrregião (cidades vizinhas)?
+                                </label>
+                            </div>
                         </div>
+                    </div>
+                    <div className='col-md-6'>
+
                     </div>
 
                     <div className='col-md-6'>
@@ -449,7 +454,7 @@ function RegisterForm() {
                                         {ddd}
                                     </option>
                                 ))}
-                            </select>                            
+                            </select>
                         </div>
                     </div>
 
@@ -469,7 +474,7 @@ function RegisterForm() {
                                 placeholder='00' min={11} max={99}
                                 required={isInputText} disabled={isDropdown} />
                         </div>
-                    </div>                    
+                    </div>
 
                     <div className='col-md-6'>
                         <label className='form-label'>8 - Celular | Whatsapp</label>
