@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { cpf, cnpj } from 'cpf-cnpj-validator';
 
 declare var $: any;
@@ -12,8 +11,6 @@ import LogoutModal from './partials/LogoutModal';
 import utils from '../assets/utils/utils.json';
 
 function EditProfileForm() {
-
-    const navigate = useNavigate();
 
     const messageClass = {
         primary: 'alert alert-primary',
@@ -172,6 +169,7 @@ function EditProfileForm() {
                 } else {
                     if (typeof data.result === 'object' && Object.keys(data.result).length > 0) {
                         /* verificar se já existe, carregar os dados no formulario */
+
                         setFormData(data.result);
 
                         //carregar cidades da UF selecionada
@@ -235,7 +233,7 @@ function EditProfileForm() {
             setFormData(prevState => ({
                 ...prevState,
                 ['stateId']: province?.id || 0,
-                ['state']: province?.nome || '',                
+                ['state']: province?.nome || '',
                 ['cityId']: 0,
                 ['city']: '',
                 ['microregionId']: 0,
@@ -331,59 +329,31 @@ function EditProfileForm() {
         } else if (!formData.userId) {
             setMessage(`Acesso indevido: sem autenticação. Acessar tela de login`);
         } else {
-            //Prosseguir Cadastro de instrutores. Preencha os campos obrigatórios
-            setInputClass(inputFocusClass.default);
-
-            //Verificar se já existe o CPF | CNPJ cadastrado
-            let api_url = '';
-
-            if (isCpf) {
-                api_url = `${import.meta.env.VITE_INSTRUCTOR_API_CPF_URL}/${formData.cpf}`;
-            } else if (isCnpj) {
-                api_url = `${import.meta.env.VITE_INSTRUCTOR_API_CNPJ_URL}/${formData.cnpj}`;
-            }
-
+            const api_url = `${import.meta.env.VITE_INSTRUCTOR_API_URL}`;
             const response = await fetch(api_url, {
-                method: "GET",
+                method: "PUT",
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
-                }
+                },
+                body: JSON.stringify(formData),
             });
 
-            if (response.status === 500) {
-                setAlertClass(messageClass.danger);
-                setMessage(`Erro no servidor. Tente novamente mais tarde.`);
-            }
-
             const data = await response.json();
+            alert(JSON.stringify(data));
 
-            if (data.status === 200) {
-                //setMessage('Data is a non-empty object.');
-                setAlertClass(messageClass.danger);
-                setMessage(`Já existe um usuário com o CPF / CNPJ ${formData.cpf ?? formData.cnpj} cadastrado.`);
-                alert(`Já existe um usuário com o CPF / CNPJ ${formData.cpf ?? formData.cnpj} cadastrado.`);
-                setFormData(prevState => ({
-                    ...prevState,
-                    ['cpf']: '',
-                    ['cnpj']: '',
-                }));
-
-            } else {
-                const api_url = `${import.meta.env.VITE_INSTRUCTOR_API_URL}`;
-                const response = await fetch(api_url, {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`,
-                    },
-                    body: JSON.stringify(formData),
-                });
-
-                const data = await response.json();
-                //o result é o ID do instrutor cadastrado
-                navigate('/register-result', { state: data.result });
+            if (response.status === 500 || !data.success) {
+                setIsLoading(false);
+                $('#logoutModal').modal('show');
+            } else if (data.result) {
+                setMessage(`${data.message}: Dados atualizados com sucesso.`);
             }
+            else if (data.result === null) {
+                setMessage(`${data.message}: Não houve nenhuma alteração.`);
+            }
+            //o data.result é o ID do instrutor
+            //navigate('/register-result', { state: data.result });
+
 
         }
 
@@ -444,8 +414,8 @@ function EditProfileForm() {
                                 ) : (
                                     <>
 
-                                        <input type="text" disabled className="form-control" value={formData.state} 
-                                        placeholder='Selecione o Estado' aria-describedby="button-addon2" />
+                                        <input type="text" disabled className="form-control" value={formData.state}
+                                            placeholder='Selecione o Estado' aria-describedby="button-addon2" />
                                         <button className="btn btn-primary" type="button" id="button-addon2" onClick={handleStateBtnClick}>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
                                                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
@@ -480,9 +450,9 @@ function EditProfileForm() {
                                     </>
                                 ) : (
                                     <>
-                                        <input type="text" disabled className="form-control" value={formData.city} 
-                                        placeholder='Selecione a Cidade'
-                                        aria-describedby="button-addon2" />
+                                        <input type="text" disabled className="form-control" value={formData.city}
+                                            placeholder='Selecione a Cidade'
+                                            aria-describedby="button-addon2" />
                                         <button className="btn btn-primary" type="button" id="button-addon2" onClick={handleCityBtnClick}>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
                                                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
@@ -564,7 +534,7 @@ function EditProfileForm() {
                                     ) : (
                                         <>
                                             <input type="text" disabled className="form-control" value={formData.lastname} placeholder='Campo obrigatório'
-                                             aria-describedby="button-addon2" />
+                                                aria-describedby="button-addon2" />
                                             <button className="btn btn-primary" type="button" id="button-addon2" onClick={handleLastNameBtnClick}>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
                                                     <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
@@ -700,7 +670,7 @@ function EditProfileForm() {
                                     ) : (
                                         <>
                                             <input type="text" disabled className="form-control" value={formData.ddd} placeholder='Selecione o DDD'
-                                            aria-describedby="button-addon2" />
+                                                aria-describedby="button-addon2" />
                                             <button className="btn btn-primary" type="button" id="button-addon2" onClick={handlePhonePrefixBtnClick} disabled={isInputText}>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
                                                     <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
@@ -746,7 +716,7 @@ function EditProfileForm() {
                                     ) : (
                                         <>
                                             <input type="text" disabled className="form-control" value={formData.ddd} placeholder='DDD (outra UF)'
-                                             aria-describedby="button-addon2" />
+                                                aria-describedby="button-addon2" />
                                             <button className="btn btn-primary" type="button" id="button-addon2" disabled={isDropdown} onClick={handlePhonePrefix2BtnClick}>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
                                                     <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
@@ -790,7 +760,7 @@ function EditProfileForm() {
                                                 </svg>
                                             </span>
                                             <input type="text" disabled className="form-control" value={formData.phone} placeholder='Números, sem DDD, pontos ou traços. Ex.: 9 9888 9999'
-                                             aria-describedby="button-addon2" />
+                                                aria-describedby="button-addon2" />
                                             <button className="btn btn-primary" type="button" id="button-addon2" onClick={handlePhoneBtnClick}>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
                                                     <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />

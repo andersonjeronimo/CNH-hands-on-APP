@@ -54,7 +54,10 @@ function Profile() {
 
             const data = await response.json();
 
-            if (data.status === 401) {
+            if (response.status === 500 || !data.success) {
+                setIsLoading(false);
+                $('#logoutModal').modal('show');
+            } else if (data.status === 401) {
                 setIsLoading(false);
                 $('#logoutModal').modal('show');
             } else if (data.status === 404 || !data.success) {
