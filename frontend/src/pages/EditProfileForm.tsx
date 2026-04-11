@@ -42,8 +42,9 @@ function EditProfileForm() {
     const [isInputText, setIsInputText] = useState(false);
 
     const [editStateField, setEditStateField] = useState(false);
-    const handleStateBtnClick = () => {
+    const handleStateBtnClick = (e: any) => {
         setEditStateField(editStateField => !editStateField);
+        //alert(`Clicked button ID: ${e.currentTarget.id}`);
     };
 
     const [editCityField, setEditCityField] = useState(false);
@@ -52,8 +53,9 @@ function EditProfileForm() {
     };
 
     const [editFirstNameField, setEditFirstNameField] = useState(false);
-    const handleFirstNameBtnClick = () => {
+    const handleFirstNameBtnClick = (e: any) => {
         setEditFirstNameField(editFirstNameField => !editFirstNameField);
+        //alert(`Clicked button ID: ${e.currentTarget.id}`);
     };
 
     const [editLastNameField, setEditLastNameField] = useState(false);
@@ -328,31 +330,48 @@ function EditProfileForm() {
 
         } else if (!formData.userId) {
             setMessage(`Acesso indevido: sem autenticação. Acessar tela de login`);
+            $('#logoutModal').modal('show');
         } else {
-            const api_url = `${import.meta.env.VITE_INSTRUCTOR_API_URL}`;
-            const response = await fetch(api_url, {
-                method: "PUT",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                },
-                body: JSON.stringify(formData),
+
+            //checar se existe algum campo vazio no formulário
+            const fields: string[] = [];
+            Object.entries(formData).forEach(([key, value]) => {
+                if (value === null || value === undefined ||
+                    (typeof value === 'string' && value.trim() === "") ||
+                    (Array.isArray(value) && value.length === 0)) {
+                    fields.push(`${key}`);
+                }
             });
 
-            const data = await response.json();
-            alert(JSON.stringify(data));
+            if (fields.length) {
+                setAlertClass(messageClass.danger);
+                setMessage(`O(s) campo(s) ${fields} está(ão) vazio(s).`)
 
-            if (response.status === 500 || !data.success) {
-                setIsLoading(false);
-                $('#logoutModal').modal('show');
-            } else if (data.result) {
-                setMessage(`${data.message}: Dados atualizados com sucesso.`);
+            } else {
+                //const api_url = `${import.meta.env.VITE_INSTRUCTOR_API_URL}`;
+                //const response = await fetch(api_url, {
+                //    method: "PUT",
+                //    headers: {
+                //        'Content-Type': 'application/json',
+                //        'Authorization': `Bearer ${token}`,
+                //    },
+                //    body: JSON.stringify(formData),
+                //});
+                //
+                //const data = await response.json();
+                //alert(JSON.stringify(data));
+                //
+                //if (response.status === 500 || !data.success || data.status === 404 || data.status === 401) {
+                //    setIsLoading(false);
+                //    $('#logoutModal').modal('show');
+                //} else if (data.status === 204) {
+                //    setMessage(`${data.message}: Dados atualizados com sucesso.`);
+                //}
+                //else if (data.status === 304) {
+                //    setMessage(`${data.message}: Não houve nenhuma alteração.`);
+                //}
+                //o data.result é a quantidade de documentos modificados.
             }
-            else if (data.result === null) {
-                setMessage(`${data.message}: Não houve nenhuma alteração.`);
-            }
-            //o data.result é o ID do instrutor
-            //navigate('/register-result', { state: data.result });
 
 
         }
@@ -404,7 +423,7 @@ function EditProfileForm() {
                                                 </option>
                                             ))}
                                         </select>
-                                        <button className="btn btn-success" type="button" id="button-addon2" onClick={handleStateBtnClick}>
+                                        <button className="btn btn-success" type="button" id="button-1" onClick={handleStateBtnClick}>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-check-square" viewBox="0 0 16 16">
                                                 <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
                                                 <path d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z" />
@@ -414,9 +433,9 @@ function EditProfileForm() {
                                 ) : (
                                     <>
 
-                                        <input type="text" disabled className="form-control" value={formData.state}
-                                            placeholder='Selecione o Estado' aria-describedby="button-addon2" />
-                                        <button className="btn btn-primary" type="button" id="button-addon2" onClick={handleStateBtnClick}>
+                                        <input type="text" className="form-control" value={formData.state}
+                                            placeholder='Selecione o Estado' />
+                                        <button className="btn btn-primary" type="button" id="button-state" onClick={handleStateBtnClick}>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
                                                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
                                                 <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
@@ -441,7 +460,7 @@ function EditProfileForm() {
                                                 </option>
                                             ))}
                                         </select>
-                                        <button className="btn btn-success" type="button" id="button-addon2" onClick={handleCityBtnClick}>
+                                        <button className="btn btn-success" type="button" id="button-2" onClick={handleCityBtnClick}>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-check-square" viewBox="0 0 16 16">
                                                 <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
                                                 <path d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z" />
@@ -450,10 +469,9 @@ function EditProfileForm() {
                                     </>
                                 ) : (
                                     <>
-                                        <input type="text" disabled className="form-control" value={formData.city}
-                                            placeholder='Selecione a Cidade'
-                                            aria-describedby="button-addon2" />
-                                        <button className="btn btn-primary" type="button" id="button-addon2" onClick={handleCityBtnClick}>
+                                        <input type="text" className="form-control" value={formData.city}
+                                            placeholder='Selecione a Cidade' required />
+                                        <button className="btn btn-primary" type="button" id="button-city" onClick={handleCityBtnClick}>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
                                                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
                                                 <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
@@ -493,7 +511,7 @@ function EditProfileForm() {
                                         <>
                                             <input type='text' className='form-control' name='firstname' id='firstname'
                                                 value={formData.firstname} onChange={handleInputChange} required autoComplete='off' />
-                                            <button className="btn btn-success" type="button" id="button-addon2" onClick={handleFirstNameBtnClick}>
+                                            <button className="btn btn-success" type="button" id="firstname_btn" onClick={handleFirstNameBtnClick}>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-check-square" viewBox="0 0 16 16">
                                                     <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
                                                     <path d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z" />
@@ -502,8 +520,8 @@ function EditProfileForm() {
                                         </>
                                     ) : (
                                         <>
-                                            <input type="text" disabled className="form-control" value={formData.firstname} placeholder='Campo obrigatório' aria-describedby="button-addon2" />
-                                            <button className="btn btn-primary" type="button" id="button-addon2" onClick={handleFirstNameBtnClick}>
+                                            <input type="text" className="form-control" value={formData.firstname} placeholder='Campo obrigatório' required />
+                                            <button className="btn btn-primary" type="button" id="btn-4" onClick={handleFirstNameBtnClick}>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
                                                     <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
                                                     <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
@@ -524,7 +542,7 @@ function EditProfileForm() {
                                         <>
                                             <input type='text' className='form-control' name='lastname' id='lastname'
                                                 value={formData.lastname} onChange={handleInputChange} required autoComplete='off' />
-                                            <button className="btn btn-success" type="button" id="button-addon2" onClick={handleLastNameBtnClick}>
+                                            <button className="btn btn-success" type="button" id="button-5" onClick={handleLastNameBtnClick}>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-check-square" viewBox="0 0 16 16">
                                                     <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
                                                     <path d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z" />
@@ -533,9 +551,9 @@ function EditProfileForm() {
                                         </>
                                     ) : (
                                         <>
-                                            <input type="text" disabled className="form-control" value={formData.lastname} placeholder='Campo obrigatório'
-                                                aria-describedby="button-addon2" />
-                                            <button className="btn btn-primary" type="button" id="button-addon2" onClick={handleLastNameBtnClick}>
+                                            <input type="text" className="form-control" value={formData.lastname} placeholder='Campo obrigatório'
+                                                required />
+                                            <button className="btn btn-primary" type="button" id="button-5" onClick={handleLastNameBtnClick}>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
                                                     <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
                                                     <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
@@ -569,7 +587,7 @@ function EditProfileForm() {
                                             value={formData.cpf} onChange={handleInputChange}
                                             placeholder='Apenas números, sem pontos ou traços.'
                                             required={isCpf} disabled={isCnpj} />
-                                        <button className="btn btn-success" type="button" id="button-addon2" onClick={handleCpfBtnClick} disabled={isCnpj}>
+                                        <button className="btn btn-success" type="button" id="button-6" onClick={handleCpfBtnClick} disabled={isCnpj}>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-check-square" viewBox="0 0 16 16">
                                                 <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
                                                 <path d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z" />
@@ -577,8 +595,8 @@ function EditProfileForm() {
                                         </button>
                                     </>) : (
                                     <>
-                                        <input type="text" disabled className="form-control" value={formData.cpf} placeholder='Apenas números, sem pontos ou traços.' aria-describedby="button-addon2" />
-                                        <button className="btn btn-primary" type="button" id="button-addon2" disabled={isCnpj} onClick={handleCpfBtnClick}>
+                                        <input type="text" className="form-control" value={formData.cpf} placeholder='Apenas números, sem pontos ou traços.' required />
+                                        <button className="btn btn-primary" type="button" id="button-6" disabled={isCnpj} onClick={handleCpfBtnClick}>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
                                                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
                                                 <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
@@ -610,7 +628,7 @@ function EditProfileForm() {
                                                 value={formData.cnpj} onChange={handleInputChange}
                                                 placeholder='Apenas números, sem pontos, traços ou barra.'
                                                 required={isCnpj} disabled={isCpf} />
-                                            <button className="btn btn-success" type="button" id="button-addon2" onClick={handleCnpjBtnClick} disabled={isCpf}>
+                                            <button className="btn btn-success" type="button" id="button-cnpj" onClick={handleCnpjBtnClick} disabled={isCpf}>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-check-square" viewBox="0 0 16 16">
                                                     <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
                                                     <path d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z" />
@@ -619,8 +637,8 @@ function EditProfileForm() {
                                         </>
                                     ) : (
                                         <>
-                                            <input type="text" disabled className="form-control" value={formData.cnpj} placeholder='Apenas números, sem pontos, traços ou barra.' aria-describedby="button-addon2" />
-                                            <button className="btn btn-primary" type="button" id="button-addon2" onClick={handleCnpjBtnClick} disabled={isCpf}>
+                                            <input type="text" className="form-control" value={formData.cnpj} placeholder='Apenas números, sem pontos, traços ou barra.' required />
+                                            <button className="btn btn-primary" type="button" id="button-cnpj" onClick={handleCnpjBtnClick} disabled={isCpf}>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
                                                     <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
                                                     <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
@@ -660,7 +678,7 @@ function EditProfileForm() {
                                                     </option>
                                                 ))}
                                             </select>
-                                            <button className="btn btn-success" type="button" id="button-addon2" onClick={handlePhonePrefixBtnClick} disabled={isInputText}>
+                                            <button className="btn btn-success" type="button" id="button-ddd" onClick={handlePhonePrefixBtnClick} disabled={isInputText}>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-check-square" viewBox="0 0 16 16">
                                                     <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
                                                     <path d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z" />
@@ -669,9 +687,9 @@ function EditProfileForm() {
                                         </>
                                     ) : (
                                         <>
-                                            <input type="text" disabled className="form-control" value={formData.ddd} placeholder='Selecione o DDD'
-                                                aria-describedby="button-addon2" />
-                                            <button className="btn btn-primary" type="button" id="button-addon2" onClick={handlePhonePrefixBtnClick} disabled={isInputText}>
+                                            <input type="text" className="form-control" value={formData.ddd} placeholder='Selecione o DDD'
+                                                required={isInputText} />
+                                            <button className="btn btn-primary" type="button" id="button-ddd" onClick={handlePhonePrefixBtnClick} disabled={isInputText}>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
                                                     <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
                                                     <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
@@ -705,8 +723,8 @@ function EditProfileForm() {
                                             <input type='number' className={inputClass} name='ddd' id='ddd'
                                                 value={formData.ddd} onChange={handleInputChange}
                                                 placeholder='00' min={11} max={99}
-                                                required={isInputText} disabled={isDropdown} />
-                                            <button className="btn btn-success" type="button" id="button-addon2" onClick={handlePhonePrefix2BtnClick} disabled={isDropdown}>
+                                                required={isInputText} />
+                                            <button className="btn btn-success" type="button" id="button-ddd2" onClick={handlePhonePrefix2BtnClick} disabled={isDropdown}>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-check-square" viewBox="0 0 16 16">
                                                     <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
                                                     <path d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z" />
@@ -715,9 +733,10 @@ function EditProfileForm() {
                                         </>
                                     ) : (
                                         <>
-                                            <input type="text" disabled className="form-control" value={formData.ddd} placeholder='DDD (outra UF)'
-                                                aria-describedby="button-addon2" />
-                                            <button className="btn btn-primary" type="button" id="button-addon2" disabled={isDropdown} onClick={handlePhonePrefix2BtnClick}>
+                                            <input type="number" className="form-control"
+                                                value={formData.ddd} placeholder='DDD (outra UF)'
+                                                required={isInputText} />
+                                            <button className="btn btn-primary" type="button" id="ddd2" disabled={isDropdown} onClick={handlePhonePrefix2BtnClick}>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
                                                     <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
                                                     <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
@@ -745,7 +764,7 @@ function EditProfileForm() {
                                             <input type='number' className='form-control' name='phone' id='phone' min='10000000' max='999999999'
                                                 value={formData.phone} onChange={handleInputChange}
                                                 placeholder='Números, sem DDD, pontos ou traços. Ex.: 9 9888 9999' required />
-                                            <button className="btn btn-success" type="button" id="button-addon2" onClick={handlePhoneBtnClick}>
+                                            <button className="btn btn-success" type="button" id="button-whatsapp" onClick={handlePhoneBtnClick}>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-check-square" viewBox="0 0 16 16">
                                                     <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
                                                     <path d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z" />
@@ -759,9 +778,9 @@ function EditProfileForm() {
                                                     <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232" />
                                                 </svg>
                                             </span>
-                                            <input type="text" disabled className="form-control" value={formData.phone} placeholder='Números, sem DDD, pontos ou traços. Ex.: 9 9888 9999'
-                                                aria-describedby="button-addon2" />
-                                            <button className="btn btn-primary" type="button" id="button-addon2" onClick={handlePhoneBtnClick}>
+                                            <input type="text" className="form-control" value={formData.phone} placeholder='Números, sem DDD, pontos ou traços. Ex.: 9 9888 9999'
+                                                required />
+                                            <button className="btn btn-primary" type="button" id="button-whatsapp" onClick={handlePhoneBtnClick}>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
                                                     <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
                                                     <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
