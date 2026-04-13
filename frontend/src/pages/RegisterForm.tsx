@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { cpf, cnpj } from 'cpf-cnpj-validator';
+import { redirect, useNavigate } from 'react-router-dom';
+//import { cpf, cnpj } from 'cpf-cnpj-validator';
+import { validate as validateCPF, mask as maskCPF } from 'validation-br/dist/cpf';
+import { validate as validateCNPJ, mask as maskCNPJ } from 'validation-br/dist/cnpj';
 
 import TermsShort from './TermsInstructor';
 import RegisterExplanation from './partials/RegisterExplanation';
@@ -168,7 +170,7 @@ function RegisterForm() {
             setFormData(prevState => ({
                 ...prevState,
                 ['stateId']: province?.id || 0,
-                ['state']: province?.nome || '',                
+                ['state']: province?.nome || '',
                 ['cityId']: 0,
                 ['city']: '',
                 ['microregionId']: 0,
@@ -233,74 +235,115 @@ function RegisterForm() {
     const handleSubmit = async (e: any) => {
         e.preventDefault();
 
-        //Validar CPF | CNPJ
-        const _cpf = formData.cpf;
-        const _cnpj = formData.cnpj;
+        if (!formData.userId) {
+            alert(`Acesso indevido: sem autenticação. Acessar tela de login`);
+            redirect('/login');
+        }
 
         const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
 
         formData.status = utils.status.ativo;
 
-        if (isCpf && !cpf.isValid(_cpf)) {
-            setInputClass(inputFocusClass.danger);
-            setAlertClass(messageClass.danger);
-            setMessage(`Atenção: O CPF informado, ${formData.cpf}, é inválido`);
-            setFormData(prevState => ({
-                ...prevState,
-                ['cpf']: ''
-            }));
-        } else if (isCnpj && !cnpj.isValid(_cnpj)) {
-            setInputClass(inputFocusClass.danger);
-            setAlertClass(messageClass.danger);
-            setMessage(`Atenção: O CNPJ informado, ${formData.cnpj}, é inválido`);
-            setFormData(prevState => ({
-                ...prevState,
-                ['cnpj']: ''
-            }));
-
-
-        } else if (!formData.userId) {
-            setMessage(`Acesso indevido: sem autenticação. Acessar tela de login`);
-        } else {
-            //Prosseguir Cadastro de instrutores. Preencha os campos obrigatórios
-            setInputClass(inputFocusClass.default);
-
-            //Verificar se já existe o CPF | CNPJ cadastrado
-            let api_url = '';
-
-            if (isCpf) {
-                api_url = `${import.meta.env.VITE_INSTRUCTOR_API_CPF_URL}/${formData.cpf}`;
-            } else if (isCnpj) {
-                api_url = `${import.meta.env.VITE_INSTRUCTOR_API_CNPJ_URL}/${formData.cnpj}`;
+        //Validar CPF | CNPJ
+        if (isCpf) {
+            const _cpf = maskCPF(formData.cpf);
+            if (!validateCPF(_cpf)) {
+                setInputClass(inputFocusClass.danger);
+                setAlertClass(messageClass.danger);
+                setMessage(`Atenção: O CPF informado, ${_cpf}, é inválido`);
+                setFormData(prevState => ({
+                    ...prevState,
+                    ['cpf']: ''
+                }));
+            } else {
+                setInputClass(inputFocusClass.default);
+                setAlertClass(messageClass.success);
+                //setMessage(`O CPF informado, ${_cpf}, é válido`);
+                setMessage(``);
+            }
+        } else if (isCnpj) {
+            const _cnpj = maskCNPJ(formData.cnpj);
+            if (!validateCNPJ(_cnpj)) {
+                setInputClass(inputFocusClass.danger);
+                setAlertClass(messageClass.danger);
+                setMessage(`Atenção: O CNPJ informado, ${_cnpj}, é inválido`);
+                setFormData(prevState => ({
+                    ...prevState,
+                    ['cnpj']: ''
+                }));
+            } else {
+                setInputClass(inputFocusClass.default);
+                setAlertClass(messageClass.success);
+                //setMessage(`O CNPJ informado, ${_cnpj}, é válido`);
+                setMessage(``);
             }
 
-            const response = await fetch(api_url, {
-                method: "GET",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
+        }
+
+        //Prosseguir Cadastro de instrutores. Preencha os campos obrigatórios
+        setInputClass(inputFocusClass.default);
+
+        //Verificar se já existe o CPF | CNPJ cadastrado
+        let api_url = '';
+
+        if (isCpf) {
+            api_url = `${import.meta.env.VITE_INSTRUCTOR_API_CPF_URL}/${formData.cpf}`;
+        } else if (isCnpj) {
+            api_url = `${import.meta.env.VITE_INSTRUCTOR_API_CNPJ_URL}/${formData.cnpj}`;
+        }
+
+        const response = await fetch(api_url, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
+        });
+
+        if (response.status === 500) {
+            setAlertClass(messageClass.danger);
+            setMessage(`Erro no servidor. Tente novamente mais tarde.`);
+        }
+
+        const data = await response.json();
+
+        if (data.status === 200) {
+            //setMessage('Data is a non-empty object.');
+            setAlertClass(messageClass.danger);
+            setMessage(`Já existe um usuário com o CPF / CNPJ ${formData.cpf ?? formData.cnpj} cadastrado.`);
+            alert(`Já existe um usuário com o CPF / CNPJ ${formData.cpf ?? formData.cnpj} cadastrado.`);
+            setFormData(prevState => ({
+                ...prevState,
+                ['cpf']: '',
+                ['cnpj']: '',
+            }));
+
+        } else {
+            //checar se existe algum campo vazio no formulário
+            const fields: string[] = [];
+            Object.entries(formData).forEach(([key, value]) => {
+                if (value === null || value === undefined ||
+                    (typeof value === 'string' && value.trim() === "") ||
+                    (Array.isArray(value) && value.length === 0)) {
+                    if (key === 'cpf' && isCpf) {
+                        fields.push(`${key}`);
+                    } else if (key === 'cnpj' && isCnpj) {
+                        fields.push(`${key}`);
+                    }
+                    else {
+                        if (key !== 'cpf' && key !== 'cnpj') {
+                            fields.push(`${key}`);
+                        }
+                    }
                 }
             });
 
-            if (response.status === 500) {
+            if (fields.length) {
                 setAlertClass(messageClass.danger);
-                setMessage(`Erro no servidor. Tente novamente mais tarde.`);
-            }
-
-            const data = await response.json();
-
-            if (data.status === 200) {
-                //setMessage('Data is a non-empty object.');
-                setAlertClass(messageClass.danger);
-                setMessage(`Já existe um usuário com o CPF / CNPJ ${formData.cpf ?? formData.cnpj} cadastrado.`);
-                alert(`Já existe um usuário com o CPF / CNPJ ${formData.cpf ?? formData.cnpj} cadastrado.`);
-                setFormData(prevState => ({
-                    ...prevState,
-                    ['cpf']: '',
-                    ['cnpj']: '',
-                }));
+                setMessage(`O(s) campo(s) ${fields} está(ão) vazio(s).`)
 
             } else {
+
                 const api_url = `${import.meta.env.VITE_INSTRUCTOR_API_URL}`;
                 const response = await fetch(api_url, {
                     method: "POST",
@@ -314,6 +357,7 @@ function RegisterForm() {
                 const data = await response.json();
                 //o result é o ID do instrutor cadastrado
                 navigate('/register-result', { state: data.result });
+
             }
 
         }
