@@ -114,9 +114,24 @@ function RegisterForm() {
                 if (!response.ok) {
                     //throw new Error(`Response status: ${_response.status}`);
                     setMessage(`${response.status}`);
+                    localStorage.removeItem(`${import.meta.env.VITE_TOKEN_VAR}`);
+                    localStorage.removeItem(`${import.meta.env.VITE_ID_VAR}`);
+                    localStorage.removeItem(`${import.meta.env.VITE_EMAIL_VAR}`);
+                    localStorage.removeItem(`${import.meta.env.VITE_ROLE_VAR}`);
+                    window.location.reload();
+                    navigate('/signin');
+                }
+                if (response.status === 500) {
+                    localStorage.removeItem(`${import.meta.env.VITE_TOKEN_VAR}`);
+                    localStorage.removeItem(`${import.meta.env.VITE_ID_VAR}`);
+                    localStorage.removeItem(`${import.meta.env.VITE_EMAIL_VAR}`);
+                    localStorage.removeItem(`${import.meta.env.VITE_ROLE_VAR}`);
+                    window.location.reload();
+                    navigate('/signin');
                 }
 
                 const data = await response.json();
+
                 if (typeof data.result === 'object' && Object.keys(data.result).length > 0) {
                     /* verificar se já existe, carregar os dados no formulario */
                     setFormData(data.result);
@@ -376,7 +391,7 @@ function RegisterForm() {
             <p className="text-center"><h1>Cadastro de Instrutores</h1></p>
             <hr />
 
-            <form className="row g-3 needs-validation" onSubmit={handleSubmit} >
+            <form className="needs-validation" onSubmit={handleSubmit} >
 
                 <div className='row g-3 align-items-center'>
 
