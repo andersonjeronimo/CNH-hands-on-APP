@@ -340,7 +340,8 @@ function RegisterForm() {
 
             if (fields.length) {
                 setAlertClass(messageClass.danger);
-                setMessage(`O(s) campo(s) ${fields} está(ão) vazio(s).`)
+                //setMessage(`O(s) campo(s) ${fields} está(ão) vazio(s).`)
+                setMessage(`Existem campos obrigatórios não preenchidos.`)
 
             } else {
 
@@ -357,7 +358,6 @@ function RegisterForm() {
                 const data = await response.json();
                 //o result é o ID do instrutor cadastrado
                 navigate('/register-result', { state: data.result });
-
             }
 
         }

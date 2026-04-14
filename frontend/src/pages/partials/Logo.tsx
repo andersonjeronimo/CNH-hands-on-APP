@@ -5,7 +5,7 @@ function Logo() {
             <div className='row'>
                 <div className='col-md-12'>
                     <div className="text-center">
-                        <img src={LogoImg} width={300} className="img-fluid" alt="..." />                        
+                        <img src={LogoImg} width={300} className="img-fluid" alt="..." />
                     </div>
                 </div>
                 <div className='col-md-12'>

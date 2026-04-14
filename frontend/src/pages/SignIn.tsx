@@ -103,8 +103,7 @@ function SignInPage() {
                                     </svg>
 
                                 </span>
-                                <input type='email' className='form-control form-control-lg' name='email' id='email'
-                                    placeholder='seu_email@exemplo.com'
+                                <input type='email' className='form-control form-control-lg' name='email' id='email'                                    
                                     value={modelData.email} onChange={handleInputChange}
                                     aria-describedby='email' required />
                             </div>

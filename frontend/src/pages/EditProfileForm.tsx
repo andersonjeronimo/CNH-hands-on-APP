@@ -1,5 +1,6 @@
 declare var $: any;
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { validate as validateCPF, mask as maskCPF } from 'validation-br/dist/cpf';
 import { validate as validateCNPJ, mask as maskCNPJ } from 'validation-br/dist/cnpj';
 
@@ -11,6 +12,8 @@ import LogoutModal from './partials/LogoutModal';
 import utils from '../assets/utils/utils.json';
 
 function EditProfileForm() {
+
+    const navigate = useNavigate();
 
     const messageClass = {
         primary: 'alert alert-primary',
@@ -32,6 +35,7 @@ function EditProfileForm() {
     const [selectedProvince, setSelectedProvince] = useState(provinceModel);
     const [citiesData, setCitiesData] = useState([cityModel]);//cidades por UF
     const [microregionData, setMicroregionData] = useState([cityModel]);
+    const [formDataCopy, setFormDataCopy] = useState(instructorModel);
     const [formData, setFormData] = useState(instructorModel);
     const [isCpf, setIsCpf] = useState(true);
     const [isCnpj, setIsCnpj] = useState(false);
@@ -42,7 +46,7 @@ function EditProfileForm() {
     const [isInputText, setIsInputText] = useState(false);
 
     const [editStateField, setEditStateField] = useState(false);
-    const handleStateBtnClick = (e: any) => {
+    const handleStateBtnClick = () => {
         setEditStateField(editStateField => !editStateField);
         //alert(`Clicked button ID: ${e.currentTarget.id}`);
     };
@@ -53,9 +57,8 @@ function EditProfileForm() {
     };
 
     const [editFirstNameField, setEditFirstNameField] = useState(false);
-    const handleFirstNameBtnClick = (e: any) => {
+    const handleFirstNameBtnClick = () => {
         setEditFirstNameField(editFirstNameField => !editFirstNameField);
-        //alert(`Clicked button ID: ${e.currentTarget.id}`);
     };
 
     const [editLastNameField, setEditLastNameField] = useState(false);
@@ -178,6 +181,8 @@ function EditProfileForm() {
                         /* verificar se já existe, carregar os dados no formulario */
 
                         setFormData(data.result);
+                        //guardar uma cópia para comparar e evitar updates desnecessários
+                        setFormDataCopy(data.result);
 
                         //carregar cidades da UF selecionada
                         await loadPhonePrefixes(data.result.stateId);
@@ -318,6 +323,7 @@ function EditProfileForm() {
         formData.status = utils.status.ativo;
 
         //Validar CPF | CNPJ
+        let cpfOrCnpjIsValid = false;
         if (isCpf) {
             const _cpf = maskCPF(formData.cpf);
             if (!validateCPF(_cpf)) {
@@ -332,6 +338,7 @@ function EditProfileForm() {
                 setInputClass(inputFocusClass.default);
                 setAlertClass(messageClass.success);
                 //setMessage(`O CPF informado, ${_cpf}, é válido`);
+                cpfOrCnpjIsValid = true;
                 setMessage(``);
             }
         } else if (isCnpj) {
@@ -348,10 +355,11 @@ function EditProfileForm() {
                 setInputClass(inputFocusClass.default);
                 setAlertClass(messageClass.success);
                 //setMessage(`O CNPJ informado, ${_cnpj}, é válido`);
+                cpfOrCnpjIsValid = true;
                 setMessage(``);
             }
 
-        }        
+        }
 
         //checar se existe algum campo vazio no formulário
         const fields: string[] = [];
@@ -372,14 +380,40 @@ function EditProfileForm() {
             }
         });
 
+        //checar se houve alteração entre o original e o formulário
+        let equal = true;
+        Object.entries(formData).forEach(([key, value]) => {
+            const k = key;
+            const v = value;
+            Object.entries(formDataCopy).forEach(([key, value]) => {
+                if (key === k) {
+                    if (value !== v) {
+                        equal = false;
+                        return;
+                    }
+                }
+            });
+        });
+
         if (fields.length) {
             setAlertClass(messageClass.danger);
-            setMessage(`O(s) campo(s) ${fields} está(ão) vazio(s).`)
-
+            //setMessage(`O(s) campo(s) ${fields} está(ão) vazio(s).`)
+            setMessage(`Existem campos obrigatórios não preenchidos.`)
+        } else if (!cpfOrCnpjIsValid) {
+            setAlertClass(messageClass.danger);
+            //setMessage(`O(s) campo(s) ${fields} está(ão) vazio(s).`)
+            if (isCpf) {
+                setMessage(`Atenção: O CPF informado, ${maskCPF(formData.cpf)}, é inválido`);
+            } else {
+                setMessage(`Atenção: O CNPJ informado, ${maskCNPJ(formData.cnpj)}, é inválido`);
+            }
+        } else if (equal) {
+            setAlertClass(messageClass.success);
+            setMessage(`Não houve nenhuma alteração`);
         } else {
-            //setMessage(`Preparando para enviar os dados atualizados...`);
             setInputClass(inputFocusClass.default);
-            
+            setMessage(`Preparando para enviar os dados atualizados...`);
+
             const api_url = `${import.meta.env.VITE_INSTRUCTOR_API_URL}`;
             const response = await fetch(api_url, {
                 method: "PUT",
@@ -389,20 +423,19 @@ function EditProfileForm() {
                 },
                 body: JSON.stringify(formData),
             });
-            
             const data = await response.json();
-            alert(JSON.stringify(data));
-            
             if (response.status === 500 || !data.success || data.status === 404 || data.status === 401) {
                 setIsLoading(false);
                 $('#logoutModal').modal('show');
             } else if (data.status === 204) {
-                setMessage(`${data.message}: Dados atualizados com sucesso.`);
+                alert(`${data.message}: Dados atualizados com sucesso.`);
+                navigate('/profile');
             }
             else if (data.status === 304) {
                 setMessage(`${data.message}: Não houve nenhuma alteração.`);
+                navigate('/edit-profile');
             }
-            //o data.result é a quantidade de documentos modificados.
+            ////o data.result é a quantidade de documentos modificados.
         }
 
 
@@ -943,8 +976,7 @@ function EditProfileForm() {
                         <br />
 
                         <div className='d-grid gap-2 col-12 mx-auto'>
-                            <button className='btn btn-success btn-lg shadow' type='submit'
-                                /* disabled={submitBtnDisabled} */>
+                            <button className='btn btn-success btn-lg shadow' type='submit' >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" className="bi bi-person-check" viewBox="0 0 16 16">
                                     <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m1.679-4.493-1.335 2.226a.75.75 0 0 1-1.174.144l-.774-.773a.5.5 0 0 1 .708-.708l.547.548 1.17-1.951a.5.5 0 1 1 .858.514M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4" />
                                     <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z" />
