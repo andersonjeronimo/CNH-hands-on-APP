@@ -1,5 +1,7 @@
-{    
+{
     "userId": "",
+    "cloudinary_public_id": "",
+    "cloudinary_secure_url": "",
     "firstname": "",
     "lastname": "",
     "ddd": "",

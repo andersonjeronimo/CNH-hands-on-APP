@@ -1,8 +1,14 @@
 import { useState, useEffect } from 'react';
 import { redirect, useNavigate } from 'react-router-dom';
-//import { cpf, cnpj } from 'cpf-cnpj-validator';
+
 import { validate as validateCPF, mask as maskCPF } from 'validation-br/dist/cpf';
 import { validate as validateCNPJ, mask as maskCNPJ } from 'validation-br/dist/cnpj';
+
+import { Cloudinary } from '@cloudinary/url-gen';
+import { auto } from '@cloudinary/url-gen/actions/resize';
+import { autoGravity } from '@cloudinary/url-gen/qualifiers/gravity';
+import { AdvancedImage } from '@cloudinary/react';
+//import driver from '../assets/images/instrutor.svg';
 
 import TermsShort from './TermsInstructor';
 import RegisterExplanation from './partials/RegisterExplanation';
@@ -44,55 +50,57 @@ function RegisterForm() {
     const [isDropdown, setIsDropdown] = useState(true);
     const [isInputText, setIsInputText] = useState(false);
 
-    //load cities by province id
-    //buscar cidades na API do IBGE
-    async function loadCitiesByProvinceId(provinceId: number) {
-        const url_start = import.meta.env.VITE_IBGE_API_CITIES_START;
-        const url_end = import.meta.env.VITE_IBGE_API_CITIES_END;
-        const url_cities = `${url_start}${provinceId}${url_end}`;
-        const response = await fetch(url_cities, {
-            method: 'GET',
-            headers: {
-                'Content-type': 'application/json'
-            }
-        });
-        if (!response.ok) {
-            //throw new Error(`Response status: ${_response.status}`);
-            setMessage(`${response.status}`);
-        }
-        const data = await response.json();
-        if (typeof data === 'object' && Object.keys(data).length > 0) {
-            setCitiesData(data)
-        } else {
-            setCitiesData([cityModel]);
-        }
-    }
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-    //buscar cidades da microrregião na API do IBGE            
-    //`https://servicodados.ibge.gov.br/api/v1/localidades/microrregioes/${city?.microrregiao.id}/municipios`
-    async function loadCitiesByMicroregionId(microregionId: number) {
-        const url_start = import.meta.env.VITE_IBGE_API_MICROREGIONS_START;
-        const url_end = import.meta.env.VITE_IBGE_API_MICROREGIONS_END;
-        const url_microregions = `${url_start}${microregionId}${url_end}`;
-        const response = await fetch(url_microregions, {
-            method: 'GET',
-            headers: {
-                'Content-type': 'application/json'
-            }
-        });
-        if (!response.ok) {
-            //throw new Error(`Response status: ${_response.status}`);
-            setMessage(`${response.status}`);
-        }
-        const data = await response.json();
-        if (typeof data === 'object' && Object.keys(data).length > 0) {
-            setMicroregionData(data);
-        } else {
-            setMicroregionData([cityModel]);
-        }
-    }
+    const onFileChange = (event: any) => {
+        setSelectedFile(event.target.files[0]);
+    };
 
-    useEffect(() => {
+    const fileData = () => {
+        if (selectedFile) {           
+
+            const cloudinary = new Cloudinary({
+                cloud: {
+                    cloudName: `${import.meta.env.VITE_CLOUDINARY_NAME}`,
+                    apiKey: `${import.meta.env.VITE_CLOUDINARY_API_KEY}`,
+                    apiSecret: `${import.meta.env.VITE_CLOUDINARY_API_SECRET}`,
+                }
+            });
+
+            //let date = new Date(selectedFile.lastModified);
+            // Use this sample image or upload your own via the Media Library           
+
+
+            const img = cloudinary
+                .image('cld-sample-5')
+                .format('auto') // Optimize delivery by resizing and applying auto-format and auto-quality
+                .quality('auto')
+                .resize(auto().gravity(autoGravity()).width(250).height(250)); // Transform the image: auto-crop to square aspect_ratio
+
+            return (
+                <AdvancedImage cldImg={img} />
+            );
+            //return (
+            //    <div>
+            //        <p><strong>Detalhes da imagem:</strong></p>
+            //        <p>File Name: {selectedFile.name}</p>
+            //        <p>File Type: {selectedFile.type}</p>
+            //        <p>
+            //            Last Modified: {date.toLocaleString()}
+            //        </p>
+            //    </div>
+            //);
+        } else {
+            return (
+                <div>
+                    <p><strong>Nenhuma imagem selecionada</strong></p>
+                </div>
+            );
+        }
+    };    
+
+    useEffect(() => {      
+
         setProvinceData(Estados);
         setFormData(instructorModel);
 
@@ -142,6 +150,54 @@ function RegisterForm() {
 
     }, []);
 
+
+    //load cities by province id
+    //buscar cidades na API do IBGE
+    async function loadCitiesByProvinceId(provinceId: number) {
+        const url_start = import.meta.env.VITE_IBGE_API_CITIES_START;
+        const url_end = import.meta.env.VITE_IBGE_API_CITIES_END;
+        const url_cities = `${url_start}${provinceId}${url_end}`;
+        const response = await fetch(url_cities, {
+            method: 'GET',
+            headers: {
+                'Content-type': 'application/json'
+            }
+        });
+        if (!response.ok) {
+            //throw new Error(`Response status: ${_response.status}`);
+            setMessage(`${response.status}`);
+        }
+        const data = await response.json();
+        if (typeof data === 'object' && Object.keys(data).length > 0) {
+            setCitiesData(data)
+        } else {
+            setCitiesData([cityModel]);
+        }
+    }
+
+    //buscar cidades da microrregião na API do IBGE            
+    //`https://servicodados.ibge.gov.br/api/v1/localidades/microrregioes/${city?.microrregiao.id}/municipios`
+    async function loadCitiesByMicroregionId(microregionId: number) {
+        const url_start = import.meta.env.VITE_IBGE_API_MICROREGIONS_START;
+        const url_end = import.meta.env.VITE_IBGE_API_MICROREGIONS_END;
+        const url_microregions = `${url_start}${microregionId}${url_end}`;
+        const response = await fetch(url_microregions, {
+            method: 'GET',
+            headers: {
+                'Content-type': 'application/json'
+            }
+        });
+        if (!response.ok) {
+            //throw new Error(`Response status: ${_response.status}`);
+            setMessage(`${response.status}`);
+        }
+        const data = await response.json();
+        if (typeof data === 'object' && Object.keys(data).length > 0) {
+            setMicroregionData(data);
+        } else {
+            setMicroregionData([cityModel]);
+        }
+    }
 
     const handleCpfCnpjRadioChange = (e: any) => {
         const { name, checked } = e.target;
@@ -402,6 +458,21 @@ function RegisterForm() {
                             </p>
                         </div>
                     </div>
+
+                    <div className='col-md-12'>
+                        <label className='form-label'>Foto do Perfil <span className="badge text-bg-success"> New! </span></label>
+                        <div className='alert alert-success' role='alert'>
+
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" className="bi bi-camera" viewBox="0 0 16 16">
+                                <path d="M15 12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1.172a3 3 0 0 0 2.12-.879l.83-.828A1 1 0 0 1 6.827 3h2.344a1 1 0 0 1 .707.293l.828.828A3 3 0 0 0 12.828 5H14a1 1 0 0 1 1 1zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4z" />
+                                <path d="M8 11a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5m0 1a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M3 6.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0" />
+                            </svg> | <input type="file" onChange={onFileChange} />
+
+                            {fileData()}
+
+                        </div>
+                    </div>
+
                     <div className='col-md-6'>
                         <label className='form-label'>1 - Estado</label>
                         <select name='state' id='state' className='form-select' value={formData.state} onChange={handleInputChange} required>
