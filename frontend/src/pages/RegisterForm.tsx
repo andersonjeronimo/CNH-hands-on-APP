@@ -4,10 +4,6 @@ import { redirect, useNavigate } from 'react-router-dom';
 import { validate as validateCPF, mask as maskCPF } from 'validation-br/dist/cpf';
 import { validate as validateCNPJ, mask as maskCNPJ } from 'validation-br/dist/cnpj';
 
-import { Cloudinary } from '@cloudinary/url-gen';
-import { auto } from '@cloudinary/url-gen/actions/resize';
-import { autoGravity } from '@cloudinary/url-gen/qualifiers/gravity';
-import { AdvancedImage } from '@cloudinary/react';
 //import driver from '../assets/images/instrutor.svg';
 
 import TermsShort from './TermsInstructor';
@@ -54,52 +50,23 @@ function RegisterForm() {
 
     const onFileChange = (event: any) => {
         setSelectedFile(event.target.files[0]);
-    };
-
-    const fileData = () => {
-        if (selectedFile) {           
-
-            const cloudinary = new Cloudinary({
-                cloud: {
-                    cloudName: `${import.meta.env.VITE_CLOUDINARY_NAME}`,
-                    apiKey: `${import.meta.env.VITE_CLOUDINARY_API_KEY}`,
-                    apiSecret: `${import.meta.env.VITE_CLOUDINARY_API_SECRET}`,
-                }
-            });
-
-            //let date = new Date(selectedFile.lastModified);
-            // Use this sample image or upload your own via the Media Library           
-
-
-            const img = cloudinary
-                .image('cld-sample-5')
-                .format('auto') // Optimize delivery by resizing and applying auto-format and auto-quality
-                .quality('auto')
-                .resize(auto().gravity(autoGravity()).width(250).height(250)); // Transform the image: auto-crop to square aspect_ratio
-
-            return (
-                <AdvancedImage cldImg={img} />
-            );
-            //return (
-            //    <div>
-            //        <p><strong>Detalhes da imagem:</strong></p>
-            //        <p>File Name: {selectedFile.name}</p>
-            //        <p>File Type: {selectedFile.type}</p>
-            //        <p>
-            //            Last Modified: {date.toLocaleString()}
-            //        </p>
-            //    </div>
-            //);
-        } else {
-            return (
-                <div>
-                    <p><strong>Nenhuma imagem selecionada</strong></p>
-                </div>
-            );
-        }
     };    
 
-    useEffect(() => {      
+    const uploadFile = async (file: File) => {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", `${import.meta.env.VITE_CLOUDINARY_PRESET}`);
+        formData.append("cloud_name", `${import.meta.env.VITE_CLOUDINARY_NAME}`);
+
+        const response = await fetch(`https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_NAME}/image/upload`, {
+            method: 'POST',
+            body: formData
+        });
+        const image = await response.json();
+        return image;
+    }
+
+    useEffect(() => {
 
         setProvinceData(Estados);
         setFormData(instructorModel);
@@ -309,7 +276,7 @@ function RegisterForm() {
         if (!formData.userId) {
             alert(`Acesso indevido: sem autenticação. Acessar tela de login`);
             redirect('/login');
-        }
+        }       
 
         const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
 
@@ -402,7 +369,7 @@ function RegisterForm() {
                         fields.push(`${key}`);
                     }
                     else {
-                        if (key !== 'cpf' && key !== 'cnpj') {
+                        if (key !== 'cpf' && key !== 'cnpj' && key !== 'description' && key !== 'cloudinary_public_id' && key !== 'cloudinary_secure_url') {
                             fields.push(`${key}`);
                         }
                     }
@@ -415,6 +382,14 @@ function RegisterForm() {
                 setMessage(`Existem campos obrigatórios não preenchidos.`)
 
             } else {
+
+                if (selectedFile) {
+                    const image = await uploadFile(selectedFile);
+                    if (image) {
+                        formData.cloudinary_public_id = image.public_id;
+                        formData.cloudinary_secure_url = image.secure_url;                        
+                    }
+                }
 
                 const api_url = `${import.meta.env.VITE_INSTRUCTOR_API_URL}`;
                 const response = await fetch(api_url, {
@@ -460,19 +435,16 @@ function RegisterForm() {
                     </div>
 
                     <div className='col-md-12'>
-                        <label className='form-label'>Foto do Perfil <span className="badge text-bg-success"> New! </span></label>
-                        <div className='alert alert-success' role='alert'>
-
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" className="bi bi-camera" viewBox="0 0 16 16">
+                        <label className='form-label'>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-camera" viewBox="0 0 16 16">
                                 <path d="M15 12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1.172a3 3 0 0 0 2.12-.879l.83-.828A1 1 0 0 1 6.827 3h2.344a1 1 0 0 1 .707.293l.828.828A3 3 0 0 0 12.828 5H14a1 1 0 0 1 1 1zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4z" />
                                 <path d="M8 11a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5m0 1a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M3 6.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0" />
-                            </svg> | <input type="file" onChange={onFileChange} />
-
-                            {fileData()}
-
+                            </svg> Foto do Perfil <span className="badge text-bg-success"> New! </span></label>
+                        <div className="input-group mb-3">
+                            <input type="file" className='form-control' accept="image/*" onChange={onFileChange} />
                         </div>
                     </div>
-
+                    <hr />
                     <div className='col-md-6'>
                         <label className='form-label'>1 - Estado</label>
                         <select name='state' id='state' className='form-select' value={formData.state} onChange={handleInputChange} required>

@@ -20,12 +20,15 @@ function SignInPage() {
     const [hasProfile, setHasProfile] = useState(false);
 
     useEffect(() => {
-        //se estiver logado, redireciona conforme o perfil
-        const role = localStorage.getItem(`${import.meta.env.VITE_ROLE_VAR}`);
-        if (role) {
-            if (role === utils.role.instrutor) {
-                navigate('/profile');
-            }
+        //verificar se já existe um token, se sim, redirecionar para a página de detalhes
+        const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
+        //const role = localStorage.getItem(`${import.meta.env.VITE_ROLE_VAR}`);
+        if (token) {
+            navigate('/profile');
+            //if (role) {
+            //    if (role === utils.role.instrutor) {
+            //    }
+            //}
         }
 
         //perfil selecionado na '/home'
@@ -49,10 +52,10 @@ function SignInPage() {
     }
 
     const handleShowPassword = async () => {
-        setShowPassword(!showPassword);        
+        setShowPassword(!showPassword);
     };
 
-    const handleShowPasswordTest = async () => {        
+    const handleShowPasswordTest = async () => {
         setShowPasswordTest(!showPasswordTest);
     };
 
@@ -118,8 +121,42 @@ function SignInPage() {
             const data = await response.json();
 
             if (data.status === 201) {
-                const userId = data.result;
-                navigate('/signup-result', { state: userId });
+                //const userId = data.result;
+                //navigate('/signup-result', { state: userId });
+                const url = `${import.meta.env.VITE_AUTH_API_URL}`;
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData),
+                });
+
+                if (!response.ok) {
+                    //throw new Error(`Response status: ${_response.status}`);
+                    alert(`${response.status}`);
+                    setPasswordField1Message(`${response.status}`);
+                    setPasswordField2Message(`${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.success) {
+                    localStorage.setItem(`${import.meta.env.VITE_TOKEN_VAR}`, data.token);
+                    localStorage.setItem(`${import.meta.env.VITE_ID_VAR}`, data.user._id);
+                    localStorage.setItem(`${import.meta.env.VITE_EMAIL_VAR}`, data.user.email);
+                    localStorage.setItem(`${import.meta.env.VITE_ROLE_VAR}`, data.user.role);
+
+                    //axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
+                    window.location.reload();
+
+                    if (data.user.role === utils.role.instrutor) {
+                        navigate('/profile');
+                    }
+
+                }
+
+
             } else if (data.status === 409) {
                 if (typeof data === 'object' && Object.keys(data).length > 0) {
                     alert(`Erro: ${data.status}. Não autorizado: Usuário já existe.`);
@@ -153,7 +190,7 @@ function SignInPage() {
             <main className="form-signin">
                 <form className='needs-validation' onSubmit={handleSubmit}>
                     <div className='row g-3 justify-content-md-center'>
-                        
+
                         <div className='col-md-6'>
                             <label className='form-label'>Email</label>
                             <div className='input-group'>
@@ -164,7 +201,7 @@ function SignInPage() {
                                     </svg>
 
                                 </span>
-                                <input type='email' className='form-control form-control-lg' name='email' id='email'                                
+                                <input type='email' className='form-control form-control-lg' name='email' id='email'
                                     value={formData.email} onChange={handleInputChange}
                                     aria-describedby='email' required />
                             </div>
@@ -202,7 +239,7 @@ function SignInPage() {
                             </div>
                             <div id="passwordHelpBlock" className="form-text">
                                 <strong>{passwordField1Message}</strong>
-                            </div>                            
+                            </div>
                         </div>
 
                         <br />
@@ -237,10 +274,10 @@ function SignInPage() {
                             </div>
                             <div id="passwordHelpBlock" className="form-text">
                                 <strong>{passwordField2Message}</strong>
-                            </div>                            
+                            </div>
                         </div>
 
-                        <br />                        
+                        <br />
 
                         <div className='col-md-6'>
                             <label className='form-label'>Perfil</label>

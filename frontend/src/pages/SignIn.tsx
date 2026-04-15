@@ -16,13 +16,13 @@ function SignInPage() {
     useEffect(() => {
         //verificar se já existe um token, se sim, redirecionar para a página de detalhes
         const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
-        const role = localStorage.getItem(`${import.meta.env.VITE_ROLE_VAR}`);
+        //const role = localStorage.getItem(`${import.meta.env.VITE_ROLE_VAR}`);
         if (token) {
-            if (role) {
-                if (role === utils.role.instrutor) {
-                    navigate('/profile');
-                }
-            }
+            navigate('/profile');
+            //if (role) {
+            //    if (role === utils.role.instrutor) {
+            //    }
+            //}
         }
     }, []);
 

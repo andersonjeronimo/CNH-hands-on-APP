@@ -9,7 +9,7 @@
         "B": "B",
         "AB": "A e B"
     },
-    "vehicle": {        
+    "vehicle": {
         "aluno": "Aluno",
         "instrutor": "Instrutor",
         "ambos": "Combinar"
@@ -18,7 +18,7 @@
         "aluno": "Aluno",
         "instrutor": "Instrutor"
     },
-    "passwordSize" : {
+    "passwordSize": {
         "min": 6,
         "max": 15
     },
