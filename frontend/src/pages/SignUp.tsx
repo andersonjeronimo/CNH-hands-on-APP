@@ -146,12 +146,11 @@ function SignInPage() {
                     localStorage.setItem(`${import.meta.env.VITE_ID_VAR}`, data.user._id);
                     localStorage.setItem(`${import.meta.env.VITE_EMAIL_VAR}`, data.user.email);
                     localStorage.setItem(`${import.meta.env.VITE_ROLE_VAR}`, data.user.role);
-
-                    //axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
+                    
                     window.location.reload();
 
                     if (data.user.role === utils.role.instrutor) {
-                        navigate('/profile');
+                        navigate('/register');
                     }
 
                 }

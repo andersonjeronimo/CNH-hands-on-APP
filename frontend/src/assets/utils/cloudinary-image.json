@@ -1,30 +1,22 @@
 {
-    "asset_id": "bc31a95cd930a80fb5042ae717a1f486",
-    "public_id": "wgtaoannyp6qfliyxmih",
-    "version": 1776268461,
-    "version_id": "1604ef6e4765fa8f595dabc29247df08",
-    "signature": "4a1d5a27b9da29ede090c459815f73273b935216",
-    "width": 939,
-    "height": 509,
+    "asset_id": "fe1910be84e0f3e10cb9fbe8f9b9ca73",
+    "public_id": "ccsqktj0izi81xdqkfde",
+    "version": 1776286519,
+    "version_id": "e231dd0138d5277cc3f636a80aa7dd49",
+    "signature": "a0c1f483266fe2f9d299bc6e14e01d03ce2e4773",
+    "width": 512,
+    "height": 512,
     "format": "png",
     "resource_type": "image",
-    "created_at": "2026-04-15T15:54:21Z",
+    "created_at": "2026-04-15T20:55:19Z",
     "tags": [],
-    "bytes": 831444,
+    "bytes": 43522,
     "type": "upload",
-    "etag": "0ccb953faba6c157d9623e1fef4acb80",
+    "etag": "5dbd5a2a95a768fd2fd9e298641b315a",
     "placeholder": false,
-    "url": "http://res.cloudinary.com/dsvrferib/image/upload/v1776268461/wgtaoannyp6qfliyxmih.png",
-    "secure_url": "https://res.cloudinary.com/dsvrferib/image/upload/v1776268461/wgtaoannyp6qfliyxmih.png",
+    "url": "http://res.cloudinary.com/dsvrferib/image/upload/v1776286519/ccsqktj0izi81xdqkfde.png",
+    "secure_url": "https://res.cloudinary.com/dsvrferib/image/upload/v1776286519/ccsqktj0izi81xdqkfde.png",
     "asset_folder": "samples/cnhnamao",
-    "display_name": "cadastro_instrutores",
-    "original_filename": "cadastro_instrutores",
-    "eager": [
-        {
-            "status": "processing",
-            "batch_id": "558912988aae288936e7cd71d031315eb2c2cf63655410a202f160b0ab6349213a592efb557b816ed841c7a8d512c182",
-            "url": "http://res.cloudinary.com/dsvrferib/image/upload/f_auto/q_auto/v1776268461/wgtaoannyp6qfliyxmih.png",
-            "secure_url": "https://res.cloudinary.com/dsvrferib/image/upload/f_auto/q_auto/v1776268461/wgtaoannyp6qfliyxmih.png"
-        }
-    ]
+    "display_name": "driver",
+    "existing": true
 }

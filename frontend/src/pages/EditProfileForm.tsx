@@ -1,8 +1,14 @@
 declare var $: any;
+
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { validate as validateCPF, mask as maskCPF } from 'validation-br/dist/cpf';
 import { validate as validateCNPJ, mask as maskCNPJ } from 'validation-br/dist/cnpj';
+
+import { Cloudinary } from '@cloudinary/url-gen';
+import { auto } from '@cloudinary/url-gen/actions/resize';
+import { autoGravity } from '@cloudinary/url-gen/qualifiers/gravity';
+import { AdvancedImage } from '@cloudinary/react';
 
 import Estados from '../assets/utils/estados.json';
 import provinceModel from '../assets/utils/estado-model.json';
@@ -11,10 +17,11 @@ import instructorModel from '../assets/utils/instructor-model.json';
 import LogoutModal from './partials/LogoutModal';
 import utils from '../assets/utils/utils.json';
 
+import avatar from '../assets/images/driver.png';
+
 function EditProfileForm() {
 
     const navigate = useNavigate();
-
     const messageClass = {
         primary: 'alert alert-primary',
         success: 'alert alert-success',
@@ -44,6 +51,42 @@ function EditProfileForm() {
 
     const [isDropdown, setIsDropdown] = useState(true);
     const [isInputText, setIsInputText] = useState(false);
+
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const onFileChange = (event: any) => {
+        setSelectedFile(event.target.files[0]);
+    };
+
+    const cloudinary = new Cloudinary({
+        cloud: {
+            cloudName: `${import.meta.env.VITE_CLOUDINARY_NAME}`,
+            apiKey: `${import.meta.env.VITE_CLOUDINARY_API_KEY}`,
+            apiSecret: `${import.meta.env.VITE_CLOUDINARY_API_SECRET}`,
+        }
+    });
+
+    async function updateImage(file: File, publicId: string) {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", `${import.meta.env.VITE_CLOUDINARY_PRESET}`);
+        formData.append("cloud_name", `${import.meta.env.VITE_CLOUDINARY_NAME}`);
+        formData.append('public_id', publicId); // Key: use the same ID to update
+        //formData.append('overwrite', 'true');    // Explicitly allow overwriting
+
+        try {
+            const response = await fetch(
+                `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_NAME}/image/upload`,
+                {
+                    method: 'POST',
+                    body: formData,
+                }
+            );
+            const image = await response.json();
+            return image;
+        } catch (error) {
+            alert(`Update Failed: ${error}`);
+        }
+    }
 
     const [editStateField, setEditStateField] = useState(false);
     const handleStateBtnClick = () => {
@@ -173,9 +216,10 @@ function EditProfileForm() {
             }).then(async (response) => {
                 const data = await response.json();
 
-                if (response.status === 500 || !data.success) {
+                if (response.status === 500 || !data.success || data.status === 404 || data.status === 401) {
                     setIsLoading(false);
                     $('#logoutModal').modal('show');
+
                 } else {
                     if (typeof data.result === 'object' && Object.keys(data.result).length > 0) {
                         /* verificar se já existe, carregar os dados no formulario */
@@ -201,7 +245,6 @@ function EditProfileForm() {
         }
 
     }, []);
-
 
     const handleCpfCnpjRadioChange = (e: any) => {
         const { name, checked } = e.target;
@@ -317,9 +360,20 @@ function EditProfileForm() {
             $('#logoutModal').modal('show');
         }
 
+        //alterar a imagem de perfil
+        if (selectedFile) {
+            setMessage(`Fazendo upload da imagem...`);
+            alert(selectedFile.name);
+            //const image = await updateImage(selectedFile, formData.cloudinary_public_id);
+            //if (image) {
+            //    alert(JSON.stringify(image));
+            //    formData.cloudinary_public_id = image.public_id;
+            //    formData.cloudinary_secure_url = image.secure_url;
+            //}
+        }
+
         const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
 
-        //
         formData.status = utils.status.ativo;
 
         //Validar CPF | CNPJ
@@ -373,7 +427,7 @@ function EditProfileForm() {
                     fields.push(`${key}`);
                 }
                 else {
-                    if (key !== 'cpf' && key !== 'cnpj') {
+                    if (key !== 'cpf' && key !== 'cnpj' && key !== 'description' && key !== 'cloudinary_public_id' && key !== 'cloudinary_secure_url') {
                         fields.push(`${key}`);
                     }
                 }
@@ -381,24 +435,24 @@ function EditProfileForm() {
         });
 
         //checar se houve alteração entre o original e o formulário
-        let equal = true;
+        let change = false;
         Object.entries(formData).forEach(([key, value]) => {
             const k = key;
             const v = value;
             Object.entries(formDataCopy).forEach(([key, value]) => {
                 if (key === k) {
                     if (value !== v) {
-                        equal = false;
+                        change = true;
                         return;
                     }
                 }
             });
-        });
+        });        
 
         if (fields.length) {
             setAlertClass(messageClass.danger);
             //setMessage(`O(s) campo(s) ${fields} está(ão) vazio(s).`)
-            setMessage(`Existem campos obrigatórios não preenchidos.`)
+            setMessage(`Existem campos obrigatórios não preenchidos: ${fields}`)
         } else if (!cpfOrCnpjIsValid) {
             setAlertClass(messageClass.danger);
             //setMessage(`O(s) campo(s) ${fields} está(ão) vazio(s).`)
@@ -407,12 +461,13 @@ function EditProfileForm() {
             } else {
                 setMessage(`Atenção: O CNPJ informado, ${maskCNPJ(formData.cnpj)}, é inválido`);
             }
-        } else if (equal) {
+        } else if (!change) {
             setAlertClass(messageClass.success);
             setMessage(`Não houve nenhuma alteração`);
+
         } else {
             setInputClass(inputFocusClass.default);
-            setMessage(`Preparando para enviar os dados atualizados...`);
+            setMessage(`Preparando para enviar os dados atualizados...`);           
 
             const api_url = `${import.meta.env.VITE_INSTRUCTOR_API_URL}`;
             const response = await fetch(api_url, {
@@ -435,6 +490,7 @@ function EditProfileForm() {
                 setMessage(`${data.message}: Não houve nenhuma alteração.`);
                 navigate('/edit-profile');
             }
+
             ////o data.result é a quantidade de documentos modificados.
         }
 
@@ -442,6 +498,13 @@ function EditProfileForm() {
 
 
     };
+
+    const img = cloudinary
+        .image(formData.cloudinary_public_id)
+        .format('auto') // Optimize delivery by resizing and applying auto-format and auto-quality
+        .quality('auto')
+        .resize(auto().gravity(autoGravity()).width(280).height(280)); // Transform the image: auto-crop to square aspect_ratio
+
 
     return isLoading ?
         (
@@ -474,6 +537,42 @@ function EditProfileForm() {
                                 </p>
                             </div>
                         </div>
+
+                        <div className='col-md-6 text-center'>
+                            <div className='text-center mt-lg-3'>
+                                {
+                                    formData.cloudinary_public_id ?
+                                        (
+                                            <>
+                                                <AdvancedImage cldImg={img} />
+                                            </>
+                                        ) :
+                                        (
+                                            <>
+                                                <img src={avatar} className="rounded-circle border w-50" alt="..." />
+                                            </>
+                                        )
+                                }
+                            </div>
+                        </div>
+
+                        <div className='col-md-6'>
+                            <div className='alert alert-success' role='alert'>
+
+                                <label className='form-label'>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-camera" viewBox="0 0 16 16">
+                                        <path d="M15 12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1.172a3 3 0 0 0 2.12-.879l.83-.828A1 1 0 0 1 6.827 3h2.344a1 1 0 0 1 .707.293l.828.828A3 3 0 0 0 12.828 5H14a1 1 0 0 1 1 1zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4z" />
+                                        <path d="M8 11a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5m0 1a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M3 6.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0" />
+                                    </svg> <strong>Editar Foto do Perfil</strong> <span className="badge text-bg-success"> New! </span>
+                                </label>
+                                <div className="input-group mb-3">
+                                    <input type="file" className='form-control' accept="image/*" onChange={onFileChange} />
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <hr />
 
                         <div className='col-md-6'>
                             <label className='form-label'>1 - Estado</label>

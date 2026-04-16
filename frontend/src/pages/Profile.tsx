@@ -8,7 +8,7 @@ import { auto } from '@cloudinary/url-gen/actions/resize';
 import { autoGravity } from '@cloudinary/url-gen/qualifiers/gravity';
 import { AdvancedImage } from '@cloudinary/react';
 
-import driver from '../assets/images/aluno_02.png';
+import avatar from '../assets/images/driver.png';
 import instructorModel from '../assets/utils/instructor-model.json';
 import userModel from '../assets/utils/user-model.json';
 import LogoutModal from './partials/LogoutModal';
@@ -83,10 +83,11 @@ function Profile() {
             //}
             const data = await response.json();
 
-            if (data.status === 401) {
+            if (response.status === 500 || !data.success || data.status === 404 || data.status === 401) {
                 setIsLoading(false);
                 $('#logoutModal').modal('show');
-            } else if (data.status === 404 || !data.success) {
+
+            } else if (data.status === 404) {
                 setIsLoading(false);
                 navigate('/register');
             } else {
@@ -169,7 +170,7 @@ function Profile() {
                                             ) :
                                             (
                                                 <>
-                                                    <img src={driver} className="rounded-circle border w-50" alt="..." />
+                                                    <img src={avatar} className="rounded-circle border w-50" alt="..." />
                                                 </>
                                             )
                                     }
@@ -204,6 +205,16 @@ function Profile() {
                                 <label className='form-label'>Categoria</label>
                                 <div className="input-group mb-3">
                                     <input type="text" className="form-control" value={instructorData.category} disabled />
+                                </div>
+                            </div>
+
+                            <div className='col-md-12'>
+                                <label className='form-label'>Perfil</label>
+                                <div className="input-group mb-3">
+                                    <textarea className='form-control' name='description' id='description'
+                                        value={instructorData.description} rows={3} disabled
+                                        placeholder='Ajude o aluno a te escolher, fale um pouco sobre você, seu perfil profissional, veiculo que utiliza, tempo na carreira, etc...'>
+                                    </textarea>
                                 </div>
                             </div>
 
@@ -280,16 +291,6 @@ function Profile() {
                             <label className='form-label'>Veículo utilizado durante as aulas</label>
                             <div className="input-group mb-3">
                                 <input type="text" className="form-control" value={instructorData.vehicle} disabled />
-                            </div>
-                        </div>
-
-                        <div className='col-md-12'>
-                            <label className='form-label'>Descrição</label>
-                            <div className="input-group mb-3">
-                                <textarea className='form-control' name='description' id='description'
-                                    value={instructorData.description} rows={3} disabled
-                                    placeholder='Ajude o aluno a te escolher, fale um pouco sobre você, seu perfil profissional, veiculo que utiliza, tempo na carreira, etc...'>
-                                </textarea>
                             </div>
                         </div>
 

@@ -47,23 +47,29 @@ function RegisterForm() {
     const [isInputText, setIsInputText] = useState(false);
 
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
-
     const onFileChange = (event: any) => {
         setSelectedFile(event.target.files[0]);
-    };    
+    };
 
     const uploadFile = async (file: File) => {
         const formData = new FormData();
         formData.append("file", file);
         formData.append("upload_preset", `${import.meta.env.VITE_CLOUDINARY_PRESET}`);
         formData.append("cloud_name", `${import.meta.env.VITE_CLOUDINARY_NAME}`);
-
-        const response = await fetch(`https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_NAME}/image/upload`, {
-            method: 'POST',
-            body: formData
-        });
-        const image = await response.json();
-        return image;
+        try {
+            const response = await fetch(
+                `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_NAME}/image/upload`,
+                {
+                    method: 'POST',
+                    body: formData,
+                }
+            );
+            const image = await response.json();
+            setMessage(`Update Successful: ${image.secure_url}`);
+            return image;
+        } catch (error) {
+            setMessage(`Update Failed: ${error}`);
+        }
     }
 
     useEffect(() => {
@@ -74,46 +80,50 @@ function RegisterForm() {
         const user_id = localStorage.getItem(`${import.meta.env.VITE_ID_VAR}`);
         if (user_id) {
             formData.userId = user_id;
-
-            const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
-
-            const url = `${import.meta.env.VITE_INSTRUCTOR_API_USER_ID_URL}/${user_id}`;
-
-            fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Content-type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                }
-            }).then(async (response) => {
-                if (!response.ok) {
-                    //throw new Error(`Response status: ${_response.status}`);
-                    setMessage(`${response.status}`);
-                    localStorage.removeItem(`${import.meta.env.VITE_TOKEN_VAR}`);
-                    localStorage.removeItem(`${import.meta.env.VITE_ID_VAR}`);
-                    localStorage.removeItem(`${import.meta.env.VITE_EMAIL_VAR}`);
-                    localStorage.removeItem(`${import.meta.env.VITE_ROLE_VAR}`);
-                    window.location.reload();
-                    navigate('/signin');
-                }
-                if (response.status === 500) {
-                    localStorage.removeItem(`${import.meta.env.VITE_TOKEN_VAR}`);
-                    localStorage.removeItem(`${import.meta.env.VITE_ID_VAR}`);
-                    localStorage.removeItem(`${import.meta.env.VITE_EMAIL_VAR}`);
-                    localStorage.removeItem(`${import.meta.env.VITE_ROLE_VAR}`);
-                    window.location.reload();
-                    navigate('/signin');
-                }
-
-                const data = await response.json();
-
-                if (typeof data.result === 'object' && Object.keys(data.result).length > 0) {
-                    /* verificar se já existe, carregar os dados no formulario */
-                    setFormData(data.result);
-                }
-
-            });
         }
+
+        //if (user_id) {
+        //    formData.userId = user_id;
+        //
+        //    const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
+        //
+        //    const url = `${import.meta.env.VITE_INSTRUCTOR_API_USER_ID_URL}/${user_id}`;
+        //
+        //    fetch(url, {
+        //        method: 'GET',
+        //        headers: {
+        //            'Content-type': 'application/json',
+        //            'Authorization': `Bearer ${token}`,
+        //        }
+        //    }).then(async (response) => {
+        //        if (!response.ok) {
+        //            //throw new Error(`Response status: ${_response.status}`);
+        //            setMessage(`${response.status}`);
+        //            localStorage.removeItem(`${import.meta.env.VITE_TOKEN_VAR}`);
+        //            localStorage.removeItem(`${import.meta.env.VITE_ID_VAR}`);
+        //            localStorage.removeItem(`${import.meta.env.VITE_EMAIL_VAR}`);
+        //            localStorage.removeItem(`${import.meta.env.VITE_ROLE_VAR}`);
+        //            window.location.reload();
+        //            navigate('/signin');
+        //        }
+        //        if (response.status === 500) {
+        //            localStorage.removeItem(`${import.meta.env.VITE_TOKEN_VAR}`);
+        //            localStorage.removeItem(`${import.meta.env.VITE_ID_VAR}`);
+        //            localStorage.removeItem(`${import.meta.env.VITE_EMAIL_VAR}`);
+        //            localStorage.removeItem(`${import.meta.env.VITE_ROLE_VAR}`);
+        //            window.location.reload();
+        //            navigate('/signin');
+        //        }
+        //
+        //        const data = await response.json();
+        //
+        //        if (typeof data.result === 'object' && Object.keys(data.result).length > 0) {
+        //            /* verificar se já existe, carregar os dados no formulario */
+        //            setFormData(data.result);
+        //        }
+        //
+        //    });
+        //}
 
     }, []);
 
@@ -276,7 +286,7 @@ function RegisterForm() {
         if (!formData.userId) {
             alert(`Acesso indevido: sem autenticação. Acessar tela de login`);
             redirect('/login');
-        }       
+        }
 
         const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
 
@@ -338,10 +348,24 @@ function RegisterForm() {
             }
         });
 
-        if (response.status === 500) {
-            setAlertClass(messageClass.danger);
-            setMessage(`Erro no servidor. Tente novamente mais tarde.`);
-        }
+        //if (!response.ok) {
+        //    //throw new Error(`Response status: ${_response.status}`);
+        //    setMessage(`${response.status}`);
+        //    localStorage.removeItem(`${import.meta.env.VITE_TOKEN_VAR}`);
+        //    localStorage.removeItem(`${import.meta.env.VITE_ID_VAR}`);
+        //    localStorage.removeItem(`${import.meta.env.VITE_EMAIL_VAR}`);
+        //    localStorage.removeItem(`${import.meta.env.VITE_ROLE_VAR}`);
+        //    window.location.reload();
+        //    navigate('/signin');
+        //    
+        //} else if (response.status === 500) {
+        //    localStorage.removeItem(`${import.meta.env.VITE_TOKEN_VAR}`);
+        //    localStorage.removeItem(`${import.meta.env.VITE_ID_VAR}`);
+        //    localStorage.removeItem(`${import.meta.env.VITE_EMAIL_VAR}`);
+        //    localStorage.removeItem(`${import.meta.env.VITE_ROLE_VAR}`);
+        //    window.location.reload();
+        //    navigate('/signin');
+        //}
 
         const data = await response.json();
 
@@ -387,7 +411,7 @@ function RegisterForm() {
                     const image = await uploadFile(selectedFile);
                     if (image) {
                         formData.cloudinary_public_id = image.public_id;
-                        formData.cloudinary_secure_url = image.secure_url;                        
+                        formData.cloudinary_secure_url = image.secure_url;
                     }
                 }
 
