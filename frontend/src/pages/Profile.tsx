@@ -81,9 +81,9 @@ function Profile() {
             //    //alert(`${response.status} : Erro no servidor. Tente novamente mais tarde.`);
             //    $('#logoutModal').modal('show');
             //}
-            const data = await response.json();
+            const data = await response.json();            
 
-            if (response.status === 500 || !data.success || data.status === 404 || data.status === 401) {
+            if (response.status === 500 || data.status === 401) {
                 setIsLoading(false);
                 $('#logoutModal').modal('show');
 

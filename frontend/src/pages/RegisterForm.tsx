@@ -51,26 +51,96 @@ function RegisterForm() {
         setSelectedFile(event.target.files[0]);
     };
 
-    const uploadFile = async (file: File) => {
+    //type CloudinaryImage = {
+    //    public_id: string,
+    //    secure_url: string,
+    //    asset_folder: string,
+    //}
+
+    //async function getCloudinarySignature(image: CloudinaryImage) {
+    //    const signature_url = `${import.meta.env.VITE_CLOUDINARY_SIGNATURE_URL}`;
+    //    const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
+//
+    //    try {
+    //        const response = await fetch(signature_url, {
+    //            method: 'POST',
+    //            headers: {
+    //                'Content-Type': 'application/json',
+    //                'Authorization': `Bearer ${token}`,
+    //            },
+    //            body: JSON.stringify(image),
+    //        });
+    //        const result = await response.json();
+    //        return result;
+    //    } catch (error) {
+    //        console.error('Upload Error:', error);
+    //    }
+    //}
+
+    //async function uploadImageSigned(file: File, signedData: any) {
+    //    const formData = new FormData();
+    //    formData.append('file', file);
+    //    formData.append('upload_preset', `${import.meta.env.VITE_CLOUDINARY_PRESET}`);
+    //    formData.append('api_key', `${import.meta.env.VITE_CLOUDINARY_API_KEY}`);
+    //    formData.append('timestamp', signedData.timestamp);
+    //    formData.append('signature', signedData.signature);
+//
+    //    const url = `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_NAME}/image/upload`;
+//
+    //    try {
+    //        const response = await fetch(url, {
+    //            method: 'POST',
+    //            body: formData,
+    //        });
+    //        const image = await response.json();
+    //        console.log('Update Successful:', image.secure_url);
+    //        return image;
+    //    } catch (error) {
+    //        console.error('Upload Error:', error);
+    //    }
+    //}
+
+    async function uploadImage(file: File) {
         const formData = new FormData();
-        formData.append("file", file);
-        formData.append("upload_preset", `${import.meta.env.VITE_CLOUDINARY_PRESET}`);
-        formData.append("cloud_name", `${import.meta.env.VITE_CLOUDINARY_NAME}`);
+        formData.append('file', file);
+        formData.append('upload_preset', `${import.meta.env.VITE_CLOUDINARY_UNSIGNED_PRESET}`);
+
+        const url = `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_NAME}/image/upload`;
+
         try {
-            const response = await fetch(
-                `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_NAME}/image/upload`,
-                {
-                    method: 'POST',
-                    body: formData,
-                }
-            );
+            const response = await fetch(url, {
+                method: 'POST',
+                body: formData,
+            });
             const image = await response.json();
-            setMessage(`Update Successful: ${image.secure_url}`);
+            console.log('Update Successful:', image.secure_url);
             return image;
         } catch (error) {
-            setMessage(`Update Failed: ${error}`);
+            console.error('Upload Error:', error);
         }
     }
+
+    //const uploadFile = async (file: File) => {
+    //    const formData = new FormData();
+    //    formData.append("file", file);
+    //    formData.append("upload_preset", `${import.meta.env.VITE_CLOUDINARY_PRESET}`);
+    //    formData.append("cloud_name", `${import.meta.env.VITE_CLOUDINARY_NAME}`);
+//
+    //    const url = `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_NAME}/image/upload`;
+    //    try {
+    //        const response = await fetch(url,
+    //            {
+    //                method: 'POST',
+    //                body: formData,
+    //            }
+    //        );
+    //        const image = await response.json();
+    //        setMessage(`Update Successful: ${image.secure_url}`);
+    //        return image;
+    //    } catch (error) {
+    //        setMessage(`Update Failed: ${error}`);
+    //    }
+    //}
 
     useEffect(() => {
 
@@ -81,49 +151,6 @@ function RegisterForm() {
         if (user_id) {
             formData.userId = user_id;
         }
-
-        //if (user_id) {
-        //    formData.userId = user_id;
-        //
-        //    const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
-        //
-        //    const url = `${import.meta.env.VITE_INSTRUCTOR_API_USER_ID_URL}/${user_id}`;
-        //
-        //    fetch(url, {
-        //        method: 'GET',
-        //        headers: {
-        //            'Content-type': 'application/json',
-        //            'Authorization': `Bearer ${token}`,
-        //        }
-        //    }).then(async (response) => {
-        //        if (!response.ok) {
-        //            //throw new Error(`Response status: ${_response.status}`);
-        //            setMessage(`${response.status}`);
-        //            localStorage.removeItem(`${import.meta.env.VITE_TOKEN_VAR}`);
-        //            localStorage.removeItem(`${import.meta.env.VITE_ID_VAR}`);
-        //            localStorage.removeItem(`${import.meta.env.VITE_EMAIL_VAR}`);
-        //            localStorage.removeItem(`${import.meta.env.VITE_ROLE_VAR}`);
-        //            window.location.reload();
-        //            navigate('/signin');
-        //        }
-        //        if (response.status === 500) {
-        //            localStorage.removeItem(`${import.meta.env.VITE_TOKEN_VAR}`);
-        //            localStorage.removeItem(`${import.meta.env.VITE_ID_VAR}`);
-        //            localStorage.removeItem(`${import.meta.env.VITE_EMAIL_VAR}`);
-        //            localStorage.removeItem(`${import.meta.env.VITE_ROLE_VAR}`);
-        //            window.location.reload();
-        //            navigate('/signin');
-        //        }
-        //
-        //        const data = await response.json();
-        //
-        //        if (typeof data.result === 'object' && Object.keys(data.result).length > 0) {
-        //            /* verificar se já existe, carregar os dados no formulario */
-        //            setFormData(data.result);
-        //        }
-        //
-        //    });
-        //}
 
     }, []);
 
@@ -358,13 +385,6 @@ function RegisterForm() {
         //    window.location.reload();
         //    navigate('/signin');
         //    
-        //} else if (response.status === 500) {
-        //    localStorage.removeItem(`${import.meta.env.VITE_TOKEN_VAR}`);
-        //    localStorage.removeItem(`${import.meta.env.VITE_ID_VAR}`);
-        //    localStorage.removeItem(`${import.meta.env.VITE_EMAIL_VAR}`);
-        //    localStorage.removeItem(`${import.meta.env.VITE_ROLE_VAR}`);
-        //    window.location.reload();
-        //    navigate('/signin');
         //}
 
         const data = await response.json();
@@ -393,7 +413,8 @@ function RegisterForm() {
                         fields.push(`${key}`);
                     }
                     else {
-                        if (key !== 'cpf' && key !== 'cnpj' && key !== 'description' && key !== 'cloudinary_public_id' && key !== 'cloudinary_secure_url') {
+                        if (key !== 'cpf' && key !== 'cnpj' && key !== 'description'
+                            && key !== 'cloudinary_public_id' && key !== 'cloudinary_secure_url' && key !== 'cloudinary_asset_folder') {
                             fields.push(`${key}`);
                         }
                     }
@@ -407,11 +428,31 @@ function RegisterForm() {
 
             } else {
 
-                if (selectedFile) {
-                    const image = await uploadFile(selectedFile);
+                if (selectedFile) {                    
+
+                    //gerar assinatura
+                    //const image: CloudinaryImage = {
+                    //    //public_id: formData.cloudinary_public_id,
+                    //    public_id: formData.userId,
+                    //    secure_url: formData.cloudinary_secure_url,//vazio
+                    //    asset_folder: formData.cloudinary_asset_folder//vazio
+                    //};
+
+                    //const signedData = await getCloudinarySignature(image);
+
+                    //const imageSigned = await uploadImageSigned(selectedFile, signedData);
+                    const image = await uploadImage(selectedFile);
+
+                    alert(JSON.stringify(image));
+
                     if (image) {
                         formData.cloudinary_public_id = image.public_id;
                         formData.cloudinary_secure_url = image.secure_url;
+                        formData.cloudinary_asset_folder = image.asset_folder;
+                    } else {
+                        formData.cloudinary_public_id = "";
+                        formData.cloudinary_secure_url = "";
+                        formData.cloudinary_asset_folder = "";
                     }
                 }
 
@@ -426,8 +467,9 @@ function RegisterForm() {
                 });
 
                 const data = await response.json();
-                //o result é o ID do instrutor cadastrado
                 navigate('/register-result', { state: data.result });
+
+                //o result é o ID do instrutor cadastrado
             }
 
         }

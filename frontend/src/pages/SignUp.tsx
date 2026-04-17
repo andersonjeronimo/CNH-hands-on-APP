@@ -20,18 +20,36 @@ function SignInPage() {
     const [hasProfile, setHasProfile] = useState(false);
 
     useEffect(() => {
-        //verificar se já existe um token, se sim, redirecionar para a página de detalhes
+        //verificar se já existe um token, se sim, verificar se ainda está válido
         const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
-        //const role = localStorage.getItem(`${import.meta.env.VITE_ROLE_VAR}`);
         if (token) {
-            navigate('/profile');
-            //if (role) {
-            //    if (role === utils.role.instrutor) {
-            //    }
-            //}
+            const user_id = localStorage.getItem(`${import.meta.env.VITE_ID_VAR}`);
+            //checar sessão
+            const url = `${import.meta.env.VITE_AUTH_API_SESSION_URL}`;
+            fetch(url, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({ id: user_id }),
+            }).then(async (response) => {
+                const data = await response.json();
+                if (data.status === 401) {
+                    localStorage.removeItem(`${import.meta.env.VITE_TOKEN_VAR}`);
+                    localStorage.removeItem(`${import.meta.env.VITE_ID_VAR}`);
+                    localStorage.removeItem(`${import.meta.env.VITE_EMAIL_VAR}`);
+                    localStorage.removeItem(`${import.meta.env.VITE_ROLE_VAR}`);
+                    window.location.reload();
+
+                } else if (data.status === 200) {
+                    navigate('/profile');
+                }
+            });
+
         }
 
-        //perfil selecionado na '/home'
+        //perfil selecionado na '/home' -->(deprecated)
         const profile = localStorage.getItem(`${import.meta.env.VITE_PROFILE_VAR}`);
         if (!profile) {
             setHasProfile(false);
@@ -146,7 +164,7 @@ function SignInPage() {
                     localStorage.setItem(`${import.meta.env.VITE_ID_VAR}`, data.user._id);
                     localStorage.setItem(`${import.meta.env.VITE_EMAIL_VAR}`, data.user.email);
                     localStorage.setItem(`${import.meta.env.VITE_ROLE_VAR}`, data.user.role);
-                    
+
                     window.location.reload();
 
                     if (data.user.role === utils.role.instrutor) {

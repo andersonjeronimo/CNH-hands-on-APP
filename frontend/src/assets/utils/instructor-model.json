@@ -2,6 +2,7 @@
     "userId": "",
     "cloudinary_public_id": "",
     "cloudinary_secure_url": "",
+    "cloudinary_asset_folder": "",
     "firstname": "",
     "lastname": "",
     "ddd": "",
