@@ -81,14 +81,14 @@ function Profile() {
             //    //alert(`${response.status} : Erro no servidor. Tente novamente mais tarde.`);
             //    $('#logoutModal').modal('show');
             //}
-            const data = await response.json();            
+            const data = await response.json();
 
             if (response.status === 500 || data.status === 401) {
-                setIsLoading(false);
+                //setIsLoading(false);
                 $('#logoutModal').modal('show');
 
             } else if (data.status === 404) {
-                setIsLoading(false);
+                //setIsLoading(false);
                 navigate('/register');
             } else {
                 if (typeof data.result === 'object' && Object.keys(data.result).length > 0) {
@@ -97,7 +97,6 @@ function Profile() {
 
                     //buscar cidades da microrregião na API do IBGE            
                     await loadCitiesByMicroregionId(data.result.microregionId || 0);
-
                     //setIsLoading(false);
                 }
             }
@@ -166,6 +165,7 @@ function Profile() {
                                             (
                                                 <>
                                                     <AdvancedImage cldImg={img} />
+                                                    {/* <img src={instructorData.cloudinary_secure_url} className="rounded-circle border w-50" alt="..." /> */}
                                                 </>
                                             ) :
                                             (
@@ -176,7 +176,7 @@ function Profile() {
                                     }
                                 </div>
                                 <p className="fs-5">{instructorData.firstname}</p>
-                                <p className="fs-5"><strong>{userData.role}</strong></p>
+                                <p className="fs-5">Status: <span className="badge text-bg-primary"><strong>{instructorData.status}</strong></span></p>
                                 <hr />
                             </div>
 

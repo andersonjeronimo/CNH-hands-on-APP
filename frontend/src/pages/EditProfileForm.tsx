@@ -70,6 +70,7 @@ function EditProfileForm() {
         public_id: string,
         secure_url: string,
         asset_folder: string,
+        timestamp: number
     }
 
     async function getCloudinarySignature(image: CloudinaryImage) {
@@ -92,19 +93,18 @@ function EditProfileForm() {
         }
     }
 
-    async function updateImageSigned(file: File, signedData: any, image_public_id: string, asset_folder: string) {
+    async function updateImageSigned(file: File, signedData: any, public_id: string) {
         const formData = new FormData();
         formData.append('file', file);
+        formData.append('upload_preset', `${import.meta.env.VITE_CLOUDINARY_PRESET}`);
         formData.append('api_key', `${import.meta.env.VITE_CLOUDINARY_API_KEY}`);
-        //formData.append('upload_preset', `${import.meta.env.VITE_CLOUDINARY_PRESET}`);
-        formData.append('timestamp', signedData.timestamp);
         formData.append('signature', signedData.signature);
 
-        formData.append('folder', asset_folder); // Must match signed parameters
-
+        formData.append('timestamp', signedData.timestamp);
+        formData.append('folder', `${import.meta.env.VITE_CLOUDINARY_ASSET_FOLDER}`); // Must match signed parameters
         // Optional: Specify the public_id to update/overwrite a specific image
-        formData.append('public_id', image_public_id);
-        //formData.append('overwrite', 'true');
+        formData.append('public_id', public_id);
+        formData.append('overwrite', 'true');
 
         const url = `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_NAME}/image/upload`;
 
@@ -498,28 +498,31 @@ function EditProfileForm() {
             //alterar a imagem de perfil
             if (selectedFile) {
                 setMessage(`Fazendo upload da imagem...`);
-                //gerar assinatura               
+                //gerar assinatura    
 
+                //gerar assinatura PARA IMAGEM QUE JÁ FOI FEITO UPLOAD
                 const image: CloudinaryImage = {
+                    //public_id: formData.cloudinary_public_id,
                     public_id: formData.cloudinary_public_id,
                     secure_url: formData.cloudinary_secure_url,
-                    asset_folder: formData.cloudinary_asset_folder
+                    asset_folder: `${import.meta.env.VITE_CLOUDINARY_ASSET_FOLDER}`,
+                    timestamp: formData.cloudinary_timestamp
                 };
 
                 const signedData = await getCloudinarySignature(image);
 
-                const imageSigned = await updateImageSigned(selectedFile, signedData, image.public_id, image.asset_folder);                
+                const imageSigned = await updateImageSigned(selectedFile, signedData, image.public_id);
+                //const image = await uploadImage(selectedFile);                
 
                 if (imageSigned) {
-                    setFormData(prevState => ({
-                        ...prevState,
-                        ['cloudinary_public_id']: imageSigned.public_id,
-                        ['cloudinary_secure_url']: imageSigned.secure_url,
-                        ['cloudinary_asset_folder']: imageSigned.asset_folder
-                    }));
+                    formData.cloudinary_public_id = imageSigned.public_id;
+                    formData.cloudinary_secure_url = imageSigned.secure_url;
+                    formData.cloudinary_asset_folder = imageSigned.asset_folder;
                 }
-            }
 
+                alert(JSON.stringify(imageSigned));
+
+            }
 
             const api_url = `${import.meta.env.VITE_INSTRUCTOR_API_URL}`;
             const response = await fetch(api_url, {
@@ -597,6 +600,8 @@ function EditProfileForm() {
                                         (
                                             <>
                                                 <AdvancedImage cldImg={img} />
+                                                {/* <img src={formData.cloudinary_secure_url} className="rounded-circle border w-50" alt="..." /> */}
+
                                             </>
                                         ) :
                                         (
@@ -606,6 +611,8 @@ function EditProfileForm() {
                                         )
                                 }
                             </div>
+                            <p className="fs-5">{formData.firstname}</p>
+                            <p className="fs-5">Status: <span className="badge text-bg-primary"><strong>{formData.status}</strong></span></p>
                         </div>
 
                         <div className='col-md-6'>

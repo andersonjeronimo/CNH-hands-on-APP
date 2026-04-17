@@ -92,6 +92,7 @@ function SignInPage() {
 
         } else if (!data.success) {
             setPasswordFieldMessage(`${data.message}`);
+            alert(`${data.message}`);
             //navigate('/signup');
         }
     };

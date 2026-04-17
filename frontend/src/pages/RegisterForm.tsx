@@ -17,7 +17,7 @@ import utils from '../assets/utils/utils.json';
 
 function RegisterForm() {
 
-    const navigate = useNavigate();
+    const navigate = useNavigate();    
 
     const messageClass = {
         primary: 'alert alert-primary',
@@ -55,12 +55,12 @@ function RegisterForm() {
     //    public_id: string,
     //    secure_url: string,
     //    asset_folder: string,
+    //    timestamp: number
     //}
 
     //async function getCloudinarySignature(image: CloudinaryImage) {
     //    const signature_url = `${import.meta.env.VITE_CLOUDINARY_SIGNATURE_URL}`;
     //    const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
-//
     //    try {
     //        const response = await fetch(signature_url, {
     //            method: 'POST',
@@ -84,9 +84,9 @@ function RegisterForm() {
     //    formData.append('api_key', `${import.meta.env.VITE_CLOUDINARY_API_KEY}`);
     //    formData.append('timestamp', signedData.timestamp);
     //    formData.append('signature', signedData.signature);
-//
+    //
     //    const url = `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_NAME}/image/upload`;
-//
+    //
     //    try {
     //        const response = await fetch(url, {
     //            method: 'POST',
@@ -120,29 +120,7 @@ function RegisterForm() {
         }
     }
 
-    //const uploadFile = async (file: File) => {
-    //    const formData = new FormData();
-    //    formData.append("file", file);
-    //    formData.append("upload_preset", `${import.meta.env.VITE_CLOUDINARY_PRESET}`);
-    //    formData.append("cloud_name", `${import.meta.env.VITE_CLOUDINARY_NAME}`);
-//
-    //    const url = `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_NAME}/image/upload`;
-    //    try {
-    //        const response = await fetch(url,
-    //            {
-    //                method: 'POST',
-    //                body: formData,
-    //            }
-    //        );
-    //        const image = await response.json();
-    //        setMessage(`Update Successful: ${image.secure_url}`);
-    //        return image;
-    //    } catch (error) {
-    //        setMessage(`Update Failed: ${error}`);
-    //    }
-    //}
-
-    useEffect(() => {
+    useEffect(() => {       
 
         setProvinceData(Estados);
         setFormData(instructorModel);
@@ -428,14 +406,15 @@ function RegisterForm() {
 
             } else {
 
-                if (selectedFile) {                    
+                if (selectedFile) {
 
-                    //gerar assinatura
+                    //gerar assinatura PELA PRIMEIRA VEZ
                     //const image: CloudinaryImage = {
                     //    //public_id: formData.cloudinary_public_id,
                     //    public_id: formData.userId,
                     //    secure_url: formData.cloudinary_secure_url,//vazio
-                    //    asset_folder: formData.cloudinary_asset_folder//vazio
+                    //    asset_folder: `${import.meta.env.VITE_CLOUDINARY_ASSET_FOLDER}`,
+                    //    timestamp: Math.floor((new Date()).getTime() / 1000)
                     //};
 
                     //const signedData = await getCloudinarySignature(image);
@@ -443,17 +422,25 @@ function RegisterForm() {
                     //const imageSigned = await uploadImageSigned(selectedFile, signedData);
                     const image = await uploadImage(selectedFile);
 
+                    //alert(JSON.stringify(imageSigned));
                     alert(JSON.stringify(image));
+
+                    const dateString: string = image.created_at;
+                    const date: Date = new Date(dateString);
+                    const timestamp: number = date.getTime();
 
                     if (image) {
                         formData.cloudinary_public_id = image.public_id;
                         formData.cloudinary_secure_url = image.secure_url;
                         formData.cloudinary_asset_folder = image.asset_folder;
-                    } else {
-                        formData.cloudinary_public_id = "";
-                        formData.cloudinary_secure_url = "";
-                        formData.cloudinary_asset_folder = "";
+                        formData.cloudinary_timestamp = timestamp;
                     }
+
+                    //if (imageSigned) {
+                    //    formData.cloudinary_public_id = imageSigned.public_id;
+                    //    formData.cloudinary_secure_url = imageSigned.secure_url;
+                    //    formData.cloudinary_asset_folder = imageSigned.asset_folder;
+                    //}
                 }
 
                 const api_url = `${import.meta.env.VITE_INSTRUCTOR_API_URL}`;

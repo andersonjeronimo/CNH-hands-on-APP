@@ -152,7 +152,7 @@ function SignInPage() {
 
                 if (!response.ok) {
                     //throw new Error(`Response status: ${_response.status}`);
-                    alert(`${response.status}`);
+                    alert(`${response.status}: Erro no servidor.`);
                     setPasswordField1Message(`${response.status}`);
                     setPasswordField2Message(`${response.status}`);
                 }
@@ -176,7 +176,7 @@ function SignInPage() {
 
             } else if (data.status === 409) {
                 if (typeof data === 'object' && Object.keys(data).length > 0) {
-                    alert(`Erro: ${data.status}. Não autorizado: Usuário já existe.`);
+                    alert(`Erro ${data.status}: ${data.message}`);
                     setPasswordField1Message(`${data.status} : ${data.message}`);
                     setPasswordField2Message(`${data.status} : ${data.message}`);
                 }

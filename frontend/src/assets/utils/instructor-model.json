@@ -3,6 +3,7 @@
     "cloudinary_public_id": "",
     "cloudinary_secure_url": "",
     "cloudinary_asset_folder": "",
+    "cloudinary_timestamp": 0,
     "firstname": "",
     "lastname": "",
     "ddd": "",

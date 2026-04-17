@@ -1,0 +1,29 @@
+{
+    "asset_id": "e18fba4a7a3570a648a543ac5fdea018",
+    "public_id": "q7tvxs2p6jzgehm3hznu",
+    "version": 1776449208,
+    "version_id": "239e8b9fdbbec56221611a9365559752",
+    "signature": "371de31996679717c9cb2bae2d3302ff3df66036",
+    "width": 512,
+    "height": 512,
+    "format": "png",
+    "resource_type": "image",
+    "created_at": "2026-04-17T18:06:48Z",
+    "tags": [],
+    "bytes": 29051,
+    "type": "upload",
+    "etag": "013de76c5375173fb0c8e23ff12d056d",
+    "placeholder": false,
+    "url": "http://res.cloudinary.com/dsvrferib/image/upload/v1776449208/q7tvxs2p6jzgehm3hznu.png",
+    "secure_url": "https://res.cloudinary.com/dsvrferib/image/upload/v1776449208/q7tvxs2p6jzgehm3hznu.png",
+    "asset_folder": "samples/cnhnamao",
+    "display_name": "account",
+    "original_filename": "account",
+    "eager": [
+        {
+            "transformation": "sp_auto/e_volume:auto",
+            "status": "failed",
+            "reason": "Invalid Transformation - Streaming profile not supported for non-streaming formats"
+        }
+    ]
+}
