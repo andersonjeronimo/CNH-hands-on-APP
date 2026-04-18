@@ -3,12 +3,12 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 declare var $: any;
-import { Cloudinary } from '@cloudinary/url-gen';
-import { auto } from '@cloudinary/url-gen/actions/resize';
-import { autoGravity } from '@cloudinary/url-gen/qualifiers/gravity';
-import { AdvancedImage } from '@cloudinary/react';
+//import { Cloudinary } from '@cloudinary/url-gen';
+//import { auto } from '@cloudinary/url-gen/actions/resize';
+//import { autoGravity } from '@cloudinary/url-gen/qualifiers/gravity';
+//import { AdvancedImage } from '@cloudinary/react';
 
-import avatar from '../assets/images/driver.png';
+import avatar from '../assets/images/profile-check.svg';
 import instructorModel from '../assets/utils/instructor-model.json';
 import userModel from '../assets/utils/user-model.json';
 import LogoutModal from './partials/LogoutModal';
@@ -107,19 +107,19 @@ function Profile() {
 
     }, []);
 
-    const cloudinary = new Cloudinary({
-        cloud: {
-            cloudName: `${import.meta.env.VITE_CLOUDINARY_NAME}`,
-            apiKey: `${import.meta.env.VITE_CLOUDINARY_API_KEY}`,
-            apiSecret: `${import.meta.env.VITE_CLOUDINARY_API_SECRET}`,
-        }
-    });
+    //const cloudinary = new Cloudinary({
+    //    cloud: {
+    //        cloudName: `${import.meta.env.VITE_CLOUDINARY_NAME}`,
+    //        apiKey: `${import.meta.env.VITE_CLOUDINARY_API_KEY}`,
+    //        apiSecret: `${import.meta.env.VITE_CLOUDINARY_API_SECRET}`,
+    //    }
+    //});
 
-    const img = cloudinary
-        .image(instructorData.cloudinary_public_id)
-        .format('auto') // Optimize delivery by resizing and applying auto-format and auto-quality
-        .quality('auto')
-        .resize(auto().gravity(autoGravity()).width(280).height(280)); // Transform the image: auto-crop to square aspect_ratio
+    //const img = cloudinary
+    //    .image(instructorData.cloudinary_public_id)
+    //    .format('auto') // Optimize delivery by resizing and applying auto-format and auto-quality
+    //    .quality('auto')
+    //    .resize(auto().gravity(autoGravity()).width(280).height(280)); // Transform the image: auto-crop to square aspect_ratio
 
     //<AdvancedImage cldImg={img} />
 
@@ -163,14 +163,13 @@ function Profile() {
                                     {
                                         instructorData.cloudinary_public_id ?
                                             (
-                                                <>
-                                                    <AdvancedImage cldImg={img} />
-                                                    {/* <img src={instructorData.cloudinary_secure_url} className="rounded-circle border w-50" alt="..." /> */}
+                                                <>                                                    
+                                                    <img src={instructorData.cloudinary_secure_url} className="rounded border" width={280} alt="..." />
                                                 </>
                                             ) :
                                             (
                                                 <>
-                                                    <img src={avatar} className="rounded-circle border w-50" alt="..." />
+                                                    <img src={avatar} className="rounded border w-50" alt="..." />
                                                 </>
                                             )
                                     }
