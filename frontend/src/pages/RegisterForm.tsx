@@ -422,8 +422,7 @@ function RegisterForm() {
                     //const imageSigned = await uploadImageSigned(selectedFile, signedData);
                     const image = await uploadImage(selectedFile);
 
-                    //alert(JSON.stringify(imageSigned));
-                    alert(JSON.stringify(image));
+                    //alert(JSON.stringify(imageSigned));                    
 
                     const dateString: string = image.created_at;
                     const date: Date = new Date(dateString);

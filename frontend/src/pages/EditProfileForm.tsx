@@ -91,20 +91,24 @@ function EditProfileForm() {
         } catch (error) {
             console.error('Upload Error:', error);
         }
-    }
+    }    
 
     async function updateImageSigned(file: File, signedData: any, public_id: string) {
         const formData = new FormData();
         formData.append('file', file);
-        formData.append('upload_preset', `${import.meta.env.VITE_CLOUDINARY_PRESET}`);
+        //formData.append('upload_preset', `${import.meta.env.VITE_CLOUDINARY_PRESET}`);
+
         formData.append('api_key', `${import.meta.env.VITE_CLOUDINARY_API_KEY}`);
         formData.append('signature', signedData.signature);
-
         formData.append('timestamp', signedData.timestamp);
-        formData.append('folder', `${import.meta.env.VITE_CLOUDINARY_ASSET_FOLDER}`); // Must match signed parameters
-        // Optional: Specify the public_id to update/overwrite a specific image
-        formData.append('public_id', public_id);
-        formData.append('overwrite', 'true');
+
+        //formData.append('folder', `${import.meta.env.VITE_CLOUDINARY_ASSET_FOLDER}`); // Must match signed parameters
+
+        // Optional: Specify the public_id to update/overwrite a specific image        
+        formData.append('public_id', public_id); // Same ID as the existing image
+        //formData.append('overwrite', 'true');   // Explicitly allow overwriting
+        //formData.append('invalidate', 'true');  // Clears CDN cache to show new image immediately
+
 
         const url = `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_NAME}/image/upload`;
 
@@ -119,7 +123,7 @@ function EditProfileForm() {
         } catch (error) {
             console.error('Upload Error:', error);
         }
-    }
+    }    
 
     const [editStateField, setEditStateField] = useState(false);
     const handleStateBtnClick = () => {
@@ -498,29 +502,25 @@ function EditProfileForm() {
             //alterar a imagem de perfil
             if (selectedFile) {
                 setMessage(`Fazendo upload da imagem...`);
-                //gerar assinatura    
-
-                //gerar assinatura PARA IMAGEM QUE JÁ FOI FEITO UPLOAD
+                
                 const image: CloudinaryImage = {
-                    //public_id: formData.cloudinary_public_id,
                     public_id: formData.cloudinary_public_id,
                     secure_url: formData.cloudinary_secure_url,
                     asset_folder: `${import.meta.env.VITE_CLOUDINARY_ASSET_FOLDER}`,
                     timestamp: formData.cloudinary_timestamp
                 };
+                
+                //gerar assinatura                
+                const signedData = await getCloudinarySignature(image);                
 
-                const signedData = await getCloudinarySignature(image);
-
-                const imageSigned = await updateImageSigned(selectedFile, signedData, image.public_id);
-                //const image = await uploadImage(selectedFile);                
+                const imageSigned = await updateImageSigned(selectedFile, signedData, formData.cloudinary_public_id);
 
                 if (imageSigned) {
                     formData.cloudinary_public_id = imageSigned.public_id;
                     formData.cloudinary_secure_url = imageSigned.secure_url;
                     formData.cloudinary_asset_folder = imageSigned.asset_folder;
-                }
+                }               
 
-                alert(JSON.stringify(imageSigned));
 
             }
 
