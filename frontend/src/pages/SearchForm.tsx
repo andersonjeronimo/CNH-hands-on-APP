@@ -35,7 +35,7 @@ function SearchForm() {
     const [citiesData, setCitiesData] = useState([cityModel]);//cidades por UF
     const [selectedCity, setSelectedCity] = useState(cityModel);
     const [microregionData, setMicroregionData] = useState([cityModel]);
-    const [formData, setFormData] = useState(searchFormModel);    
+    const [formData, setFormData] = useState(searchFormModel);
 
     const loadCities = async (stateName: string) => {
         const province = provinceData.find(estado => estado.nome === stateName);
@@ -104,7 +104,7 @@ function SearchForm() {
         if (typeof data === 'object' && Object.keys(data).length > 0) {
             setMicroregionData(data);
         } else {
-            setMicroregionData([cityModel]);            
+            setMicroregionData([cityModel]);
         }
 
     }
@@ -112,8 +112,8 @@ function SearchForm() {
     useEffect(() => {
         $('#introStaticBackdrop').modal('show');
         setProvinceData(Estados);
-    }, []);   
-    
+    }, []);
+
     const handleInputChange = async (e: any) => {
         const { name, value, type, checked } = e.target;
         setFormData(prevState => ({
@@ -219,13 +219,13 @@ function SearchForm() {
                         {message}
                     </p>
                 </div>
-            </div>            
+            </div>
 
             <form className="row g-3 align-items-center needs-validation" onSubmit={handleSubmit}>
 
                 <div className='col-md-6'>
                     <label className='form-label'>1 - Estado</label>
-                    <select name='state' id='state' className='form-select' value={formData.state} onChange={handleInputChange} required>                        
+                    <select name='state' id='state' className='form-select' value={formData.state} onChange={handleInputChange} required>
                         <option disabled value={''}>Selecione o Estado</option>
                         {provinceData.map((option) => (
                             <option key={option.id} value={option.nome} selected={option.nome === formData.state}>
@@ -238,7 +238,7 @@ function SearchForm() {
                 <div className='col-md-6'>
                     <label className='form-label'>2 - Cidade</label>
                     <select name='city' id='city' className='form-select' value={formData.city} onChange={handleInputChange} required>
-                        <option selected disabled value={''}>Selecione a Cidade</option>                        
+                        <option selected disabled value={''}>Selecione a Cidade</option>
                         {citiesData.map((option) => (
                             <option key={option.id} value={option.nome}>
                                 {option.nome}
@@ -360,37 +360,38 @@ function SearchForm() {
                         <label className="form-check-label">
                             Declaro que li e concordo com os <span>
                                 <a href="#" role="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Termos de Uso da CNH Na Mão</a></span>
-                            <div className="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex={-1} aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                                <div className="modal-dialog">
-                                    <div className="modal-content">
-                                        <div className="modal-header">
-                                            <h1 className="modal-title fs-5" id="staticBackdropLabel">Termos e Condições Gerais de Uso</h1>
-                                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </label>
+
+                        <div className="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex={-1} aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div className="modal-dialog">
+                                <div className="modal-content">
+                                    <div className="modal-header">
+                                        <h1 className="modal-title fs-5" id="staticBackdropLabel">Termos e Condições Gerais de Uso</h1>
+                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div className="modal-body">
+                                        <TermsCustomer></TermsCustomer>
+                                    </div>
+                                    <div className="modal-footer">
+                                        <div className="form-check">
+                                            <input className="form-check-input"
+                                                type="checkbox"
+                                                name="agree"
+                                                id="agree"
+                                                checked={formData.agree}
+                                                onChange={handleInputChange}
+                                                required />
+                                            <label className="form-check-label">
+                                                Li e concordo com os termos
+                                            </label>
                                         </div>
-                                        <div className="modal-body">
-                                            <TermsCustomer></TermsCustomer>
-                                        </div>
-                                        <div className="modal-footer">
-                                            <div className="form-check">
-                                                <input className="form-check-input"
-                                                    type="checkbox"
-                                                    name="agree"
-                                                    id="agree"
-                                                    checked={formData.agree}
-                                                    onChange={handleInputChange}
-                                                    required />
-                                                <label className="form-check-label">
-                                                    Li e concordo com os termos
-                                                </label>
-                                            </div>
-                                            <hr />
-                                            <button type="button" className="btn btn-primary" data-bs-dismiss="modal">Fechar</button>
-                                        </div>
+                                        <hr />
+                                        <button type="button" className="btn btn-primary" data-bs-dismiss="modal">Fechar</button>
                                     </div>
                                 </div>
-                            </div>                           
-
-                        </label>
+                            </div>
+                        </div>
+                        
                     </div>
                 </div>
 

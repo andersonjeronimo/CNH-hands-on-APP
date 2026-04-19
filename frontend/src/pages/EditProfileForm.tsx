@@ -636,13 +636,13 @@ function EditProfileForm() {
                                     formData.cloudinary_public_id ?
                                         (
                                             <>
-                                                <img src={formData.cloudinary_secure_url} className="rounded border" width={280} alt="Foto de perfil do usuário" />
+                                                <img src={formData.cloudinary_secure_url} className="rounded" width={280} alt="Foto de perfil do usuário" />
 
                                             </>
                                         ) :
                                         (
                                             <>
-                                                <img src={avatar} className="rounded border w-50" alt="Foto de perfil do usuário" />
+                                                <img src={avatar} className="rounded w-50" alt="Foto de perfil do usuário" />
                                             </>
                                         )
                                 }

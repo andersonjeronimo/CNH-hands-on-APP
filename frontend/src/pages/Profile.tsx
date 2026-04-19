@@ -164,12 +164,12 @@ function Profile() {
                                         instructorData.cloudinary_public_id ?
                                             (
                                                 <>                                                    
-                                                    <img src={instructorData.cloudinary_secure_url} className="rounded border" width={280} alt="..." />
+                                                    <img src={instructorData.cloudinary_secure_url} className="rounded" width={280} alt="..." />
                                                 </>
                                             ) :
                                             (
                                                 <>
-                                                    <img src={avatar} className="rounded border w-50" alt="..." />
+                                                    <img src={avatar} className="rounded w-50" alt="..." />
                                                 </>
                                             )
                                     }
