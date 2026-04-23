@@ -123,6 +123,8 @@ function SearchFormCEP() {
         }));
     };
 
+    
+
     const searchLocationByCEP = async () => {       
 
         const brasil_api_url = `${import.meta.env.VITE_BRASIL_API_CEP_URL}${cepData.cep}`;
@@ -280,6 +282,12 @@ function SearchFormCEP() {
                     </p>
                 </div>
             </div>
+
+
+
+
+
+            
             <div className="row g-3 align-items-center">
                 <label className='form-label'>* Buscar por CEP [<strong>opcional</strong>]</label>
                 <div className="input-group mb-3">
@@ -292,6 +300,12 @@ function SearchFormCEP() {
                 </div>
             </div>           
 
+
+
+
+
+            
+            
             <hr />
 
             <form className="row g-3 align-items-center needs-validation" onSubmit={handleSubmit}>

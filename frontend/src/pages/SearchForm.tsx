@@ -6,12 +6,13 @@ declare var $: any;
 import TermsCustomer from './TermsCustomer';
 import Estados from '../assets/utils/estados.json';
 import provinceModel from '../assets/utils/estado-model.json';
+import type { ProvinceType, CityType } from '../assets/utils/AppTypes';
 import cityModel from '../assets/utils/cidade-model.json';
 //import microregionModel from '../assets/utils/microrregiao-model.json';
 import searchFormModel from '../assets/utils/search-form-model.json';
 import paginationModel from '../assets/utils/pagination.json';
 import LogoutModal from './partials/LogoutModal';
-//import cepModel from '../assets/utils/cep-model.json';
+import cepModel from '../assets/utils/cep-model.json';
 
 import utils from '../assets/utils/utils.json';
 import SearchModal from './partials/SearchModal';
@@ -35,19 +36,36 @@ function SearchForm() {
     const [citiesData, setCitiesData] = useState([cityModel]);//cidades por UF
     const [selectedCity, setSelectedCity] = useState(cityModel);
     const [microregionData, setMicroregionData] = useState([cityModel]);
-    const [formData, setFormData] = useState(searchFormModel);
 
-    const loadCities = async (stateName: string) => {
-        const province = provinceData.find(estado => estado.nome === stateName);
+    const [formData, setFormData] = useState(searchFormModel);
+    // New!
+    const [cepData, setCEPData] = useState(cepModel);
+
+    useEffect(() => {
+        $('#introStaticBackdrop').modal('show');
+        setProvinceData(Estados);
+    }, []);
+
+    const loadCities = async (province: ProvinceType) => {
+        //const province = provinceData.find(estado => estado.nome === stateName) as ProvinceType;
+        setSelectedCity(cityModel);
+        setMicroregionData([cityModel]);
+
         setFormData(prevState => ({
             ...prevState,
-            ['stateId']: province?.id || 0,
-            ['state']: province?.nome || '',
+            ['stateId']: province.id,
+            ['state']: province.nome,
+            ['cityId']: 0,
+            ['city']: '',
+            ['microregionId']: 0,
+            ['callByMicroregion']: false
         }));
+
         //buscar cidades na API do IBGE            
         const url_start = import.meta.env.VITE_IBGE_API_CITIES_START;
         const url_end = import.meta.env.VITE_IBGE_API_CITIES_END;
-        const url_cities = `${url_start}${province?.id}${url_end}`;
+        //const url_cities = `${url_start}${province?.id}${url_end}`;
+        const url_cities = `${url_start}${province.id}${url_end}`;
 
         const response = await fetch(url_cities, {
             method: 'GET',
@@ -63,20 +81,21 @@ function SearchForm() {
         const data = await response.json();
         if (typeof data === 'object' && Object.keys(data).length > 0) {
             setCitiesData(data);
-        } else {
-            setCitiesData([cityModel]);
+            setAlertClass(messageClass.info);
+            setMessage(`Selecione uma cidade`);
         }
+        return data;
 
     }
 
-    const loadMicroregionCities = async (citiName: string) => {
-        const city = citiesData.find(_city => _city.nome === citiName);
-        setSelectedCity(city ?? cityModel);
+    const loadMicroregionCities = async (city: CityType) => {
+        //const city = citiesData.find(_city => _city.nome === cityName);
+        setSelectedCity(city);
         setFormData(prevState => ({
             ...prevState,
-            ['cityId']: city?.id || 0,
-            ['city']: city?.nome || '',
-            ['microregionId']: city?.microrregiao.id || 0,
+            ['cityId']: city.id,
+            ['city']: city.nome,
+            ['microregionId']: city.microrregiao.id,
             ['callByMicroregion']: false
         }));
 
@@ -86,7 +105,7 @@ function SearchForm() {
         //buscar cidades da microrregião na API do IBGE            
         const url_start = import.meta.env.VITE_IBGE_API_MICROREGIONS_START;
         const url_end = import.meta.env.VITE_IBGE_API_MICROREGIONS_END;
-        const url_microregions = `${url_start}${city?.microrregiao.id}${url_end}`;
+        const url_microregions = `${url_start}${city.microrregiao.id}${url_end}`;
 
         const response = await fetch(url_microregions, {
             method: 'GET',
@@ -103,16 +122,76 @@ function SearchForm() {
 
         if (typeof data === 'object' && Object.keys(data).length > 0) {
             setMicroregionData(data);
-        } else {
-            setMicroregionData([cityModel]);
         }
-
     }
 
-    useEffect(() => {
-        $('#introStaticBackdrop').modal('show');
-        setProvinceData(Estados);
-    }, []);
+
+    const searchLocationByCEP = async () => {
+
+        const brasil_api_url = `${import.meta.env.VITE_BRASIL_API_CEP_URL}${cepData.cep}`;
+
+        const response = await fetch(brasil_api_url, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.status === 500) {
+            setMessage(`Erro no servidor. Busca por CEP indisponível.`);
+        }
+        else if (response.status === 404) {
+            setMessage(`Erro no servidor. Busca por CEP indisponível.`);
+        }
+        else {
+            const data = await response.json();
+            if (typeof data === 'object' && Object.keys(data).length > 0) {
+                //{
+                //    "cep": "89010025",
+                //    "state": "SC",
+                //    "city": "Blumenau",
+                //    "neighborhood": "Centro",
+                //    "street": "Rua Doutor Luiz de Freitas Melro",
+                //    "service": "viacep"
+                //}
+                setCEPData(data);
+
+                const province = provinceData.find(estado => estado.sigla === data.state) as ProvinceType;
+                setFormData(prevState => ({
+                    ...prevState,
+                    ['state']: province.nome,
+                    ['stateId']: province.id,
+                }));
+
+                //https://servicodados.ibge.gov.br/api/docs/localidades#api-Municipios-municipiosMunicipioGet
+                //VER OPÇÃO ACIMA: CARREGAR APENAS UMA CIDADE POR ID AMIGÁVEL
+
+                let city;
+
+                loadCities(province).then(async (cities) => {
+                    if (typeof cities === 'object' && Object.keys(cities).length > 0) {
+                        city = cities.find((_city: { nome: any; }) => _city.nome === data.city) as CityType;
+
+                        if (city) {
+                            setSelectedCity(city);
+                            await loadMicroregionCities(city);
+                        }
+
+                    }
+                });
+
+            }
+
+        }
+    };
+
+    const handleCEPInputChange = async (e: any) => {
+        const { name, value } = e.target;
+        setCEPData(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    };
 
     const handleInputChange = async (e: any) => {
         const { name, value, type, checked } = e.target;
@@ -122,11 +201,13 @@ function SearchForm() {
         }));
         //Estado===============================================
         if (name === 'state') {
-            loadCities(value);
+            const province = provinceData.find(estado => estado.nome === value) as ProvinceType;
+            await loadCities(province);
         }
         //Cidade===============================================
         else if (name === 'city') {
-            loadMicroregionCities(value);
+            const city = citiesData.find(_city => _city.nome === value) as CityType;
+            await loadMicroregionCities(city);
         }
         //Termos e condições===================================
         else if (type === 'checkbox') {
@@ -221,6 +302,30 @@ function SearchForm() {
                 </div>
             </div>
 
+
+            <div className="row g-3 align-items-center">
+                <div className='col-md-6'>
+                    <div className='alert alert-primary'>
+
+                        <label className='form-label'>* Buscar por CEP [<strong>opcional</strong>]</label>
+                        <div className="input-group mb-3">
+                            <input type="text" className="form-control" placeholder="Informe o CEP" aria-label="CEP" aria-describedby="button-addon"
+                                name='cep' id='cep' value={cepData.cep} onChange={handleCEPInputChange} />
+                            <button className="btn btn-primary shadow" onClick={searchLocationByCEP}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-buildings" viewBox="0 0 16 16">
+                                    <path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022M6 8.694 1 10.36V15h5zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5z" />
+                                    <path d="M2 11h1v1H2zm2 0h1v1H4zm-2 2h1v1H2zm2 0h1v1H4zm4-4h1v1H8zm2 0h1v1h-1zm-2 2h1v1H8zm2 0h1v1h-1zm2-2h1v1h-1zm0 2h1v1h-1zM8 7h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zM8 5h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zm0-2h1v1h-1z" />
+                                </svg> Buscar Estado e Cidade por CEP</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div className='col-md-6'>
+
+                </div>
+
+            </div>
+
             <form className="row g-3 align-items-center needs-validation" onSubmit={handleSubmit}>
 
                 <div className='col-md-6'>
@@ -247,23 +352,27 @@ function SearchForm() {
                     </select>
                 </div>
 
-                <div className='col-md-12'>
-                    <label className='form-label'>3 - Microrregião</label>
-                    <div className="form-check">
-                        <input className="form-check-input"
-                            type="checkbox"
-                            name="callByMicroregion"
-                            id="callByMicroregion"
-                            checked={formData.callByMicroregion}
-                            onChange={handleInputChange}
-                        />
-                        <label className="form-check-label">
-                            Buscar instrutores na microrregião (cidades vizinhas)?
-                        </label>
+                <div className='col-md-6'>
+                    <div className='alert alert-warning'>
+                        <label className='form-label'><strong>3 - Microrregião</strong></label>
+                        <div className="form-check">
+                            <input className="form-check-input"
+                                type="checkbox"
+                                name="callByMicroregion"
+                                id="callByMicroregion"
+                                checked={formData.callByMicroregion}
+                                onChange={handleInputChange}
+                            />
+                            <label className="form-check-label">
+                                Buscar instrutores na microrregião (cidades vizinhas)?
+                            </label>
+                        </div>
                     </div>
                 </div>
 
-                <hr />
+                <div className='col-md-6'>
+
+                </div>                
 
                 <div className='col-md-6'>
                     <label className='form-label'>4 - Categoria</label>
@@ -391,7 +500,7 @@ function SearchForm() {
                                 </div>
                             </div>
                         </div>
-                        
+
                     </div>
                 </div>
 
