@@ -10,6 +10,7 @@ createRoot(document.getElementById('root')!).render(
     <Header />
     <br />
     <Router />
+    <br />
     <Footer />
   </StrictMode>
 );
