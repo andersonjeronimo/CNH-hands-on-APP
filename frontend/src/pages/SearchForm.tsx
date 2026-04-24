@@ -22,16 +22,8 @@ function SearchForm() {
 
     const navigate = useNavigate();
 
-    const messageClass = {
-        primary: 'alert alert-primary',
-        success: 'alert alert-success',
-        danger: 'alert alert-danger',
-        warning: 'alert alert-warning',
-        info: 'alert alert-info'
-    }
-
     const [message, setMessage] = useState('Localize o(s) instrutor(es) preenchendo os campos abaixo');
-    const [alertClass, setAlertClass] = useState(messageClass.primary);
+    const [alertClass, setAlertClass] = useState(utils.messageClass.primary);
     const [provinceData, setProvinceData] = useState([provinceModel]);
     const [citiesData, setCitiesData] = useState([cityModel]);//cidades por UF
     const [selectedCity, setSelectedCity] = useState(cityModel);
@@ -40,6 +32,7 @@ function SearchForm() {
     const [formData, setFormData] = useState(searchFormModel);
     // New!
     const [cepData, setCEPData] = useState(cepModel);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         $('#introStaticBackdrop').modal('show');
@@ -81,7 +74,7 @@ function SearchForm() {
         const data = await response.json();
         if (typeof data === 'object' && Object.keys(data).length > 0) {
             setCitiesData(data);
-            setAlertClass(messageClass.info);
+            setAlertClass(utils.messageClass.warning);
             setMessage(`Selecione uma cidade`);
         }
         return data;
@@ -99,7 +92,7 @@ function SearchForm() {
             ['callByMicroregion']: false
         }));
 
-        setAlertClass(messageClass.info);
+        setAlertClass(utils.messageClass.warning);
         setMessage(`Localizar instrutores de cidades vizinhas? Selecione no campo 3 (Microrregião) deste formulário`);
 
         //buscar cidades da microrregião na API do IBGE            
@@ -128,6 +121,8 @@ function SearchForm() {
 
     const searchLocationByCEP = async () => {
 
+        setIsLoading(true);
+
         const brasil_api_url = `${import.meta.env.VITE_BRASIL_API_CEP_URL}${cepData.cep}`;
 
         const response = await fetch(brasil_api_url, {
@@ -138,9 +133,11 @@ function SearchForm() {
         });
 
         if (response.status === 500) {
+            setIsLoading(false);
             setMessage(`Erro no servidor. Busca por CEP indisponível.`);
         }
         else if (response.status === 404) {
+            setIsLoading(false);
             setMessage(`Erro no servidor. Busca por CEP indisponível.`);
         }
         else {
@@ -176,11 +173,14 @@ function SearchForm() {
                             setSelectedCity(city);
                             await loadMicroregionCities(city);
                         }
+                        setIsLoading(false);
 
                     }
+                    setIsLoading(false);
                 });
 
             }
+            setIsLoading(false);
 
         }
     };
@@ -213,21 +213,21 @@ function SearchForm() {
         else if (type === 'checkbox') {
             if (name === 'agree') {
                 if (checked) {
-                    setAlertClass(messageClass.warning);
+                    setAlertClass(utils.messageClass.warning);
                     setMessage(`Li e concordo com os termos e condições`);
                     //setSubmitBtnDisabled(false);
                 } else {
-                    setAlertClass(messageClass.danger);
+                    setAlertClass(utils.messageClass.danger);
                     setMessage(`Para efetuar a busca, é necessário concordar com os termos e condições`);
                     //setSubmitBtnDisabled(true);
                 }
             }
             if (name === 'callByMicroregion') {
                 if (checked) {
-                    setAlertClass(messageClass.info);
+                    setAlertClass(utils.messageClass.warning);
                     setMessage(`Microrregião de ${selectedCity.nome} : ${microregionData.map((city) => (` ${city.nome}`))}`);
                 } else {
-                    setAlertClass(messageClass.info);
+                    setAlertClass(utils.messageClass.warning);
                     setMessage(`Localizar instrutores de cidades vizinhas? Selecione no campo 3 (Microrregião) deste formulário`);
                 }
             }
@@ -259,7 +259,7 @@ function SearchForm() {
         });
 
         if (response.status === 500) {
-            setAlertClass(messageClass.danger);
+            setAlertClass(utils.messageClass.danger);
             setMessage(`Erro no servidor. Tente novamente mais tarde.`);
         }
 
@@ -296,9 +296,20 @@ function SearchForm() {
             <hr />
             <div className='col-md-12'>
                 <div className={alertClass} role='alert'>
-                    <p>
-                        {message}
-                    </p>
+                    {
+                        isLoading ? (
+                            <>
+                                <div className="spinner-border text-primary" role="status">
+                                    <span className="visually-hidden">Loading...</span>
+                                </div>  <strong> Consultando CEP ...</strong>
+                            </>
+
+                        ) : (
+                            <p>
+                                {message}
+                            </p>
+                        )
+                    }
                 </div>
             </div>
 
@@ -309,7 +320,7 @@ function SearchForm() {
 
                         <label className='form-label'>* Buscar por CEP [<strong>opcional</strong>]</label>
                         <div className="input-group mb-3">
-                            <input type="text" className="form-control" placeholder="Informe o CEP" aria-label="CEP" aria-describedby="button-addon"
+                            <input type="text" className="form-control" placeholder="warningrme o CEP" aria-label="CEP" aria-describedby="button-addon"
                                 name='cep' id='cep' value={cepData.cep} onChange={handleCEPInputChange} />
                             <button className="btn btn-primary shadow" onClick={searchLocationByCEP}>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-buildings" viewBox="0 0 16 16">
@@ -372,7 +383,7 @@ function SearchForm() {
 
                 <div className='col-md-6'>
 
-                </div>                
+                </div>
 
                 <div className='col-md-6'>
                     <label className='form-label'>4 - Categoria</label>

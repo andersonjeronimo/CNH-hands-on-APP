@@ -22,5 +22,12 @@
         "min": 6,
         "max": 15
     },
-    "cnpj": "65.810.829/0001-03"
+    "cnpj": "65.810.829/0001-03",
+    "messageClass": {
+        "primary": "alert alert-primary",
+        "success": "alert alert-success",
+        "danger": "alert alert-danger",
+        "warning": "alert alert-warning",
+        "info": "alert alert-info"
+    }
 }
