@@ -1,6 +1,6 @@
 import LandPage from "./pages/LandPage"
 
-function App() {
+function App() { 
 
   return (
     <>

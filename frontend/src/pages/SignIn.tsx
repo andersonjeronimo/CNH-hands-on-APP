@@ -6,7 +6,7 @@ import userModel from '../assets/utils/user-model.json';
 import utils from '../assets/utils/utils.json';
 
 function SignInPage() {
-
+    
     const navigate = useNavigate();
 
     const [modelData, setModelData] = useState(userModel);
@@ -29,7 +29,7 @@ function SignInPage() {
                 body: JSON.stringify({ id: user_id }),
             }).then(async (response) => {
                 const data = await response.json();
-                if (data.status === 401) {                    
+                if (!data.success) {
                     localStorage.removeItem(`${import.meta.env.VITE_TOKEN_VAR}`);
                     localStorage.removeItem(`${import.meta.env.VITE_ID_VAR}`);
                     localStorage.removeItem(`${import.meta.env.VITE_EMAIL_VAR}`);
