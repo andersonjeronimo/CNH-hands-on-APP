@@ -23,9 +23,9 @@ function LandPage() {
                 },
                 body: JSON.stringify({ id: user_id })
             }).then(async (response) => {
-                const data = await response.json();                
+                const data = await response.json();
                 if (!data.success) {
-                    $('#logoutModal').modal('show');
+                    $('#logoutModal').modal('show');                    
                 }
             });
 
