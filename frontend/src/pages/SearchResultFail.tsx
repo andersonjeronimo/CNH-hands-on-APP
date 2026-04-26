@@ -30,9 +30,7 @@ function SerchResultFail() {
                             <input className="form-check-input"
                                 type="checkbox"
                                 name="notification"
-                                id="notification"
-                            //checked={formData.callByMicroregion}
-                            //onChange={handleInputChange}
+                                id="notification"                            
                             />
                             <label className="form-check-label">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-bell" viewBox="0 0 16 16">

@@ -1,13 +1,5 @@
 import avatar from '../../assets/images/profile-check.svg';
-function ChatModal(props: any) {
-
-    const handleClick = () => {
-        //localStorage.removeItem(`${import.meta.env.VITE_TOKEN_VAR}`);
-        //localStorage.removeItem(`${import.meta.env.VITE_ID_VAR}`);
-        //localStorage.removeItem(`${import.meta.env.VITE_EMAIL_VAR}`);
-        //localStorage.removeItem(`${import.meta.env.VITE_ROLE_VAR}`);
-        //window.location.reload();
-    }
+function ChatModal(props: any) {    
 
     return (
         <div className="modal fade" id={props.id} data-bs-backdrop="static" data-bs-keyboard="false" tabIndex={-1} aria-labelledby="chatModalLabel" aria-hidden="true">
@@ -19,8 +11,7 @@ function ChatModal(props: any) {
                                 <path d="M5 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4m4-2.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5M9 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4A.5.5 0 0 1 9 8m1 2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5" />
                                 <path d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zM1 4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H8.96q.04-.245.04-.5C9 10.567 7.21 9 5 9c-2.086 0-3.8 1.398-3.984 3.181A1 1 0 0 1 1 12z" />
                             </svg> Detalhes do instrutor
-                        </h4>
-                        {/* <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> */}
+                        </h4>                        
                     </div>
                     <div className="modal-body">
 
@@ -78,7 +69,7 @@ function ChatModal(props: any) {
                         </div>
                     </div>
                     <div className="modal-footer">
-                        <button type="button" onClick={handleClick} className="btn btn-primary" data-bs-dismiss="modal">
+                        <button type="button" className="btn btn-primary" data-bs-dismiss="modal">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-x-square" viewBox="0 0 16 16">
                                 <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
                                 <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
