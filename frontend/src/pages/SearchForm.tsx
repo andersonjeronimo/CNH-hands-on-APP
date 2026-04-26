@@ -122,26 +122,31 @@ function SearchForm() {
     const searchLocationByCEP = async () => {
 
         setIsLoading(true);
+        setAlertClass(utils.messageClass.primary);
 
-        const brasil_api_url = `${import.meta.env.VITE_BRASIL_API_CEP_URL}${cepData.cep}`;
+        const cepRegex: RegExp = /^\d{5}-?\d{3}$/;
+        // Teste:
+        //console.log(cepRegex.test("12345-678")); // true
+        //console.log(cepRegex.test("12345678"));  // true
+        //console.log(cepRegex.test("1234-567"));  // false
 
-        const response = await fetch(brasil_api_url, {
-            method: "GET",
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-        if (response.status === 500) {
+        if (!cepRegex.test(cepData.cep)) {
             setIsLoading(false);
-            setMessage(`Erro no servidor. Busca por CEP indisponível.`);
-        }
-        else if (response.status === 404) {
-            setIsLoading(false);
-            setMessage(`Erro no servidor. Busca por CEP indisponível.`);
-        }
-        else {
-            const data = await response.json();
+            setAlertClass(utils.messageClass.danger);
+            setMessage(`CEP informado, ${cepData.cep}, é inválido.`);
+            setCEPData(cepModel);
+        } else {
+
+            const brasil_api_url = `${import.meta.env.VITE_BRASIL_API_CEP_URL}${cepData.cep}`;
+
+            const response = await fetch(brasil_api_url, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const data = await response.json();            
             if (typeof data === 'object' && Object.keys(data).length > 0) {
                 //{
                 //    "cep": "89010025",
@@ -181,8 +186,8 @@ function SearchForm() {
 
             }
             setIsLoading(false);
-
         }
+
     };
 
     const handleCEPInputChange = async (e: any) => {
@@ -315,25 +320,31 @@ function SearchForm() {
 
 
             <div className="row g-3 align-items-center">
+
                 <div className='col-md-6'>
                     <div className='alert alert-primary'>
-
-                        <label className='form-label'>* Buscar por CEP [<strong>opcional</strong>]</label>
+                        <label className='form-label'>* Buscar endereço por CEP [<strong>opcional</strong>]</label>
                         <div className="input-group mb-3">
-                            <input type="text" className="form-control" placeholder="warningrme o CEP" aria-label="CEP" aria-describedby="button-addon"
-                                name='cep' id='cep' value={cepData.cep} onChange={handleCEPInputChange} />
-                            <button className="btn btn-primary shadow" onClick={searchLocationByCEP}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-buildings" viewBox="0 0 16 16">
-                                    <path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022M6 8.694 1 10.36V15h5zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5z" />
-                                    <path d="M2 11h1v1H2zm2 0h1v1H4zm-2 2h1v1H2zm2 0h1v1H4zm4-4h1v1H8zm2 0h1v1h-1zm-2 2h1v1H8zm2 0h1v1h-1zm2-2h1v1h-1zm0 2h1v1h-1zM8 7h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zM8 5h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zm0-2h1v1h-1z" />
-                                </svg> Buscar Estado e Cidade por CEP</button>
+
+                            <input type='text' className='form-control' name='cep' id='cep' value={cepData.cep} onChange={handleCEPInputChange}
+                                placeholder='Digite o CEP' aria-describedby="button-addon" />
+
+                            <button className="btn btn-outline-primary shadow" id='button-addon' onClick={searchLocationByCEP}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                                </svg> Consultar CEP</button>
+
+
                         </div>
                     </div>
                 </div>
 
                 <div className='col-md-6'>
 
+
+
                 </div>
+
 
             </div>
 
