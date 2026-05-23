@@ -146,7 +146,7 @@ function SearchForm() {
                 }
             });
 
-            const data = await response.json();            
+            const data = await response.json();
             if (typeof data === 'object' && Object.keys(data).length > 0) {
                 //{
                 //    "cep": "89010025",
@@ -268,7 +268,7 @@ function SearchForm() {
             setMessage(`Erro no servidor. Tente novamente mais tarde.`);
         }
 
-        const data = await response.json();
+        const data = await response.json();        
 
         if (data.status === 401) {
             setMessage(`${data.status} : Sua sessão expirou. Efetue Login novamente.`);
@@ -279,11 +279,14 @@ function SearchForm() {
         }
         else {
             if (data.status === 200) {
-                if (typeof data.result === 'object' && Object.keys(data.result).length > 0) {
-                    navigate('/search-result', { state: { data: data.result, query: formData } });
-                } else if (Array.isArray(data.result) && data.result.length > 0) {
-                    navigate('/search-result', { state: { data: data.result, query: formData } });
-                }
+                //alert(JSON.stringify(data.result[0].data));
+                //alert(JSON.stringify(data.result[0].metadata));
+                if (typeof data.result[0] === 'object' && Object.keys(data.result[0]).length > 0) {
+                    navigate('/search-result', { state: { data: data.result[0].data, query: formData, total: data.result[0].metadata[0].total } });
+                } 
+                //else if (Array.isArray(data.result) && data.result.length > 0) {
+                //    navigate('/search-result', { state: { data: data.result, query: formData, total: data.total } });
+                //}
             }
         }
 

@@ -20,18 +20,19 @@ function SerchResult() {
     const location = useLocation();
 
     const [tableData, setTableData] = useState([instructorModel]);
+    const [maxPages, setMaxPages] = useState(0);
     const [queryData, setQueryData] = useState({});
     const [paginationData, setPaginationData] = useState(paginationModel);
 
     useEffect(() => {
 
-        setTableData(location.state.data);
-        setQueryData(location.state.query);
-
         paginationModel.pageNumber = 1;
         paginationModel.pageSize = Number(import.meta.env.VITE_PAGE_SIZE);
         setPaginationData(paginationModel);
 
+        setTableData(location.state.data);
+        setQueryData(location.state.query);
+        setMaxPages(Math.ceil(Number(location.state.total) / paginationModel.pageSize));
 
     }, []);
 
@@ -42,17 +43,18 @@ function SerchResult() {
         const token = localStorage.getItem(`${import.meta.env.VITE_TOKEN_VAR}`);
 
         if (name === 'nextPage') {
-            if (tableData.length > 0) {
+            if (paginationData.pageNumber < maxPages) {
 
-                if (tableData.length === paginationData.pageSize) {
-                    paginationData.pageNumber++;
-                }
+                paginationData.pageNumber++;
+                //if (tableData.length === paginationData.pageSize) {
+                //}
+
+                //alert(tableData.length);
 
                 const payload = {
                     pagination: paginationData,
                     query: queryData
                 }
-
                 const response = await fetch(api_url, {
                     method: "POST",
                     headers: {
@@ -61,24 +63,26 @@ function SerchResult() {
                     },
                     body: JSON.stringify(payload),
                 });
-
                 if (response.status === 500) {
                     alert(`Erro no servidor. Tente novamente mais tarde.`);
                 }
-
                 const data = await response.json();
-
                 if (data.status === 401) {
                     alert(`${data.status} : Sua sessão expirou. Efetue Login novamente.`);
                     $('#logoutModal').modal('show');
                 }
                 else {
                     if (data.status === 200) {
-                        if (typeof data.result === 'object' && Object.keys(data.result).length > 0) {
-                            setTableData(data.result);
-                        } else if (Array.isArray(data.result) && data.result.length > 0) {
-                            setTableData(data.result);
+                        //if (typeof data.result === 'object' && Object.keys(data.result).length > 0) {
+                        //    setTableData(data.result);
+                        //}
+                        if (typeof data.result[0] === 'object' && Object.keys(data.result[0]).length > 0) {
+                            setTableData(data.result[0].data);
                         }
+
+                        //else if (Array.isArray(data.result) && data.result.length > 0) {
+                        //    setTableData(data.result);
+                        //}
                     }
                 }
             }
@@ -114,11 +118,12 @@ function SerchResult() {
                 }
                 else {
                     if (data.status === 200) {
-                        if (typeof data.result === 'object' && Object.keys(data.result).length > 0) {
-                            setTableData(data.result);
-                        } else if (Array.isArray(data.result) && data.result.length > 0) {
-                            setTableData(data.result);
+                        if (typeof data.result[0] === 'object' && Object.keys(data.result[0]).length > 0) {
+                            setTableData(data.result[0].data);
                         }
+                        //else if (Array.isArray(data.result) && data.result.length > 0) {
+                        //    setTableData(data.result);
+                        //}
                     }
                 }
             }
@@ -152,7 +157,7 @@ function SerchResult() {
                 <thead>
                     <tr className='table-light'>
                         <th scope="col">Foto</th>
-                        <th scope="col">Instrutor</th>                        
+                        <th scope="col">Instrutor</th>
                         <th scope='col'>Detalhes</th>
                     </tr>
                 </thead>
@@ -174,7 +179,7 @@ function SerchResult() {
                                 </td>
                                 <td>
                                     <p className="fs-4">{data.firstname}</p>
-                                </td>                                
+                                </td>
                                 <td>
                                     <a href="#" role="button" data-bs-toggle="modal" data-bs-target={`#${data.userId}`}>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="currentColor" className="bi bi-person-vcard" viewBox="0 0 16 16">
@@ -183,7 +188,7 @@ function SerchResult() {
                                         </svg>
                                     </a>
                                     <ChatModal id={data.userId} data={data}></ChatModal>
-                                </td>                                
+                                </td>
                             </tr>
 
                         ))
@@ -199,7 +204,7 @@ function SerchResult() {
                             Página Anterior
                         </button>
                     </li>
-                    <li className="page-item"><a className="page-link" href="#">Página {paginationData.pageNumber}</a></li>
+                    <li className="page-item"><a className="page-link" href="#">Página {paginationData.pageNumber} de {maxPages}</a></li>
                     <li className="page-item">
                         <button className='btn btn-success shadow' name='nextPage' id='nextPage' onClick={handlePagination}>
                             Próxima Página

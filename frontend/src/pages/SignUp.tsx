@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import userModel from '../assets/utils/user-model.json';
 import utils from '../assets/utils/utils.json';
 
-function SignInPage() {
+function SignUpPage() {
 
     const navigate = useNavigate();
 
@@ -346,4 +346,4 @@ function SignInPage() {
 
 }
 
-export default SignInPage;
+export default SignUpPage;
