@@ -11,7 +11,6 @@ import ChatModal from './partials/ChatModal';
 //import aluna1 from '../assets/images/aluna_01.png';
 //import aluno2 from '../assets/images/aluno_02.png';
 //import aluna2 from '../assets/images/aluna_02.png';
-import avatar from '../assets/images/profile-check.svg';
 
 //import { data } from 'jquery';
 
