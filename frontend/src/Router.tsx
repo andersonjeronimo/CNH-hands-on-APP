@@ -22,6 +22,7 @@ import FaqInstructors from './pages/FaqInstructors';
 
 import utils from './assets/utils/utils.json';
 import Construction from './pages/partials/Construction';
+import ResetPage from './pages/ResetPassword';
 
 function Router() {
 
@@ -48,6 +49,8 @@ function Router() {
                 <Route path='/signup' element={<SignUpPage />} />
                 <Route path='/construction' element={<Construction />} />
                 <Route path='/signup-result' element={<SignUpResult />} />
+
+                <Route path='/reset-passwd' element={<ResetPage />} />
 
                 <Route path='/register-result' element={
                     <PrivateRoute>
@@ -113,7 +116,7 @@ function Router() {
                 <Route path='/privacy' element={<Privacy />} />
                 <Route path='/terms' element={<Terms />} />
                 <Route path='/faq-customers' element={<FaqCustomers />} />
-                <Route path='/faq-instructors' element={<FaqInstructors />} />
+                <Route path='/faq-instructors' element={<FaqInstructors />} />               
 
             </Routes>
         </BrowserRouter>
